@@ -7,12 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        primaryLite: "var(--color-white)",
-        primaryDark: "var(--color-dark)",
+        primaryLite: "var(--color-primaryLite)",
+        secondaryLite: "var(--color-secondaryLite)",
+        teritaryLite: "var(--color-teritaryLite)",
+        primaryText: "var(--color-primaryText)",
+        secondaryText: "var(--color-secondaryText)",
+        primaryborder: "var(--color-primaryborder)",
+        primaryInput: "var(--color-primaryInput)",
+        white: "var(--color-white)",
+        dark: "var(--color-dark)",
         green: "var(--color-green)",
-        danger: "var(--color-danger)",
+        yellow: "var(--color-yellow)",
       },
-      fontSize: {
+      borderRadius: {
         primaryRadius: '16px',
       },
       fontFamily: {
@@ -22,6 +29,12 @@ export default {
         jkabode: ["JK Abode", "sans-serif"],
         inter: ["Inter", "sans-serif"],
         spartan: ['"League Spartan"', "sans-serif"],
+      },
+      width: {
+        'primaryButton': '150px',
+      },
+      height: {
+        'primaryButton': '48px',
       },
     },
   },

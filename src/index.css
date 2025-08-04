@@ -4,8 +4,23 @@
 
 
 :root {
-  --color-white: #FFFFFF;
+  /* background colors  */
+  --color-primaryLite: #3F51B5;
+  --color-secondaryLite: #8E9B6E;
+  --color-teritaryLite: #D26A5E;
+
+  /* text colors  */
+  --color-primaryText: #333333;
+  --color-secondaryText: #6E6E6E;
+
+  /* border color  */
+  --color-primaryborder: #C8C1B7;
+
+  /* input field  */
+  --color-primaryInput: #6D73FF1A;
+
+  --color-white: #F9F6F1;
   --color-dark: #000000;
-  --color-green: #53B96A;
-  --color-danger: #DC3545;
+  --color-green: #B4C9A9;
+  --color-yellow: #E2B659;
 }
