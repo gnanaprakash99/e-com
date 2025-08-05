@@ -37,16 +37,16 @@ const AddProduct = ({ isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="w-full max-w-md bg-white p-8 rounded-primaryRadius shadow-lg relative">
+            <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
                 {/* Modal Close Button */}
                 <button
-                    className="absolute top-4 right-4 text-primaryText hover:font-medium text-2xl hover:text-teritaryLite"
+                    className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-primaryBtn"
                     onClick={onClose}
                 >
                     &times;
                 </button>
 
-                <h2 className="text-2xl font-bold text-primaryText mb-6 text-center">
+                <h2 className="text-2xl font-bold mb-6 text-center">
                     Add Products
                 </h2>
 
@@ -58,7 +58,7 @@ const AddProduct = ({ isOpen, onClose }) => {
                         name="name"
                         placeholder="Product Name"
                         onChange={(e) => setProductName(e.target.value)}
-                        className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
                         required
                     />
 
@@ -67,7 +67,7 @@ const AddProduct = ({ isOpen, onClose }) => {
                         name="category"
                         value={productCategory}
                         onChange={(e) => setProductCategory(e.target.value)}
-                        className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
                         required
                     >
                         <option value="" disabled>Select Category</option>
@@ -84,7 +84,7 @@ const AddProduct = ({ isOpen, onClose }) => {
                         name="price"
                         placeholder="Product price"
                         onChange={(e) => setProductPrice(e.target.value)}
-                        className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
                         required
                     />
 
@@ -92,7 +92,7 @@ const AddProduct = ({ isOpen, onClose }) => {
                     <textarea
                         name="description"
                         placeholder="Product Description"
-                        className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
                         required
                     />
 
@@ -103,13 +103,13 @@ const AddProduct = ({ isOpen, onClose }) => {
                             name="image"
                             ref={fileInputRef}
                             onChange={handleFileChange}
-                            className="w-full px-4 py-2 rounded-primaryRadius"
+                            className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius"
                         />
                         {selectedFile && (
                             <button
                                 type="button"
                                 onClick={handleFileCancel}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-teritaryLite text-xl font-bold hover:text-teritaryLite"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-inputBg text-xl font-bold hover:text-teritaryLite"
                                 title="Cancel file"
                             >
                                 &times;
@@ -120,7 +120,7 @@ const AddProduct = ({ isOpen, onClose }) => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="mx-auto block bg-teritaryLite text-white font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
+                        className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
                     >
                         Submit
                     </button>

@@ -22,12 +22,12 @@ const About = () => {
 
   return (
     <>
-      <div className="bg-[#f9f3ef] font-sans px-4 py-8 sm:px-8">
+      <div className="text-primaryText font-sans px-4 py-8 sm:px-8">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold text-center mb-4">About Us</h1>
-          <div className="w-20 mx-auto border-b-2 border-gray-300 mb-6"></div>
-          <p className="text-lg text-center text-gray-700 leading-relaxed mb-10">
-            Welcome to <span className="font-semibold text-[#a36031]">MuseMarket</span>, your curated destination
+          <div className="w-20 mx-auto border-b-2 border-mutedText mb-6"></div>
+          <p className="text-lg text-center leading-relaxed mb-10">
+            Welcome to <span className="font-semibold text-secondaryText">MuseMarket</span>, your curated destination
             for handcrafted artistry, creative expression, and premium-quality
             goods. We are more than just an e-commerce store — we’re a vibrant
             community that connects passionate artists with appreciative buyers
@@ -53,7 +53,7 @@ const About = () => {
             {products.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-[#fffaf5] border border-[#f0e6dc] rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300"
+                className="bg-cardBg border rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300"
               >
                 <div className="h-44 rounded-t-xl overflow-hidden">
                   <img
@@ -63,7 +63,7 @@ const About = () => {
                   />
                 </div>
                 <div className="p-4 text-center">
-                  <h5 className="text-lg font-semibold text-gray-800">
+                  <h5 className="text-lg font-semibold text-primaryText">
                     {item.title}
                   </h5>
                 </div>

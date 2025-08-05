@@ -4,23 +4,36 @@
 
 
 :root {
-  /* background colors  */
-  --color-primaryLite: #111827;
-  --color-secondaryLite: #3F51B5;
-  --color-teritaryLite: #D26A5E;
+  /* Primary colors  */
+  --color-primaryLite: #8E9B6E;
+  --color-secondaryLite: #D26A5E;
+  --color-teritaryLite: #D4C9B6;
+
+  /* Header & Tabs  */
+  --color-headerBg: #2E2B28;
+  --color-headerButtonBg: #8E9B6E;
+  --color-headerHoverButtonBg: #E7A087;
+  --color-headerTextColor: #FDF8F3;
+
+/* page Background  */
+  --color-pageBg: #FAF7F0;
+  --color-cardBg: #F2EADF;
+  --color-inputBg: #EDEAE2;
 
   /* text colors  */
-  --color-primaryText: #333333;
-  --color-secondaryText: #6E6E6E;
+  --color-primaryText: #1F1D1B;
+  --color-secondaryText: #6B665E;
+  --color-mutedText: #99948D;
+  --color-headingText: #3A2E28;
 
-  /* border color  */
-  --color-primaryborder: #C8C1B7;
-
-  /* input field  */
-  --color-primaryInput: #6D73FF1A;
-
-  --color-white: #F9F6F1;
-  --color-dark: #000000;
-  --color-green: #B4C9A9;
-  --color-yellow: #E2B659;
+  /* button color  */
+  --color-primaryBtn: #D26A5E;
+  --color-secondaryBtn: #8E9B6E;
+  --color-buttonText: #FFFFFF;
+  
+  /* Status Colors */
+  --color-success: #6B8E23;
+  --color-Warning: #F4A261;
+  --color-Error: #B94E4E;
+  --color-Info: #6C7A89;
 }

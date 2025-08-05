@@ -6,6 +6,8 @@ import Products from '../pages/products/Products'
 import About from '../pages/about/About'
 import Contact from '../pages/contact/Contact'
 import ProductCarouselView from '../components/productCarousel/ProductCarouselView'
+import SummaryPage from '../pages/summaryPage/SummaryPage'
+import Orders from '../pages/orders/Orders'
 
 const AppRoutes = [
   {
@@ -13,7 +15,7 @@ const AppRoutes = [
     element: <MainPage />,
     children: [
       {
-        index: true, 
+        index: true,
         element: <Home />
       },
       {
@@ -29,8 +31,16 @@ const AppRoutes = [
         element: <Contact />
       },
       {
+        path: "orders",
+        element: <Orders />
+      },
+      {
         path: "productView",
         element: <ProductCarouselView />
+      },
+      {
+        path: "checkout",
+        element: <SummaryPage />
       },
     ]
   },

@@ -12,16 +12,16 @@ const Login = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="w-full max-w-md bg-white p-8 rounded-primaryRadius shadow-lg relative">
+      <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-primaryText hover:font-medium text-2xl hover:text-teritaryLite "
+          className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-secondaryLite "
           onClick={onClose}
         >
           &times;
         </button>
 
-        <h2 className="text-2xl font-bold text-primaryText mb-6 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-center">
           {isLogin ? 'Login to Your Account' : 'Create a New Account'}
         </h2>
 
@@ -30,30 +30,30 @@ const Login = ({ isOpen, onClose }) => {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+              className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
             />
           )}
           <input
             type="email"
             placeholder="Email"
-            className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+            className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
           />
           <input
             type="password"
             placeholder="Password"
-            className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+            className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
           />
           {!isLogin && (
             <input
               type="password"
               placeholder="Confirm Password"
-              className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
+              className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
             />
           )}
 
           <button
             type="submit"
-            className="mx-auto block bg-teritaryLite text-white font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
+            className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
           >
             {isLogin ? 'Login' : 'Sign Up'}
           </button>
@@ -63,7 +63,7 @@ const Login = ({ isOpen, onClose }) => {
           <p className="text-sm text-secondaryText">
             {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
             <button
-              className="text-teritaryLite font-medium hover:underline"
+              className="text-secondaryLite font-medium hover:underline"
               onClick={() => setIsLogin(!isLogin)}
             >
               {isLogin ? 'Sign up' : 'Login'}

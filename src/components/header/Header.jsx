@@ -1,68 +1,44 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Login from '../../pages/login/Login';
 import Cards from '../../pages/cards/Cards';
 import AddProduct from '../../pages/addProduct/AddProduct';
 import Search from '../search/Search';
-import { useSearch } from '../context/Context';
+import { useSearch } from '../context/SearchContext';
+import { useCart } from '../context/CardContext';
+import { FaLuggageCart } from "react-icons/fa";
+import Orders from '../../pages/orders/Orders';
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const { setSearchQuery } = useSearch();
+  const { cartItems } = useCart();
+  const navigate = useNavigate();
+
+  // Total items in cart
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  // navigate order page
+  const handleOrders = () => {
+    navigate('/orders');
+  }
 
   return (
-    <nav className="flex flex-col lg:flex-row sm:flex-col sm:justify-between sm:items-center gap-4 px-6 py-4 bg-teritaryLite shadow border-b border-primaryborder">
-
-      {/* Left: Logo + Navigation */}
+    <nav className="flex flex-col lg:flex-row sm:flex-col sm:justify-between sm:items-center gap-4 px-6 py-4 bg-headerBg shadow border-b border-primaryborder">
+      {/* Logo and Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-        <h1 className="text-2xl mr-6 font-bold text-green">Muse Market</h1>
+        <h1 className="text-2xl mr-6 font-bold text-teritaryLite">Muse Market</h1>
         <div className="flex gap-6">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primaryText'
-                : 'text-secondaryText hover:text-primaryText'
-            }
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/products"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primaryText'
-                : 'text-secondaryText hover:text-primaryText'
-            }
-          >
-            Product
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primaryText'
-                : 'text-secondaryText hover:text-primaryText'
-            }
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className={({ isActive }) =>
-              isActive
-                ? 'text-primaryText'
-                : 'text-secondaryText hover:text-primaryText'
-            }
-          >
-            Contact
-          </NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? 'text-secondaryLite' : 'text-headerTextColor hover:text-secondaryLite'}>Home</NavLink>
+          <NavLink to="/products" className={({ isActive }) => isActive ? 'text-secondaryLite' : 'text-headerTextColor hover:text-secondaryLite'}>Product</NavLink>
+          <NavLink to="/about" className={({ isActive }) => isActive ? 'text-secondaryLite' : 'text-headerTextColor hover:text-secondaryLite'}>About</NavLink>
+          <NavLink to="/contact" className={({ isActive }) => isActive ? 'text-secondaryLite' : 'text-headerTextColor hover:text-secondaryLite'}>Contact</NavLink>
         </div>
       </div>
 
-      {/* Center: Search */}
+      {/* Search */}
       <div className="w-full sm:w-auto">
         <Search
           placeholder="Search..."
@@ -71,26 +47,36 @@ const Header = () => {
         />
       </div>
 
-      {/* Right: Action Buttons */}
+      {/* Action Buttons */}
       <div className="flex gap-4 flex-wrap sm:flex-nowrap">
         <button
           onClick={() => setShowAddProduct(true)}
-          className="border border-primaryborder hover:bg-primaryborder py-1 px-3 rounded-primaryRadius"
-        >
-          Add Product
-        </button>
+          className="text-headerTextColor bg-headerButtonBg hover:bg-headerHoverButtonBg py-1 px-3 rounded-primaryRadius"
+        >Add Product</button>
+
+        <button
+          onClick={handleOrders}
+          className="text-headerTextColor bg-headerButtonBg hover:bg-headerHoverButtonBg py-1 px-3 rounded-primaryRadius"
+        >Orders</button>
+
         <button
           onClick={() => setShowCard(true)}
-          className="border border-primaryborder hover:bg-primaryborder py-1 px-3 rounded-primaryRadius"
+          className="relative flex items-center gap-1 text-headerTextColor bg-headerButtonBg hover:bg-headerHoverButtonBg py-1 px-3 rounded-primaryRadius"
         >
-          Card <span className="text-primaryText">0</span>
+          <FaLuggageCart />
+          <span >Cart</span>
+
+          {cartItemCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-secondaryLite text-headerTextColor text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              {cartItemCount}
+            </span>
+          )}
         </button>
+
         <button
           onClick={() => setShowLogin(true)}
-          className="border border-primaryborder hover:bg-primaryborder py-1 px-3 rounded-primaryRadius"
-        >
-          Log in
-        </button>
+          className="text-headerTextColor bg-headerButtonBg hover:bg-headerHoverButtonBg py-1 px-3 rounded-primaryRadius"
+        >Log in</button>
       </div>
 
       {/* Modals */}
