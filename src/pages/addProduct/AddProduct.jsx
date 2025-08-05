@@ -1,8 +1,15 @@
 import React, { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 
 const AddProduct = ({ isOpen, onClose }) => {
+    const [productName, setProductName] = useState('');
+    const [productCategory, setProductCategory] = useState('');
+    const [productPrice, setProductPrice] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
-    const fileInputRef = useRef(null); // <-- Reference for file input
+    const fileInputRef = useRef(null);
+
+    // getting product category
+    const categories = useSelector((state) => state.productCategory.productCategory);
 
     if (!isOpen) return null;
 
@@ -13,8 +20,19 @@ const AddProduct = ({ isOpen, onClose }) => {
     const handleFileCancel = () => {
         setSelectedFile(null);
         if (fileInputRef.current) {
-            fileInputRef.current.value = ''; // <-- Reset actual input value
+            fileInputRef.current.value = '';
         }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const product = {
+            name: productName,
+            category: productCategory,
+            price: productPrice,
+            file: selectedFile,
+        };
+        onClose();
     };
 
     return (
@@ -32,31 +50,40 @@ const AddProduct = ({ isOpen, onClose }) => {
                     Add Products
                 </h2>
 
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={handleSubmit}>
 
                     {/* Product Name */}
                     <input
                         type="text"
                         name="name"
                         placeholder="Product Name"
+                        onChange={(e) => setProductName(e.target.value)}
                         className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
                         required
                     />
 
                     {/* Product category */}
-                    <input
-                        type="text"
+                    <select
                         name="category"
-                        placeholder="Product category"
+                        value={productCategory}
+                        onChange={(e) => setProductCategory(e.target.value)}
                         className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
                         required
-                    />
+                    >
+                        <option value="" disabled>Select Category</option>
+                        {categories.map((category, index) => (
+                            <option key={index} value={category}>
+                                {category.charAt(0).toUpperCase() + category.slice(1)}
+                            </option>
+                        ))}
+                    </select>
 
                     {/* Price */}
                     <input
                         type="number"
                         name="price"
                         placeholder="Product price"
+                        onChange={(e) => setProductPrice(e.target.value)}
                         className="w-full px-4 py-2 border border-primaryborder rounded-primaryRadius focus:outline-none focus:ring-2 focus:ring-teritaryLite"
                         required
                     />

@@ -5,6 +5,7 @@ import Login from '../pages/login/Login'
 import Products from '../pages/products/Products'
 import About from '../pages/about/About'
 import Contact from '../pages/contact/Contact'
+import ProductCarouselView from '../components/productCarousel/ProductCarouselView'
 
 const AppRoutes = [
   {
@@ -26,6 +27,10 @@ const AppRoutes = [
       {
         path: "contact",
         element: <Contact />
+      },
+      {
+        path: "productView",
+        element: <ProductCarouselView />
       },
     ]
   },

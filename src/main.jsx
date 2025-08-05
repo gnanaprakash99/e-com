@@ -4,11 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux';
 import store from './store/Store.js';
+import { SearchProvider } from './components/context/Context.jsx';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <StrictMode>
-      <App />
-    </StrictMode>
+    <SearchProvider>
+      <StrictMode>
+        <App />
+      </StrictMode>
+    </SearchProvider>
   </Provider>,
 )
