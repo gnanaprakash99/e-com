@@ -19,6 +19,8 @@
   --color-pageBg: #FAF7F0;
   --color-cardBg: #F2EADF;
   --color-inputBg: #EDEAE2;
+  --color-cardShadow: #000000;
+  --color-hoverCardShadow: #000000;
 
   /* text colors  */
   --color-primaryText: #1F1D1B;
@@ -30,6 +32,7 @@
   --color-primaryBtn: #D26A5E;
   --color-secondaryBtn: #8E9B6E;
   --color-buttonText: #FFFFFF;
+  --color-deleteBtn: #DC3545;
   
   /* Status Colors */
   --color-success: #6B8E23;

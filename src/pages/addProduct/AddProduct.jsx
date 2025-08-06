@@ -1,73 +1,108 @@
 import React, { useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProduct } from '../../store/slice/ProductCarouselSlice';
+
+
+const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
+};
 
 const AddProduct = ({ isOpen, onClose }) => {
     const [productName, setProductName] = useState('');
     const [productCategory, setProductCategory] = useState('');
     const [productPrice, setProductPrice] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [productDescription, setProductDescription] = useState('');
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const fileInputRef = useRef(null);
+    const dispatch = useDispatch();
 
-    // getting product category
     const categories = useSelector((state) => state.productCategory.productCategory);
 
     if (!isOpen) return null;
 
     const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]);
+        const files = Array.from(e.target.files);
+        const totalFiles = selectedFiles.length + files.length;
+
+        if (totalFiles > 10) {
+            alert('You can upload up to 10 images only.');
+            return;
+        }
+
+        setSelectedFiles((prev) => [...prev, ...files]);
     };
 
-    const handleFileCancel = () => {
-        setSelectedFile(null);
+    const handleFileRemove = (index) => {
+        const updatedFiles = [...selectedFiles];
+        updatedFiles.splice(index, 1);
+        setSelectedFiles(updatedFiles);
+    };
+
+    const handleClearAll = () => {
+        setSelectedFiles([]);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const product = {
+
+        const base64Images = await Promise.all(
+            selectedFiles.map(file => convertToBase64(file))
+        );
+
+        const newProduct = {
             name: productName,
             category: productCategory,
-            price: productPrice,
-            file: selectedFile,
+            price: Number(productPrice),
+            description: productDescription,
+            images: base64Images
         };
+
+        dispatch(addProduct(newProduct));
+
+        // Clear form
+        setProductName('');
+        setProductCategory('');
+        setProductPrice('');
+        setProductDescription('');
+        setSelectedFiles([]);
+        fileInputRef.current.value = '';
         onClose();
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
-                {/* Modal Close Button */}
                 <button
-                    className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-primaryBtn"
+                    className="absolute top-4 right-4 text-2xl hover:text-primaryBtn"
                     onClick={onClose}
                 >
                     &times;
                 </button>
 
-                <h2 className="text-2xl font-bold mb-6 text-center">
-                    Add Products
-                </h2>
+                <h2 className="text-2xl font-bold mb-6 text-center">Add Products</h2>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
-
-                    {/* Product Name */}
                     <input
                         type="text"
-                        name="name"
                         placeholder="Product Name"
+                        value={productName}
                         onChange={(e) => setProductName(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
                         required
                     />
 
-                    {/* Product category */}
                     <select
-                        name="category"
                         value={productCategory}
                         onChange={(e) => setProductCategory(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
                         required
                     >
                         <option value="" disabled>Select Category</option>
@@ -78,49 +113,64 @@ const AddProduct = ({ isOpen, onClose }) => {
                         ))}
                     </select>
 
-                    {/* Price */}
                     <input
                         type="number"
-                        name="price"
-                        placeholder="Product price"
+                        placeholder="Product Price"
+                        value={productPrice}
                         onChange={(e) => setProductPrice(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
                         required
                     />
 
-                    {/* Product Description */}
                     <textarea
-                        name="description"
                         placeholder="Product Description"
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                        value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
                         required
                     />
 
-                    {/* File Upload w */}
-                    <div className="relative w-full">
+                    <div className="space-y-2">
                         <input
                             type="file"
-                            name="image"
+                            multiple
+                            accept="image/*"
                             ref={fileInputRef}
                             onChange={handleFileChange}
                             className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius"
                         />
-                        {selectedFile && (
-                            <button
-                                type="button"
-                                onClick={handleFileCancel}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-inputBg text-xl font-bold hover:text-teritaryLite"
-                                title="Cancel file"
-                            >
-                                &times;
-                            </button>
+                        {selectedFiles.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                                {selectedFiles.map((file, index) => (
+                                    <div key={index} className="relative">
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt={`preview-${index}`}
+                                            className="w-16 h-16 object-cover rounded border"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleFileRemove(index)}
+                                            className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                                <button
+                                    type="button"
+                                    onClick={handleClearAll}
+                                    className="text-sm text-tertiaryLite underline mt-2"
+                                >
+                                    Clear All
+                                </button>
+                            </div>
                         )}
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
-                        className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
+                        className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius"
                     >
                         Submit
                     </button>

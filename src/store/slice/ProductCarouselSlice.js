@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let initialState = {
-    ProductData: [
+const defaultProducts = [
         // Fashion
         { id: 1, name: 'Men’s T-Shirt', category: 'fashion', price: 599, description: 'Cotton crew neck t-shirt', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
         { id: 2, name: 'Women’s Kurti', category: 'fashion', price: 999, description: 'Printed kurti for casual wear', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
@@ -11,10 +10,10 @@ let initialState = {
 
         // Appliances
         { id: 6, name: 'Air Conditioner', category: 'appliances', price: 32999, description: '1.5 Ton Split AC with inverter technology', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
-        { id: 7, name: 'Washing Machine', category: 'appliances', price: 18999, description: 'Front load washing machine with smart inverter', image: 'https://images.unsplash.com/photo-1545249394-066c6c134f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
-        { id: 8, name: 'Refrigerator', category: 'appliances', price: 22999, description: 'Double door fridge with frost free technology', image: 'fridge.jpg' },
-        { id: 9, name: 'Microwave Oven', category: 'appliances', price: 8999, description: 'Convection microwave for fast cooking', image: 'microwave.jpg' },
-        { id: 10, name: 'Dishwasher', category: 'appliances', price: 27999, description: '12 place setting dishwasher', image: 'dishwasher.jpg' },
+        { id: 7, name: 'Washing Machine', category: 'appliances', price: 18999, description: 'Front load washing machine with smart inverter', image: ['https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80','https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'] },
+        { id: 8, name: 'Refrigerator', category: 'appliances', price: 22999, description: 'Double door fridge with frost free technology', image: ['https://images.unsplash.com/photo-1590080877789-cdb875cd7c44?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'] },
+        { id: 9, name: 'Microwave Oven', category: 'appliances', price: 8999, description: 'Convection microwave for fast cooking', image: 'https://images.unsplash.com/photo-1545249394-066c6c134f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
+        { id: 10, name: 'Dishwasher', category: 'appliances', price: 27999, description: '12 place setting dishwasher', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80' },
 
         // Mobiles
         { id: 11, name: 'iPhone 15', category: 'mobiles', price: 79999, description: 'Latest Apple iPhone with A17 Bionic chip', image: 'iphone15.jpg' },
@@ -72,17 +71,45 @@ let initialState = {
         { id: 49, name: 'Digital Thermometer', category: 'pharmacy', price: 299, description: 'Fast and accurate temperature check', image: 'thermometer.jpg' },
         { id: 50, name: 'First Aid Kit', category: 'pharmacy', price: 499, description: 'Essential emergency items', image: 'firstaid.jpg' }
     ]
-}
+
+// Products from localStorage
+const storedData = JSON.parse(localStorage.getItem("productData")) || [];
+
+// Merge while ensuring no duplicate `id`s
+const mergedProducts = [
+  ...defaultProducts,
+  ...storedData.filter(newProd =>
+    !defaultProducts.some(defaultProd => defaultProd.id === newProd.id)
+  )
+];
+
+const initialState = {
+  ProductData: mergedProducts,
+};
 
 const productCarouselSlice = createSlice({
-    name: 'ProductData',
-    initialState,
-    reducers: {
-        setProductData: ((state, action) => {
-            state.ProductData = action.payload || []
-        }),
-    }
-})
+  name: 'ProductData',
+  initialState,
+  reducers: {
+    setProductData: (state, action) => {
+      state.ProductData = action.payload || [];
+      localStorage.setItem("productData", JSON.stringify(
+        state.ProductData.filter(prod => prod.id > 50) // only store new
+      ));
+    },
+    addProduct: (state, action) => {
+      const newProduct = {
+        ...action.payload,
+        id: state.ProductData.length + 1
+      };
+      state.ProductData.push(newProduct);
 
-export const { setProductData } = productCarouselSlice.actions;
+      // Save only the added (non-default) products to localStorage
+      const newProductsOnly = state.ProductData.filter(p => p.id > 50);
+      localStorage.setItem("productData", JSON.stringify(newProductsOnly));
+    },
+  }
+});
+
+export const { setProductData, addProduct } = productCarouselSlice.actions;
 export default productCarouselSlice.reducer;

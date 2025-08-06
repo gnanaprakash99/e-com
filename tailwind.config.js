@@ -24,10 +24,15 @@ export default {
         primaryBtn: "var(--color-primaryBtn)",
         secondaryBtn: "var(--color-secondaryBtn)",
         buttonText: "var(--color-buttonText)",
+        deleteBtn: "var(--color-deleteBtn)",
         success: "var(--color-success)",
         Warning: "var(--color-Warning)",
         Error: "var(--color-Error)",
         Info: "var(--color-Info)",
+      },
+      boxShadow: {
+        cardShadow: '0 4px 20px var(--color-cardShadow)',
+        hoverCardShadow: '0 8px 30px var(--color-hoverCardShadow)',
       },
       borderRadius: {
         primaryRadius: '16px',

@@ -1,16 +1,30 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useCategory } from '../context/CategoryContext';
 
 const CategoryBar = () => {
     const categories = useSelector((state) => state.productCategory.productCategory);
+    const { selectedCategory, setSelectedCategory } = useCategory();
 
     return (
         <div className="flex mt-3 justify-center">
             <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 py-2 scrollbar-hide">
+                {/* All button */}
+                <button
+                    onClick={() => setSelectedCategory('')}
+                    className={`text-primaryText px-3 shrink-0 pb-1 border-b-2 transition-all duration-300 ease-in-out ${selectedCategory === '' ? 'border-secondaryLite font-semibold' : 'border-transparent'
+                        }`}
+                >
+                    All
+                </button>
+
+                {/* Category buttons */}
                 {categories.map((item, index) => (
                     <button
                         key={index}
-                        className="bg-primaryBtn text-buttonText px-4 py-2 rounded-primaryRadius shrink-0"
+                        onClick={() => setSelectedCategory(item)}
+                        className={`text-primaryText px-3 shrink-0 pb-1 border-b-2 transition-all duration-300 ease-in-out ${selectedCategory === item ? 'border-secondaryLite font-semibold' : 'border-transparent'
+                            }`}
                     >
                         {item}
                     </button>

@@ -1,21 +1,35 @@
-import { useMemo,useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
+import { useCategory } from '../context/CategoryContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import ProductImageRotator from './ProductImageRotator';
 
 const ProductCarousel = () => {
   const navigate = useNavigate();
   const { searchQuery } = useSearch();
-  const products = useSelector(state => state.ProductData.ProductData || []);
+  const { selectedCategory } = useCategory();
+  const products = useSelector(state => state.ProductData.ProductData);
 
-  // Filter products by search query
+  // Filter products by search query and category bar
   const filteredProducts = useMemo(() => {
-    return products.filter((product) =>
-      product.name?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [products, searchQuery]);
+    const query = searchQuery.toLowerCase();
+
+    return products.filter((product) => {
+      const matchesQuery =
+        product.name.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query);
+
+      const matchesCategory = selectedCategory
+        ? product.category.toLowerCase().trim() === selectedCategory.toLowerCase().trim()
+        : true;
+
+
+      return matchesQuery && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
 
   // Handle view button
   const handleView = (product) => {
@@ -23,10 +37,10 @@ const ProductCarousel = () => {
   };
 
   // animation effect
-    useEffect(() => {
+  useEffect(() => {
     AOS.init({
       duration: 800,
-      once: true, 
+      once: true,
     });
   }, []);
 
@@ -36,15 +50,12 @@ const ProductCarousel = () => {
         <div
           key={index}
           data-aos="fade-up"
-          className="w-full max-w-sm bg-cardBg border border-primaryborder rounded-primaryRadius hover:shadow-2xl duration-300 transition-shadow shadow-lg"
+          className="w-full max-w-sm bg-cardBg border border-primaryborder rounded-primaryRadius duration-300 transition-shadow shadow-cardShadow hover:shadow-hoverCardShadow"
         >
-          <a href="#">
-            <img
-              className="p-5 rounded-t-primaryRadius w-full text-mutedText h-60 object-cover"
-              src={item.image}
-              alt={item.name}
-            />
-          </a>
+
+          {/* Image Carousel */}
+          <ProductImageRotator images={item.image} name={item.name} />
+
           <div className="px-5 pb-3">
             <a href="#">
               <h5 className="text-xl text-primaryText text-center font-semibold tracking-tight">{item.name}</h5>
