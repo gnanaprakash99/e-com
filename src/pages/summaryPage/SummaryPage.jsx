@@ -2,8 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../components/context/CardContext";
 import PaymentMethodSection from "./PaymentMethod";
-
-const indianStates = ["Tamil Nadu", "Karnataka", "Kerala", "Maharashtra", "Delhi"];
+import IndianStates from "../../utils/IndianStates";
 
 const SummaryPage = () => {
     const { cartItems, incrementQuantity, decrementQuantity } = useCart();
@@ -99,7 +98,6 @@ const SummaryPage = () => {
                                             required
                                             className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
                                         >
-                                            <option value="">Choose...</option>
                                             <option value="India">India</option>
                                         </select>
 
@@ -108,9 +106,8 @@ const SummaryPage = () => {
                                             required
                                             className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
                                         >
-                                            <option value="">Choose...</option>
-                                            {indianStates.map((s) => (
-                                                <option key={s}>{s}</option>
+                                            {IndianStates.map((s) => (
+                                                <option key={s} value={s}>{s}</option>
                                             ))}
                                         </select>
                                     </div>

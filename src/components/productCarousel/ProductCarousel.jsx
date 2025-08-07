@@ -6,12 +6,16 @@ import { useCategory } from '../context/CategoryContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ProductImageRotator from './ProductImageRotator';
+import useProductCarousel from '../../hooks/useProductCarousel';
 
 const ProductCarousel = () => {
   const navigate = useNavigate();
   const { searchQuery } = useSearch();
   const { selectedCategory } = useCategory();
   const products = useSelector(state => state.ProductData.ProductData);
+
+  // calling hooks
+  const { isLoading, isError } = useProductCarousel();
 
   // Filter products by search query and category bar
   const filteredProducts = useMemo(() => {

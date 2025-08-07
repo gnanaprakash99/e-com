@@ -76,12 +76,15 @@ const defaultProducts = [
 const storedData = JSON.parse(localStorage.getItem("productData")) || [];
 
 // Merge while ensuring no duplicate `id`s
+const normalizeImage = (img) => Array.isArray(img) ? img : [img];
+
 const mergedProducts = [
-  ...defaultProducts,
-  ...storedData.filter(newProd =>
-    !defaultProducts.some(defaultProd => defaultProd.id === newProd.id)
-  )
+  ...defaultProducts.map(p => ({ ...p, image: normalizeImage(p.image) })),
+  ...storedData
+    .filter(newProd => !defaultProducts.some(d => d.id === newProd.id))
+    .map(p => ({ ...p, image: normalizeImage(p.image) }))
 ];
+
 
 const initialState = {
   ProductData: mergedProducts,
@@ -92,23 +95,31 @@ const productCarouselSlice = createSlice({
   initialState,
   reducers: {
     setProductData: (state, action) => {
-      state.ProductData = action.payload || [];
-      localStorage.setItem("productData", JSON.stringify(
-        state.ProductData.filter(prod => prod.id > 50) // only store new
-      ));
+      const newProducts = action.payload || [];
+
+      // Merge without duplication
+      const all = [
+        ...state.ProductData,
+        ...newProducts.filter(p => !state.ProductData.some(d => d.id === p.id))
+      ];
+
+      state.ProductData = all;
+
+      const newOnly = all.filter(p => p.id > 50);
+      localStorage.setItem("productData", JSON.stringify(newOnly));
     },
+
     addProduct: (state, action) => {
       const newProduct = {
         ...action.payload,
-        id: state.ProductData.length + 1
+        id: state.ProductData.length + 1,
       };
       state.ProductData.push(newProduct);
 
-      // Save only the added (non-default) products to localStorage
-      const newProductsOnly = state.ProductData.filter(p => p.id > 50);
-      localStorage.setItem("productData", JSON.stringify(newProductsOnly));
+      const newOnly = state.ProductData.filter(p => p.id > 50);
+      localStorage.setItem("productData", JSON.stringify(newOnly));
     },
-  }
+  },
 });
 
 export const { setProductData, addProduct } = productCarouselSlice.actions;
