@@ -8,6 +8,7 @@ import Contact from '../pages/contact/Contact'
 import ProductCarouselView from '../components/productCarousel/ProductCarouselView'
 import SummaryPage from '../pages/summaryPage/SummaryPage'
 import Orders from '../pages/orders/Orders'
+import Profile from '../pages/profile/Profile'
 
 const AppRoutes = [
   {
@@ -41,6 +42,10 @@ const AppRoutes = [
       {
         path: "checkout",
         element: <SummaryPage />
+      },
+      {
+        path: "profile",
+        element: <Profile />
       },
     ]
   },

@@ -10,12 +10,11 @@ const ProductImageRotator = ({ images, name }) => {
         if (imageList.length <= 1) return;
 
         const interval = setInterval(() => {
-            setFade(false); 
-
+            setFade(false);
             setTimeout(() => {
-                setIndex((prev) => (prev + 1) % imageList.length); // Switch image
-                setFade(true); 
-            }, 500); 
+                setIndex((prev) => (prev + 1) % imageList.length);
+                setFade(true);
+            }, 500);
         }, 5000);
 
         return () => clearInterval(interval);
@@ -23,7 +22,7 @@ const ProductImageRotator = ({ images, name }) => {
 
     return (
         <img
-            className={`p-5 rounded-t-primaryRadius w-full text-mutedText h-60 object-cover transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
+            className={`rounded-t-primaryRadius w-full h-60 object-contain transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
             src={imageList[index]}
             alt={name}
         />

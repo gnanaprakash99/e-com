@@ -50,23 +50,21 @@ const ProductCarousel = () => {
         <div
           key={index}
           data-aos="fade-up"
-          className="w-full max-w-sm bg-cardBg border border-primaryborder rounded-primaryRadius duration-300 transition-shadow shadow-cardShadow hover:shadow-hoverCardShadow"
+          className="w-full max-w-xs text-primaryText bg-productCardBg border border-productCartBorder rounded-primaryRadius duration-300 transition-shadow shadow-cardShadow hover:shadow-hoverCardShadow"
         >
-
           {/* Image Carousel */}
           <ProductImageRotator images={item.image} name={item.name} />
 
-          <div className="px-5 pb-3">
+          <div className="px-3 pb-2">
             <a href="#">
-              <h5 className="text-xl text-primaryText text-center font-semibold tracking-tight">{item.name}</h5>
+              <h5 className="text-lg text-primaryText text-center font-semibold tracking-tight">{item.name}</h5>
             </a>
-            <div className="flex items-center my-3">
+            <div className="flex items-center my-2">
               <div className="flex items-center space-x-1 rtl:space-x-reverse">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-4 h-4 ${i < Math.round(item.rating) ? 'text-secondaryLite' : 'text-mutedText'
-                      }`}
+                    className={`w-3.5 h-3.5 ${i < Math.round(item.rating) ? 'text-primaryLite' : 'text-productCartMutedcolor'}`}
                     fill="currentColor"
                     viewBox="0 0 22 20"
                   >
@@ -74,16 +72,16 @@ const ProductCarousel = () => {
                   </svg>
                 ))}
               </div>
-              <span className="bg-teritaryLite text-secondaryLite text-xs font-semibold px-2.5 py-0.5 rounded-sm ml-2">
+              <span className="bg-secondaryLite text-productCartRatingText text-xs font-semibold px-2 py-0.5 rounded-sm ml-2">
                 {item.rating?.toFixed(1) || "0.0"}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-primaryText">₹{item.price}</span>
-              <div className="flex gap-2">
+              <span className="text-lg font-bold text-primaryText">₹{item.price}</span>
+              <div className="flex gap-1">
                 <button
                   onClick={() => handleView(item)}
-                  className="text-buttonText border bg-primaryBtn font-medium rounded-primaryRadius px-4 py-2"
+                  className="text-buttonText border bg-primaryBtn text-sm font-medium rounded-primaryRadius px-3 py-1.5"
                 >
                   View
                 </button>

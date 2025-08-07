@@ -11,16 +11,29 @@
 
   /* Header & Tabs  */
   --color-headerBg: #2E2B28;
-  --color-headerButtonBg: #8E9B6E;
-  --color-headerHoverButtonBg: #E7A087;
+  --color-headerHeading: #FFFFFF;
   --color-headerTextColor: #FDF8F3;
+  --color-headerSelectedNavText: #D26A5E;
+  --color-headerHoverNavText: #D26A5E;
+  --color-headerHoverBtnText: #000000;
+  --color-headerHoverBtnBg: #FFFFFF;
+  --color-headerBtnBorder: #FDF8F3;
+
+  /* search input  */
+  --color-searchInputBg: #EDEAE2;
+
+  /* product cart  */
+  --color-productCardBg: #FFFFFF;
+  --color-cardShadow: #000000;
+  --color-hoverCardShadow: #000000;
+  --color-productCartBorder: #99948D;
+  --color-productCartMutedcolor: #99948D;
+  --color-productCartRatingText: #FFFFFF;
 
 /* page Background  */
   --color-pageBg: #FAF7F0;
   --color-cardBg: #F2EADF;
   --color-inputBg: #EDEAE2;
-  --color-cardShadow: #000000;
-  --color-hoverCardShadow: #000000;
 
   /* text colors  */
   --color-primaryText: #1F1D1B;
@@ -33,6 +46,8 @@
   --color-secondaryBtn: #8E9B6E;
   --color-buttonText: #FFFFFF;
   --color-deleteBtn: #DC3545;
+  --color-hoverBtnBg: #FFFFFF;
+  --color-hoverBtnText: #000000;
   
   /* Status Colors */
   --color-success: #6B8E23;

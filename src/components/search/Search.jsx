@@ -27,7 +27,7 @@ const Search = ({ placeholder, onChange, className, suggestions = [] }) => {
                 onFocus={() => setFocus(true)}
                 onBlur={() => setTimeout(() => setFocus(false), 100)}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-2 rounded-primaryRadius border outline-none bg-inputBg"
+                className="w-full pl-10 pr-4 py-2 rounded-primaryRadius border outline-none bg-searchInputBg"
             />
             {focus && filteredSuggestions.length > 0 && (
                 <ul className="absolute z-10 bg-white border mt-1 w-full rounded shadow-lg max-h-40 overflow-hidden">

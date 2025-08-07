@@ -34,10 +34,17 @@ const AddProduct = ({ isOpen, onClose }) => {
             return;
         }
 
-        setSelectedFiles((prev) => [...prev, ...files]);
+        const filesWithPreviews = files.map(file => ({
+            file,
+            preview: URL.createObjectURL(file)
+        }));
+
+        setSelectedFiles((prev) => [...prev, ...filesWithPreviews]);
     };
 
     const handleFileRemove = (index) => {
+        const fileToRemove = selectedFiles[index];
+        URL.revokeObjectURL(fileToRemove.preview); // Revoke preview
         const updatedFiles = [...selectedFiles];
         updatedFiles.splice(index, 1);
         setSelectedFiles(updatedFiles);

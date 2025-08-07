@@ -141,7 +141,7 @@ const SummaryPage = () => {
                     {/* Order Summary */}
                     <div className="w-full lg:w-1/3">
                         <div className="bg-cardBg text-primaryText rounded-primaryRadius shadow-md">
-                            <div className="bg-teritaryLite text-center px-6 py-4 rounded-t-xl">
+                            <div className="bg-secondaryLite text-center px-6 py-4 rounded-t-xl">
                                 <h3 className="text-lg font-semibold">Order Summary</h3>
                             </div>
                             <div className="p-6 space-y-4">

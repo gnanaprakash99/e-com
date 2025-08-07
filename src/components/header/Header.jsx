@@ -21,6 +21,10 @@ const Header = () => {
   const navigate = useNavigate();
   const [isMobileMenu, setIsMobileMenu] = useState(false);
 
+  // login
+  const generatedImage = `https://avatar.iran.liara.run/username`;
+  const isLogin = true
+
   // permissions
   const permissions = getPermissions();
 
@@ -41,8 +45,14 @@ const Header = () => {
 
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  // order page navigation
   const handleOrders = () => {
     navigate('/orders');
+  };
+
+  // profile page navigation
+  const handleProfile = () => {
+    navigate('/profile');
   };
 
   return (
@@ -52,14 +62,14 @@ const Header = () => {
         <div className=" gap-3 flex sm:justify-evenly">
           <div className=" gap-3 flex sm:flex-col md:flex-row">
             {/* Logo */}
-            <h1 className="text-2xl font-bold text-teritaryLite">Muse Market</h1>
+            <h1 className="text-2xl font-bold text-headerHeading">Muse Market</h1>
 
             {/* Nav Links */}
             <div className=" gap-3 flex items-center">
-              <NavLink to="/" className={({ isActive }) => isActive ? 'text-secondaryLite px-2' : 'text-headerTextColor hover:text-secondaryLite px-2'}>Home</NavLink>
-              <NavLink to="/products" className={({ isActive }) => isActive ? 'text-secondaryLite' : 'text-headerTextColor hover:text-secondaryLite'}>Product</NavLink>
-              <NavLink to="/about" className={({ isActive }) => isActive ? 'text-secondaryLite px-2' : 'text-headerTextColor hover:text-secondaryLite px-2'}>About</NavLink>
-              <NavLink to="/contact" className={({ isActive }) => isActive ? 'text-secondaryLite ' : 'text-headerTextColor hover:text-secondaryLite'}>Contact</NavLink>
+              <NavLink to="/" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>Home</NavLink>
+              <NavLink to="/products" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Product</NavLink>
+              <NavLink to="/about" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>About</NavLink>
+              <NavLink to="/contact" className={({ isActive }) => isActive ? 'text-headerHoverNavText ' : 'text-headerTextColor hover:text-headerHoverNavText'}>Contact</NavLink>
             </div>
           </div>
 
@@ -68,7 +78,7 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(prev => !prev)}
-                className="border border-headerTextColor px-3 py-2 rounded-primaryRadius text-headerTextColor hover:bg-headerButtonBg"
+                className="border border-headerBtnBorder px-3 py-2 rounded-primaryRadius text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText"
               >
                 <AiOutlineMenu />
               </button>
@@ -79,20 +89,20 @@ const Header = () => {
                     {!permissions.AddProduct && (
                       <button
                         onClick={() => { setShowAddProduct(true); setIsDropdownOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerButtonBg"
+                        className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText transition duration-300 ease-in-out transform hover:scale-[1.03]"
                       >
                         Add Product
                       </button>
                     )}
                     <button
                       onClick={() => { handleOrders(); setIsDropdownOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerButtonBg"
+                      className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText transition duration-300 ease-in-out transform hover:scale-[1.03]"
                     >
                       Orders
                     </button>
                     <button
                       onClick={() => { setShowCard(true); setIsDropdownOpen(false); }}
-                      className="relative flex items-center gap-1 px-4 py-2 text-sm text-headerTextColor hover:bg-headerButtonBg w-full"
+                      className="relative flex items-center gap-1 px-4 py-2 text-sm text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText w-full transition duration-300 ease-in-out transform hover:scale-[1.03]"
                     >
                       <FaLuggageCart />
                       <span>Cart</span>
@@ -102,12 +112,25 @@ const Header = () => {
                         </span>
                       )}
                     </button>
-                    <button
-                      onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerButtonBg"
-                    >
-                      Log in
-                    </button>
+                    {isLogin && isMobileMenu ? (
+                      <button
+                        onClick={() => { handleProfile(); setIsDropdownOpen(false); }}
+                        className="w-full flex items-center gap-3 font-semibold text-left px-3 py-1 text-sm text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText transition duration-300 ease-in-out transform hover:scale-[1.03]"
+                      >
+                        <img
+                          src={generatedImage}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
+                        /> YOU
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
+                        className="w-full text-left px-4 py-2 text-sm text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText transition duration-300 ease-in-out transform hover:scale-[1.03]"
+                      >
+                        Log in
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -127,11 +150,11 @@ const Header = () => {
 
         {/* Buttons - Only show on lg and above */}
         {!isMobileMenu && (
-          <div className="flex flex-wrap gap-3 justify-start sm:justify-end">
+          <div className="flex gap-3 justify-start sm:justify-end">
             {!permissions.AddProduct && (
               <button
                 onClick={() => setShowAddProduct(true)}
-                className="text-headerTextColor border border-headerTextColor hover:bg-headerButtonBg py-1 px-3 rounded-primaryRadius"
+                className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
               >
                 Add Product
               </button>
@@ -139,14 +162,14 @@ const Header = () => {
 
             <button
               onClick={handleOrders}
-              className="text-headerTextColor border border-headerTextColor hover:bg-headerButtonBg py-1 px-3 rounded-primaryRadius"
+              className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
             >
               Orders
             </button>
 
             <button
               onClick={() => setShowCard(true)}
-              className="relative flex items-center gap-1 text-headerTextColor border border-headerTextColor hover:bg-headerButtonBg py-1 px-3 rounded-primaryRadius"
+              className="relative flex items-center gap-1 text-headerBtnBorder border border-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
             >
               <FaLuggageCart />
               <span>Cart</span>
@@ -156,13 +179,25 @@ const Header = () => {
                 </span>
               )}
             </button>
-
-            <button
-              onClick={() => setShowLogin(true)}
-              className="text-headerTextColor border border-headerTextColor hover:bg-headerButtonBg py-1 px-3 rounded-primaryRadius"
-            >
-              Log in
-            </button>
+            {isLogin && !isMobileMenu ? (
+              <button
+                onClick={handleProfile}
+                className=" text-left px-3 py-1 text-sm text-headerTextColor "
+              >
+                <img
+                  src={generatedImage}
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
+                />
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowLogin(true)}
+                className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
+              >
+                Log in
+              </button>
+            )}
           </div>
         )}
       </div>

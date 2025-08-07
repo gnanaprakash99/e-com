@@ -2,10 +2,12 @@ const permissions = {
     admin: {
         addProduct: true,
         deleteProduct: true,
+        controlPanel: true,
     },
     user: {
         addProduct: false,
         deleteProduct: false,
+        controlPanel: false,
     },
 };
 

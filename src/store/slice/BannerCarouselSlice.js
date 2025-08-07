@@ -29,11 +29,21 @@ const BannerCarouselSlice = createSlice({
     name: 'bannerCarouselData',
     initialState,
     reducers: {
-        setBannerCarousel: ((state, action) => {
+        setBannerCarousel: (state, action) => {
             state.bannerCarouselData = action.payload || []
-        }),
+        },
+        addBanner: (state, action) => {
+            const newBanner = {
+                id: Date.now(),
+                Imgsrc: action.payload,
+            };
+            state.bannerCarouselData.push(newBanner);
+        },
+        removeBanner: (state, action) => {
+            state.bannerCarouselData = state.bannerCarouselData.filter(b => b.id !== action.payload);
+        }
     }
-})
+});
 
-export const { setBannerCarousel } = BannerCarouselSlice.actions;
+export const { setBannerCarousel, addBanner, removeBanner } = BannerCarouselSlice.actions;
 export default BannerCarouselSlice.reducer;
