@@ -11,11 +11,13 @@ const Search = ({ placeholder, onChange, className, suggestions = [] }) => {
         onChange(e);
     };
 
-    const filteredSuggestions = suggestions.filter(
-        (item) =>
-            item.toLowerCase().includes(input.toLowerCase()) &&
+    const filteredSuggestions = suggestions
+        .filter(Boolean) // remove null/undefined
+        .filter((item) =>
+            String(item).toLowerCase().includes(input.toLowerCase()) &&
             input.length > 1
-    );
+        );
+
 
     return (
         <div className={`relative rounded-primaryRadius w-full ${className}`}>

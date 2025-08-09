@@ -43,14 +43,16 @@ export default {
         hoverBtnBg: "var(--color-hoverBtnBg)",
         hoverBtnText: "var(--color-hoverBtnText)",
         
+        ratingStarcolor: "var(--color-ratingStarcolor)",
+
         success: "var(--color-success)",
         Warning: "var(--color-Warning)",
         Error: "var(--color-Error)",
         Info: "var(--color-Info)",
       },
       boxShadow: {
-        cardShadow: '0 4px 20px var(--color-cardShadow)',
-        hoverCardShadow: '0 8px 30px var(--color-hoverCardShadow)',
+        cardShadow: '0 1px 2px var(--color-cardShadow)',
+        hoverCardShadow: '0 4px 8px var(--color-hoverCardShadow)',
       },
       borderRadius: {
         primaryRadius: '16px',
