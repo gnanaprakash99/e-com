@@ -53,7 +53,7 @@ const ProductCarouselView = () => {
                 <img
                     src={images[currentIndex]}
                     alt={`Product Image ${currentIndex + 1}`}
-                    className="w-full max-w-lg object-cover rounded-lg shadow"
+                    className="w-full max-w-lg object-cover rounded-primaryRadius bg-productCardBg p-10 shadow"
                 />
 
                 {images.length > 1 && (
@@ -79,7 +79,7 @@ const ProductCarouselView = () => {
 
             {/* Right Side: Details */}
             <div className="w-full md:w-1/2 flex flex-col justify-center gap-4">
-                <h1 className="text-4xl font-bold">{product.name}</h1>
+                <h1 className="text-4xl font-bold">{product.name || product.title}</h1>
                 <p className="text-xl text-secondaryText">Category: {product.category}</p>
                 <p className="text-3xl font-semibold">₹{product.price}</p>
 

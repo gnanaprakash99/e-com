@@ -22,7 +22,7 @@ const ProductImageRotator = ({ images, name }) => {
 
     return (
         <img
-            className={`rounded-t-primaryRadius w-full h-60 object-contain transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
+            className={`rounded-t-primaryRadius p-5 w-full h-60 object-contain transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
             src={imageList[index]}
             alt={name}
         />

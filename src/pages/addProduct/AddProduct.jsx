@@ -44,7 +44,7 @@ const AddProduct = ({ isOpen, onClose }) => {
 
     const handleFileRemove = (index) => {
         const fileToRemove = selectedFiles[index];
-        URL.revokeObjectURL(fileToRemove.preview); // Revoke preview
+        URL.revokeObjectURL(fileToRemove.preview);
         const updatedFiles = [...selectedFiles];
         updatedFiles.splice(index, 1);
         setSelectedFiles(updatedFiles);
@@ -61,7 +61,7 @@ const AddProduct = ({ isOpen, onClose }) => {
         e.preventDefault();
 
         const base64Images = await Promise.all(
-            selectedFiles.map(file => convertToBase64(file))
+            selectedFiles.map(fileObj => convertToBase64(fileObj.file))
         );
 
         const newProduct = {
@@ -146,33 +146,22 @@ const AddProduct = ({ isOpen, onClose }) => {
                             onChange={handleFileChange}
                             className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius"
                         />
-                        {selectedFiles.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                                {selectedFiles.map((file, index) => (
-                                    <div key={index} className="relative">
-                                        <img
-                                            src={URL.createObjectURL(file)}
-                                            alt={`preview-${index}`}
-                                            className="w-16 h-16 object-cover rounded border"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => handleFileRemove(index)}
-                                            className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
+                        {selectedFiles.map((fileObj, index) => (
+                            <div key={index} className="relative">
+                                <img
+                                    src={fileObj.preview}
+                                    alt={`preview-${index}`}
+                                    className="w-16 h-16 object-cover rounded border"
+                                />
                                 <button
                                     type="button"
-                                    onClick={handleClearAll}
-                                    className="text-sm text-tertiaryLite underline mt-2"
+                                    onClick={() => handleFileRemove(index)}
+                                    className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
                                 >
-                                    Clear All
+                                    ×
                                 </button>
                             </div>
-                        )}
+                        ))}
                     </div>
 
                     <button

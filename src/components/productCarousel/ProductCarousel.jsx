@@ -19,17 +19,18 @@ const ProductCarousel = () => {
 
   // Filter products by search query and category bar
   const filteredProducts = useMemo(() => {
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery?.toLowerCase?.() || "";
 
     return products.filter((product) => {
+      const name = product?.name?.toLowerCase?.() || "";
+      const category = product?.category?.toLowerCase?.() || "";
+
       const matchesQuery =
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query);
+        name.includes(query) || category.includes(query);
 
       const matchesCategory = selectedCategory
-        ? product.category.toLowerCase().trim() === selectedCategory.toLowerCase().trim()
+        ? category.trim() === selectedCategory.toLowerCase().trim()
         : true;
-
 
       return matchesQuery && matchesCategory;
     });
@@ -49,7 +50,7 @@ const ProductCarousel = () => {
   }, []);
 
   return (
-    <div className="flex flex-wrap gap-4 my-3 justify-center text-dark">
+    <div className="flex flex-wrap gap-10 my-3 justify-center text-dark">
       {filteredProducts.map((item, index) => (
         <div
           key={index}
@@ -61,14 +62,14 @@ const ProductCarousel = () => {
 
           <div className="px-3 pb-2">
             <a href="#">
-              <h5 className="text-lg text-primaryText text-center font-semibold tracking-tight">{item.name}</h5>
+              <h5 className="text-lg text-primaryText text-center font-semibold tracking-tight">{item.name || item.title}</h5>
             </a>
             <div className="flex items-center my-2">
               <div className="flex items-center space-x-1 rtl:space-x-reverse">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-3.5 h-3.5 ${i < Math.round(item.rating) ? 'text-primaryLite' : 'text-productCartMutedcolor'}`}
+                    className={`w-3.5 h-3.5 ${i < Math.round(item.rating?.rate) ? 'text-ratingStarcolor' : 'text-productCartMutedcolor'}`}
                     fill="currentColor"
                     viewBox="0 0 22 20"
                   >
@@ -77,8 +78,13 @@ const ProductCarousel = () => {
                 ))}
               </div>
               <span className="bg-secondaryLite text-productCartRatingText text-xs font-semibold px-2 py-0.5 rounded-sm ml-2">
-                {item.rating?.toFixed(1) || "0.0"}
+                {item.rating?.rate || "0.0"}
               </span>
+              {item.rating?.count && (
+                <span className="text-mutedText text-xs font-semibold py-0.5 rounded-sm ml-2">
+                  {`(${item.rating.count})`}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <span className="text-lg font-bold text-primaryText">₹{item.price}</span>

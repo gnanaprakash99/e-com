@@ -10,22 +10,24 @@ const useProductCarousel = () => {
         queryFn: async () => {
             const res = await fetch("https://fakestoreapi.com/products/");
             if (!res.ok) throw new Error("Failed to fetch products");
-            return res.json();
+            const data = await res.json();
+            console.log('API data:', data); 
+            dispatch(setProductData(data));
+            return data;
         },
         select: (data) => {
-            const maxDefaultId = Math.max(...defaultProducts.map(p => p.id), 0);
-            return data.map((p, i) => ({
-                id: maxDefaultId + i + 1,
+            return data.map((p) => ({
+                id: p.id, // ✅ use API's own ID
                 name: p.title,
                 category: p.category || "others",
-                price: Math.round(p.price * 80),
+                price: Math.round(p.price * 80), // Convert to INR
                 description: p.description,
-                image: Array.isArray(p.image) ? p.image : [p.image],
+                image: [p.image], // Always make it an array
                 rating: typeof p.rating === "object" ? p.rating.rate : 4.0,
             }));
         },
         onSuccess: (transformed) => {
-            dispatch(setProductData(transformed));
+            console.log('Transformed data:', transformed);
         },
     });
 };

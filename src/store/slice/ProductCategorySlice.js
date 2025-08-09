@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
-    productCategory: ['appliances', 'mobiles', 'electronics', 'beauty', 'grocery', 'furniture', 'toys', 'fashion', 'books', 'pharmacy'],
+    productCategory: ["men's clothing", "jewelery", "electronics", "women's clothing", 'appliances', 'mobiles', 'toys', 'fashion', 'books', 'pharmacy'],
 }
 
 const productCategorySlice = createSlice({
