@@ -20,7 +20,7 @@ const Contact = () => {
                 type="text"
                 id="Name"
                 placeholder="Enter your name"
-                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none"
               />
             </div>
 
@@ -35,7 +35,7 @@ const Contact = () => {
                 type="email"
                 id="Email"
                 placeholder="name@example.com"
-                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none"
               />
             </div>
 
@@ -50,14 +50,14 @@ const Contact = () => {
                 id="Message"
                 rows="5"
                 placeholder="Enter your message"
-                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius resize-none focus:ring-2 focus:ring-secondaryLite focus:outline-none"
+                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius resize-none focus:ring-1 focus:ring-inputSelectBorder focus:outline-none"
               ></textarea>
             </div>
 
             <div className="text-center">
               <button
                 type="submit"
-                className="bg-primaryBtn text-buttonText px-6 py-2 rounded-primaryRadius transition"
+                className="bg-primaryBtn text-buttonText font-bold px-6 py-2 rounded-primaryRadius border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 "
                 disabled
               >
                 Send

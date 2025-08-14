@@ -50,12 +50,14 @@ const ProductCarousel = () => {
   }, []);
 
   return (
-    <div className="flex flex-wrap gap-10 my-3 justify-center text-dark">
+    <div className="flex flex-wrap gap-5 my-3 justify-center text-dark ">
       {filteredProducts.map((item, index) => (
         <div
           key={index}
           data-aos="fade-up"
-          className="w-full max-w-xs text-primaryText bg-productCardBg border border-productCartBorder rounded-primaryRadius duration-300 transition-shadow shadow-cardShadow hover:shadow-hoverCardShadow"
+          className="w-full sm:w-[48%] lg:w-[22%] text-primaryText bg-productCardBg border border-productCartBorder rounded-primaryRadius shadow-cardShadow
+  transform transition-transform duration-300 ease-in-out 
+  hover:scale-105 hover:shadow-hoverCardShadow"
         >
           {/* Image Carousel */}
           <ProductImageRotator images={item.image} name={item.name} />
@@ -91,7 +93,7 @@ const ProductCarousel = () => {
               <div className="flex gap-1">
                 <button
                   onClick={() => handleView(item)}
-                  className="text-buttonText border bg-primaryBtn text-sm font-medium rounded-primaryRadius px-3 py-1.5"
+                  className="text-buttonText border-[1px] border-buttonBorder transition-transform hover:scale-105 bg-primaryBtn text-sm font-medium rounded-primaryRadius px-3 py-1.5"
                 >
                   View
                 </button>

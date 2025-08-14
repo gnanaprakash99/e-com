@@ -67,156 +67,143 @@ const Profile = () => {
 
     return (
         <div>
-            {/* Profile data  */}
+            {/* Profile data */}
             <div
-                className={`p-10 relative z-30 rounded-primaryRadius border-2 border-mutedText mx-40 mt-20 mb-6 bg-cardBg`}
+                className="p-4 sm:p-6 lg:p-10 relative z-30 rounded-primaryRadius border-2 border-mutedText 
+                   mx-4 sm:mx-10 lg:mx-40 mt-10 sm:mt-20 mb-6 bg-cardBg"
             >
-                <div className="mt-3 flex items-center justify-between px-6 mb-3">
-                    <h2 className="text-left text-3xl font-bold m-0">Account Settings</h2>
+                <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-2 sm:px-6 mb-3">
+                    <h2 className="text-left text-2xl sm:text-3xl font-bold m-0">Account Settings</h2>
                     <button
                         type="submit"
-                        className="px-6 py-2 rounded-primaryRadius font-semibold text-md bg-primaryBtn text-buttonText"
+                        className="px-4 sm:px-6 py-2 rounded-primaryRadius font-semibold text-sm sm:text-md bg-primaryBtn text-buttonText border border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50"
                     >
                         Update Profile
                     </button>
                 </div>
 
-                <div className="p-2 rounded-lg m-10">
-                    <form
-                        className=" "
-                    >
-                        <div className='grid md:grid-cols-2 gap-3' >
+                <div className="p-2 rounded-lg sm:m-6 lg:m-10">
+                    <form>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* First Name */}
                             <div>
-                                <label className="block text-lg font-bold">
-                                    First Name
-                                </label>
+                                <label className="block text-base sm:text-lg font-bold">First Name</label>
                                 <input
                                     type="text"
                                     name="firstName"
                                     placeholder="First Name"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                 />
                             </div>
 
                             {/* Last Name */}
                             <div>
-                                <label className="block text-lg font-bold">
-                                    Last Name
-                                </label>
+                                <label className="block text-base sm:text-lg font-bold">Last Name</label>
                                 <input
                                     type="text"
                                     name="lastName"
                                     placeholder="Last Name"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                 />
                             </div>
 
                             {/* Email */}
                             <div>
-                                <label className="block text-lg font-bold">
-                                    E-Mail
-                                </label>
+                                <label className="block text-base sm:text-lg font-bold">E-Mail</label>
                                 <input
                                     type="email"
                                     name="email"
                                     placeholder="E-Mail"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                 />
                             </div>
 
                             {/* Phone Number */}
                             <div>
-                                <label className="block text-lg font-bold">
-                                    Phone Number
-                                </label>
+                                <label className="block text-base sm:text-lg font-bold">Phone Number</label>
                                 <input
                                     type="text"
                                     name="phoneNumber"
                                     placeholder="Phone Number"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                 />
                             </div>
                         </div>
 
                         {/* Address */}
-                        <div className="col-span-1">
-                            <label className="block text-lg font-bold">
-                                Address
-                            </label>
+                        <div className="mt-3">
+                            <label className="block text-base sm:text-lg font-bold">Address</label>
                             <textarea
                                 rows="6"
                                 name="address"
                                 placeholder="Address"
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                             ></textarea>
                         </div>
                     </form>
                 </div>
             </div>
 
-            {/* Admin only  */}
-            {!permission.controlPanel &&
+            {/* Admin only */}
+            {!permission.controlPanel && (
                 <div
-                    className={`p-3 relative z-30 rounded-primaryRadius border-2 border-mutedText mx-40 mt-20 mb-6 bg-cardBg`}
+                    className="p-3 sm:p-6 relative z-30 rounded-primaryRadius border-2 border-mutedText 
+                       mx-4 sm:mx-10 lg:mx-40 mt-10 sm:mt-20 mb-6 bg-cardBg"
                 >
-                    <div className="mt-3 flex items-center justify-center px-6 mb-3">
-                        <h2 className="text-center text-3xl font-bold m-0">Admin Control Panel</h2>
+                    <div className="mt-3 flex justify-center px-2 sm:px-6 mb-3">
+                        <h2 className="text-center text-2xl sm:text-3xl font-bold m-0">Admin Control Panel</h2>
                     </div>
-                    <div className="p-2 rounded-lg ">
+                    <div className="p-2 rounded-lg">
                         <form>
-                            <div className='grid md:grid-cols-2 gap-3' >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {/* CATEGORY MANAGEMENT */}
                                 <div className="md:col-span-2">
-                                    <div className=" p-6">
-                                        <h2 className="text-2xl font-bold mb-4">Manage Categories</h2>
+                                    <div className="p-4 sm:p-6">
+                                        <h2 className="text-xl sm:text-2xl font-bold mb-4">Manage Categories</h2>
 
-                                        {/* Add New Category */}
-                                        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                                             <input
                                                 type="text"
                                                 value={newCategory}
                                                 onChange={(e) => setNewCategory(e.target.value)}
                                                 placeholder="New category"
-                                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius p-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-secondaryLite"
+                                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius p-2 shadow-sm focus:outline-none focus:ring-1 focus:ring-inputSelectBorder"
                                             />
                                             <button
                                                 onClick={handleAddCategory}
                                                 type="button"
-                                                className="px-6 py-2 bg-secondaryBtn text-buttonText font-semibold rounded-primaryRadius"
+                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                             >
                                                 Add
                                             </button>
                                             <button
                                                 onClick={handleCategory}
                                                 type="button"
-                                                className="px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius"
+                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                             >
                                                 Categories
                                             </button>
                                         </div>
 
-                                        {/* List of Categories */}
+                                        {/* Category list */}
                                         {showCategory && (
                                             <div
                                                 className="relative"
                                                 onMouseEnter={() => setShowCategory(true)}
                                                 onMouseLeave={() => setShowCategory(false)}
                                             >
-                                                <div
-                                                    className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-white p-5 rounded-primaryRadius transition-all duration-300 ease-in-out transform animate-fade-in"
-                                                >
+                                                <div className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius">
                                                     <ul className="space-y-2">
                                                         {categories.map((cat, index) => (
                                                             <li
                                                                 key={index}
-                                                                className="flex justify-between items-center border border-mutedText bg-white p-2 rounded-primaryRadius"
+                                                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center border border-mutedText bg-cardBg p-2 rounded-primaryRadius"
                                                             >
                                                                 <span className="capitalize">{cat}</span>
                                                                 <button
                                                                     onClick={() => handleDeleteCategory(cat)}
                                                                     type="button"
-                                                                    className="px-3 py-1 bg-deleteBtn text-buttonText rounded-primaryRadius"
+                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                                                 >
                                                                     Delete
                                                                 </button>
@@ -229,18 +216,18 @@ const Profile = () => {
                                     </div>
                                 </div>
 
-                                {/* Banner Carousel */}
+                                {/* BANNER CAROUSEL */}
                                 <div className="md:col-span-2">
-                                    <div className="p-6">
-                                        <h2 className="text-2xl font-bold mb-4">Banner Carousel</h2>
-                                        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                                    <div className="p-4 sm:p-6">
+                                        <h2 className="text-xl sm:text-2xl font-bold mb-4">Banner Carousel</h2>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                                             <div className="relative w-full">
                                                 <input
                                                     type="text"
                                                     value={newBanner}
                                                     onChange={(e) => setNewBanner(e.target.value)}
                                                     placeholder="Enter banner URL"
-                                                    className="w-full pr-10 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                                    className="w-full pr-10 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                                 />
                                                 <button
                                                     type="button"
@@ -250,7 +237,6 @@ const Profile = () => {
                                                     <MdAddPhotoAlternate className="w-5 h-5 text-gray-600" />
                                                 </button>
 
-                                                {/* file input */}
                                                 <input
                                                     type="file"
                                                     accept="image/*"
@@ -261,42 +247,40 @@ const Profile = () => {
                                             </div>
                                             <button
                                                 type="button"
-                                                className="px-6 py-2 bg-secondaryBtn text-buttonText font-semibold rounded-primaryRadius"
+                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                                 onClick={handleAddBanner}
                                             >
-                                                add
+                                                Add
                                             </button>
                                             <button
                                                 type="button"
-                                                className="px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius"
+                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                                 onClick={() => setShowBannerList(true)}
                                             >
                                                 Banners
                                             </button>
                                         </div>
 
-                                        {/* Banner List*/}
+                                        {/* Banner list */}
                                         {showBannerList && (
                                             <div
                                                 className="relative"
                                                 onMouseEnter={() => setShowBannerList(true)}
                                                 onMouseLeave={() => setShowBannerList(false)}
                                             >
-                                                <div
-                                                    className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-white p-5 rounded-primaryRadius transition-all duration-300 ease-in-out transform animate-fade-in"
-                                                >
+                                                <div className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius">
                                                     <ul className="space-y-2">
                                                         {bannerData.map((banner, index) => (
                                                             <li
                                                                 key={banner.id}
-                                                                className="flex items-center justify-between border border-mutedText p-2 bg-white rounded-primaryRadius"
+                                                                className="flex flex-col sm:flex-row sm:items-center sm:justify-between border border-mutedText p-2 bg-cardBg rounded-primaryRadius"
                                                             >
                                                                 <img src={banner.Imgsrc} alt={`banner-${index}`} className="w-16 h-10 object-cover rounded" />
-                                                                <span className="truncate w-4/5">{banner.Imgsrc}</span>
+                                                                <span className="truncate w-full sm:w-4/5">{banner.Imgsrc}</span>
                                                                 <button
                                                                     onClick={() => handleDeleteBanner(banner.id)}
                                                                     type="button"
-                                                                    className="px-3 py-1 bg-deleteBtn text-buttonText rounded-primaryRadius"
+                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
                                                                 >
                                                                     Delete
                                                                 </button>
@@ -311,9 +295,10 @@ const Profile = () => {
                             </div>
                         </form>
                     </div>
-                </div >
-            }
-        </div >
+                </div>
+            )}
+        </div>
+
     )
 }
 

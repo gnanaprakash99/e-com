@@ -30,6 +30,7 @@ export default {
         pageBg: "var(--color-pageBg)",
         cardBg: "var(--color-cardBg)",
         inputBg: "var(--color-inputBg)",
+        inputSelectBorder: "var(--color-inputSelectBorder)",
 
         primaryText: "var(--color-primaryText)",
         secondaryText: "var(--color-secondaryText)",
@@ -39,9 +40,12 @@ export default {
         primaryBtn: "var(--color-primaryBtn)",
         secondaryBtn: "var(--color-secondaryBtn)",
         buttonText: "var(--color-buttonText)",
+        buttonText2: "var(--color-buttonText2)",
         deleteBtn: "var(--color-deleteBtn)",
         hoverBtnBg: "var(--color-hoverBtnBg)",
         hoverBtnText: "var(--color-hoverBtnText)",
+        buttonBorder: "var(--color-buttonBorder)",
+        cancelButton: "var(--color-cancelButton)",
         
         ratingStarcolor: "var(--color-ratingStarcolor)",
 
@@ -51,8 +55,8 @@ export default {
         Info: "var(--color-Info)",
       },
       boxShadow: {
-        cardShadow: '0 1px 2px var(--color-cardShadow)',
-        hoverCardShadow: '0 4px 8px var(--color-hoverCardShadow)',
+        cardShadow: '0 0px 0px var(--color-cardShadow)',
+        hoverCardShadow: '0 0px 0px var(--color-hoverCardShadow)',
       },
       borderRadius: {
         primaryRadius: '16px',
@@ -66,10 +70,10 @@ export default {
         spartan: ['"League Spartan"', "sans-serif"],
       },
       width: {
-        'primaryButton': '150px',
+        'primaryWidth': '150px',
       },
       height: {
-        'primaryButton': '48px',
+        'primaryHeight': '48px',
       },
       keyframes: {
         'fade-in': {

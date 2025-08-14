@@ -1,15 +1,26 @@
 import { useState } from "react";
 import { SiGooglepay, SiPhonepe, SiPaytm } from "react-icons/si";
 import { FaAmazonPay } from "react-icons/fa";
+import { CiCreditCard1 } from "react-icons/ci";
 
 const PaymentMethodSection = () => {
     const [paymentMethod, setPaymentMethod] = useState("card");
     const [selectedWallet, setSelectedWallet] = useState("");
 
     const paymentLabels = {
-        card: "Debit / Credit Card",
+        card: (
+            <>
+                <CiCreditCard1 className="text-2xl inline-block mr-2" /> Card Payment
+            </>
+        ),
         upi: "UPI Payment",
         wallet: "Online Payment",
+    };
+
+    const paymentColors = {
+        card: "bg-blue-500 text-white hover:bg-blue-600",
+        upi: "bg-green-500 text-white hover:bg-green-600",
+        wallet: "bg-purple-500 text-white hover:bg-purple-600",
     };
 
     const wallets = [
@@ -64,10 +75,10 @@ const PaymentMethodSection = () => {
                     <button
                         key={method}
                         type="button"
-                        className={`px-4 py-2 border rounded-lg transition ${paymentMethod === method
-                            ? "bg-secondaryBtn text-buttonText"
-                            : "bg-mutedText text-buttonText hover:bg-secondaryBtn"
-                            }`}
+                        className={`px-4 py-2 rounded-primaryRadius cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50
+              ${paymentColors[method]}
+              ${paymentMethod === method ? "ring-1 ring-offset-2 ring-inputSelectBorder" : ""}
+            `}
                         onClick={() => setPaymentMethod(method)}
                     >
                         {paymentLabels[method]}
@@ -84,7 +95,7 @@ const PaymentMethodSection = () => {
                             <input
                                 type="text"
                                 required
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                             />
                             <small className="">
                                 Full name as displayed on card
@@ -95,7 +106,7 @@ const PaymentMethodSection = () => {
                             <input
                                 type="text"
                                 required
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                             />
                         </div>
                         <div>
@@ -103,7 +114,7 @@ const PaymentMethodSection = () => {
                             <input
                                 type="text"
                                 required
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                                 placeholder="MM/YY"
                             />
                         </div>
@@ -112,14 +123,14 @@ const PaymentMethodSection = () => {
                             <input
                                 type="text"
                                 required
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                             />
                         </div>
                     </div>
                     <div className="flex justify-end">
                         <button
                             type="submit"
-                            className=" w-primaryButton bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow "
+                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow "
                         >
                             Verify card details
                         </button>
@@ -137,7 +148,7 @@ const PaymentMethodSection = () => {
                                 type="text"
                                 required
                                 placeholder="example@upi"
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-2 focus:ring-secondaryLite focus:outline-none p-2 shadow-sm"
+                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
                             />
                         </div>
                         <p className="text-sm text-mutedText">
@@ -148,7 +159,7 @@ const PaymentMethodSection = () => {
                         <button
                             type="submit"
                             disabled
-                            className=" w-primaryButton bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow "
+                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  w-primaryWidth bg-primaryBtn text-buttonText font-bold py-3 rounded-primaryRadius mt-6 shadow "
                         >
                             Verify UPI ID
                         </button>
@@ -191,7 +202,7 @@ const PaymentMethodSection = () => {
                                 type="submit"
                                 onClick={() => handleWalletPayment()}
                                 disabled={!selectedWallet}
-                                className=" w-primaryButton bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow "
+                                className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow "
                             >
                                 Pay Now
                             </button>

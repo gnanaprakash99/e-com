@@ -88,7 +88,7 @@ const AddProduct = ({ isOpen, onClose }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
                 <button
-                    className="absolute top-4 right-4 text-2xl hover:text-primaryBtn"
+                    className="absolute top-4 right-4 text-2xl hover:text-cancelButton"
                     onClick={onClose}
                 >
                     &times;
@@ -166,7 +166,7 @@ const AddProduct = ({ isOpen, onClose }) => {
 
                     <button
                         type="submit"
-                        className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius"
+                        className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  transform duration-300 ease-in-out "
                     >
                         Submit
                     </button>

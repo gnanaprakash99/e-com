@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Cards = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, incrementQuantity, decrementQuantity } = useCart();
-  console.log('object',cartItems)
+  console.log('object', cartItems)
 
   if (!isOpen) return null;
 
@@ -19,7 +19,7 @@ const Cards = ({ isOpen, onClose }) => {
       <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-secondaryLite "
+          className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-cancelButton "
           onClick={onClose}
         >
           &times;
@@ -30,7 +30,7 @@ const Cards = ({ isOpen, onClose }) => {
           <div className="text-center ">
             <h3 className="text-lg mb-5">Your cart is empty</h3>
             <button
-              className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
+              className="mx-auto block border-[1px] border-buttonBorder  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius duration-200"
               onClick={onClose}
             >
               Continue Shopping
@@ -78,13 +78,14 @@ const Cards = ({ isOpen, onClose }) => {
                 </button>
               </div>
             ))}
-
-            <button
-              className="w-full bg-primaryBtn text-buttonText py-2 rounded-primaryRadius font-semibold mt-4"
-              onClick={handleCheckout}
-            >
-              Go to checkout
-            </button>
+            <div className="flex justify-center items-center mt-4">
+              <button
+                className="w-primaryWidth bg-primaryBtn text-buttonText py-2 rounded-primaryRadius font-semibold mt-4 border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 "
+                onClick={handleCheckout}
+              >
+                Go to checkout
+              </button>
+            </div>
           </div>
         )}
       </div>
