@@ -47,7 +47,7 @@ const Cards = ({ isOpen, onClose }) => {
                 {/* Product Info */}
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold">{item.name}</h4>
-                  <p className="text-sm text-secondaryText">
+                  <p className="text-sm text-">
                     ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
                   </p>
                 </div>

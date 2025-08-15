@@ -9,6 +9,8 @@ import ProductCarouselView from '../components/productCarousel/ProductCarouselVi
 import SummaryPage from '../pages/summaryPage/SummaryPage'
 import Orders from '../pages/orders/Orders'
 import Profile from '../pages/profile/Profile'
+import PaymentAddress from '../pages/summaryPage/PaymentMethod'
+import FinalSummary from '../pages/summaryPage/FinalSummary'
 
 const AppRoutes = [
   {
@@ -24,6 +26,10 @@ const AppRoutes = [
         element: <Products />
       },
       {
+        path: "productView",
+        element: <ProductCarouselView />
+      },
+      {
         path: "about",
         element: <About />
       },
@@ -31,21 +37,27 @@ const AppRoutes = [
         path: "contact",
         element: <Contact />
       },
+
+      // need to make private routes for these
+      {
+        path: "profile",
+        element: <Profile />
+      },
       {
         path: "orders",
         element: <Orders />
-      },
-      {
-        path: "productView",
-        element: <ProductCarouselView />
       },
       {
         path: "checkout",
         element: <SummaryPage />
       },
       {
-        path: "profile",
-        element: <Profile />
+        path: "payment",
+        element: <PaymentAddress />
+      },
+      {
+        path: "finalSummaryPage",
+        element: <FinalSummary />
       },
     ]
   },

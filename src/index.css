@@ -30,7 +30,7 @@
   --color-productCartMutedcolor: #99948D;
   --color-productCartRatingText: #FFFFFF;
 
-/* page Background  */
+/* Background  */
   --color-pageBg: #FAF7F0;
   --color-cardBg: #FFFFFF;
   --color-inputBg: #FFFFFF;
@@ -39,8 +39,8 @@
   /* text colors  */
   --color-primaryText: #1F1D1B;
   --color-secondaryText: #6B665E;
+  --color-teriteryText: #3759B8;
   --color-mutedText: #99948D;
-  --color-headingText: #3A2E28;
 
   /* button color  */
   --color-primaryBtn: #FFFFFF;

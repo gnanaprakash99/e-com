@@ -34,8 +34,8 @@ export default {
 
         primaryText: "var(--color-primaryText)",
         secondaryText: "var(--color-secondaryText)",
+        teriteryText: "var(--color-teriteryText)",
         mutedText: "var(--color-mutedText)",
-        headingText: "var(--color-headingText)",
 
         primaryBtn: "var(--color-primaryBtn)",
         secondaryBtn: "var(--color-secondaryBtn)",
