@@ -53,7 +53,10 @@ const Login = ({ isOpen, onClose }) => {
 
           <button
             type="submit"
-            className="mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition duration-200"
+            className="
+             sm:px-6 text-sm sm:text-md border border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50
+            mx-auto block bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius duration-200"
+
           >
             {isLogin ? 'Login' : 'Sign Up'}
           </button>

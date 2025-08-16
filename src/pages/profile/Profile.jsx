@@ -5,32 +5,44 @@ import { addCategory, removeCategory } from '../../store/slice/ProductCategorySl
 import { addBanner, removeBanner } from '../../store/slice/BannerCarouselSlice';
 import { getPermissions } from '../../utils/UserPermission';
 import IndianStates from '../../utils/IndianStates';
+import { FaUserCircle } from "react-icons/fa";
+import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
 
 const Profile = () => {
-    const categories = useSelector((state) => state.productCategory.productCategory);
-    const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
-    const dispatch = useDispatch();
-    const [newCategory, setNewCategory] = useState('');
-    const [showCategory, setShowCategory] = useState(false);
-    const [showBannerList, setShowBannerList] = useState(false);
-    const [newBanner, setNewBanner] = useState('');
-    const fileInputRef = useRef(null);
+  const categories = useSelector((state) => state.productCategory.productCategory);
+  const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
+  const dispatch = useDispatch();
 
-    // Form data state
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        house: '',
-        street: '',
-        landmark: '',
-        country: 'India',
-        state: '',
-        city: '',
-        zip: ''
+  const [newCategory, setNewCategory] = useState('');
+  const [showCategory, setShowCategory] = useState(false);
+  const [showBannerList, setShowBannerList] = useState(false);
+  const [newBanner, setNewBanner] = useState('');
+  const fileInputRef = useRef(null);
+
+    // Profile info
+    const [user, setUser] = useState({
+        firstName: "John",
+        lastName: "Doe",
+        email: "johndoe@email.com",
+        phone: "+91 98765 43210",
+        house: "123",
+        street: "MG Road",
+        landmark: "",
+        country: "India",
+        state: "Karnataka",
+        city: "Bangalore",
+        zip: "560001",
     });
 
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState(user);
+
+    const handleEdit = () => setIsEditing(true);
+    const handleSave = () => {
+        setUser(formData);
+        setIsEditing(false);
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -88,82 +100,84 @@ const Profile = () => {
 
     return (
         <div>
-            {/* Profile data */}
-            <div
-                className="p-4 sm:p-6 lg:p-10 relative z-30 rounded-primaryRadius border-2 border-mutedText 
-                   mx-4 sm:mx-10 lg:mx-40 mt-10 sm:mt-20 mb-6 bg-cardBg"
-            >
-                <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-2 sm:px-6 mb-3">
-                    <h2 className="text-left text-2xl sm:text-3xl font-bold m-0">Account Settings</h2>
-                    <button
-                        type="submit"
-                        className="px-4 sm:px-6 py-2 rounded-primaryRadius font-semibold text-sm sm:text-md bg-primaryBtn text-buttonText border border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50"
-                    >
-                        Update Profile
-                    </button>
-                </div>
-
-                <div className="p-2 rounded-lg sm:m-6 lg:m-10">
-                    <form className='space-y-6'>
-                        {/* Name & Contact */}
-                        <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block font-medium mb-1">First Name</label>
-                                    <input name="firstName" value={formData.firstName} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Last Name</label>
-                                    <input name="lastName" value={formData.lastName} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
+            {/* Profile View or Edit */}
+            <div className="p-6 lg:p-10 mx-4 sm:mx-10 lg:mx-40 mt-10 rounded-primaryRadius border-2 border-mutedText bg-cardBg">
+                {!isEditing ? (
+                    <>
+                        {/* User Info */}
+                        <div className="flex justify-between items-center border-b pb-6">
+                            <div className='flex items-center gap-4'>
+                                <FaUserCircle className="text-6xl text-gray-400" />
+                                <h2 className="text-2xl font-semibold">{user.firstName} {user.lastName}</h2>
                             </div>
+                            <button
+                                onClick={handleEdit}
+                                className="px-6 py-2 rounded-primaryRadius font-semibold bg-primaryBtn text-buttonText border border-buttonBorder hover:scale-105 transition"
+                            >
+                                Edit
+                            </button>
+                        </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block font-medium mb-1">Email</label>
-                                    <input name="email" value={formData.email} onChange={handleChange} type="email" className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Mobile Number</label>
-                                    <input name="phone" value={formData.phone} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
+                        {/* Profile Details */}
+                        <div className="mt-6 text-gray-700 space-y-2">
+                            <p><MdEmail className="inline mr-1" /> {user.email}</p>
+                            <p><MdPhone className="inline mr-1" /> {user.phone}</p>
+                            <p><MdLocationOn className="inline mr-1" /> {user.house}, {user.street}, {user.city}, {user.state} - {user.zip}</p>
+                        </div>
+
+                        {/* Order History */}
+                        <div className="mt-10">
+                            <h3 className="text-lg font-semibold mb-4">Recent Orders</h3>
+                            <div className="border rounded-lg p-4 text-gray-600">
+                                <p>No orders yet.</p>
                             </div>
                         </div>
 
-                        {/* Address */}
-                        <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 space-y-4">
-                            <input name="house" value={formData.house} onChange={handleChange} placeholder="House no. / building name" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                            <input name="street" value={formData.street} onChange={handleChange} placeholder="Street name / Area" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                            <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                        {/* Logout */}
+                        <div className="mt-10 flex justify-end">
+                            <button className="flex items-center gap-2 text-secondaryLite font-medium border border-secondaryLite p-2 rounded-primaryRadius">
+                                <FiLogOut /> Logout
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {/* Edit Form */}
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold">Edit Profile</h2>
+                            <button
+                                onClick={handleSave}
+                                className="px-6 py-2 rounded-primaryRadius font-semibold bg-primaryBtn text-buttonText border border-buttonBorder hover:scale-105 transition"
+                            >
+                                Save
+                            </button>
+                        </div>
 
-                            {/* Location */}
+                        <form className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            </div>
+                            <input name="house" value={formData.house} onChange={handleChange} placeholder="House / Building" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            <input name="street" value={formData.street} onChange={handleChange} placeholder="Street / Area" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                <div>
-                                    <label className="block font-medium mb-1">Country</label>
-                                    <select name="country" value={formData.country} onChange={handleChange} required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none">
-                                        <option value="India">India</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">State</label>
-                                    <select name="state" value={formData.state} onChange={handleChange} required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none">
-                                        {IndianStates.map(s => (
-                                            <option key={s} value={s}>{s}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Town/City</label>
-                                    <input name="city" value={formData.city} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Zip</label>
-                                    <input name="zip" value={formData.zip} onChange={handleChange} type="number" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
-                                </div>
+                                <select name="country" value={formData.country} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
+                                    <option value="India">India</option>
+                                </select>
+                                <select name="state" value={formData.state} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
+                                    {IndianStates.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                                <input name="city" value={formData.city} onChange={handleChange} placeholder="City" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="zip" value={formData.zip} onChange={handleChange} placeholder="Zip" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </>
+                )}
             </div>
 
             {/* Admin only */}
