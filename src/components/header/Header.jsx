@@ -38,7 +38,7 @@ const Header = () => {
   const handleProfile = () => navigate('/profile');
 
   return (
-    <nav className="w-full px-3 py-3 bg-headerBg shadow border-b">
+    <nav className="w-full px-3 py-3 bg-headerBg shadow sticky top-0 z-50 border-b">
       <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
 
         {/* Logo + Hamburger */}

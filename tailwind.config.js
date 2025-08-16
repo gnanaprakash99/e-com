@@ -59,7 +59,8 @@ export default {
         hoverCardShadow: '0 0px 0px var(--color-hoverCardShadow)',
       },
       borderRadius: {
-        primaryRadius: '16px',
+        primaryRadius: '12px',
+        secondaryRadius: '6px',
       },
       fontFamily: {
         sans: ['"Source Sans Pro"', "sans-serif"],

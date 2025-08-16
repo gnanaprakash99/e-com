@@ -55,7 +55,7 @@ const ProductCarousel = () => {
         <div
           key={index}
           data-aos="fade-up"
-          className="w-full sm:w-[48%] lg:w-[22%] text-primaryText bg-productCardBg border border-productCartBorder rounded-primaryRadius shadow-cardShadow
+          className="w-full mx-3 lg:mx-0 sm:w-[48%] lg:w-[22%] text-primaryText bg-productCardBg border rounded-primaryRadius shadow-cardShadow
   transform transition-transform duration-300 ease-in-out 
   hover:scale-105 hover:shadow-hoverCardShadow"
         >
@@ -79,7 +79,7 @@ const ProductCarousel = () => {
                   </svg>
                 ))}
               </div>
-              <span className="bg-secondaryLite text-productCartRatingText text-xs font-semibold px-2 py-0.5 rounded-sm ml-2">
+              <span className="bg-secondaryLite text-productCartRatingText text-xs font-semibold px-2 py-0.5 rounded-secondaryRadius ml-2">
                 {item.rating?.rate || "0.0"}
               </span>
               {item.rating?.count && (

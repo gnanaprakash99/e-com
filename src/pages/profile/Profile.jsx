@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addCategory, removeCategory } from '../../store/slice/ProductCategorySlice';
 import { addBanner, removeBanner } from '../../store/slice/BannerCarouselSlice';
 import { getPermissions } from '../../utils/UserPermission';
+import IndianStates from '../../utils/IndianStates';
 
 const Profile = () => {
     const categories = useSelector((state) => state.productCategory.productCategory);
@@ -14,6 +15,26 @@ const Profile = () => {
     const [showBannerList, setShowBannerList] = useState(false);
     const [newBanner, setNewBanner] = useState('');
     const fileInputRef = useRef(null);
+
+    // Form data state
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        house: '',
+        street: '',
+        landmark: '',
+        country: 'India',
+        state: '',
+        city: '',
+        zip: ''
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
     // permissions
     const permission = getPermissions();
@@ -83,62 +104,63 @@ const Profile = () => {
                 </div>
 
                 <div className="p-2 rounded-lg sm:m-6 lg:m-10">
-                    <form>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {/* First Name */}
-                            <div>
-                                <label className="block text-base sm:text-lg font-bold">First Name</label>
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    placeholder="First Name"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                />
+                    <form className='space-y-6'>
+                        {/* Name & Contact */}
+                        <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block font-medium mb-1">First Name</label>
+                                    <input name="firstName" value={formData.firstName} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block font-medium mb-1">Last Name</label>
+                                    <input name="lastName" value={formData.lastName} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
                             </div>
 
-                            {/* Last Name */}
-                            <div>
-                                <label className="block text-base sm:text-lg font-bold">Last Name</label>
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    placeholder="Last Name"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                />
-                            </div>
-
-                            {/* Email */}
-                            <div>
-                                <label className="block text-base sm:text-lg font-bold">E-Mail</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="E-Mail"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                />
-                            </div>
-
-                            {/* Phone Number */}
-                            <div>
-                                <label className="block text-base sm:text-lg font-bold">Phone Number</label>
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    placeholder="Phone Number"
-                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block font-medium mb-1">Email</label>
+                                    <input name="email" value={formData.email} onChange={handleChange} type="email" className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block font-medium mb-1">Mobile Number</label>
+                                    <input name="phone" value={formData.phone} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
                             </div>
                         </div>
 
                         {/* Address */}
-                        <div className="mt-3">
-                            <label className="block text-base sm:text-lg font-bold">Address</label>
-                            <textarea
-                                rows="6"
-                                name="address"
-                                placeholder="Address"
-                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                            ></textarea>
+                        <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 space-y-4">
+                            <input name="house" value={formData.house} onChange={handleChange} placeholder="House no. / building name" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                            <input name="street" value={formData.street} onChange={handleChange} placeholder="Street name / Area" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                            <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+
+                            {/* Location */}
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div>
+                                    <label className="block font-medium mb-1">Country</label>
+                                    <select name="country" value={formData.country} onChange={handleChange} required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none">
+                                        <option value="India">India</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block font-medium mb-1">State</label>
+                                    <select name="state" value={formData.state} onChange={handleChange} required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none">
+                                        {IndianStates.map(s => (
+                                            <option key={s} value={s}>{s}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block font-medium mb-1">Town/City</label>
+                                    <input name="city" value={formData.city} onChange={handleChange} type="text" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
+                                <div>
+                                    <label className="block font-medium mb-1">Zip</label>
+                                    <input name="zip" value={formData.zip} onChange={handleChange} type="number" required className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none" />
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

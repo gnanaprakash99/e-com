@@ -7,7 +7,7 @@ const CategoryBar = () => {
     const { selectedCategory, setSelectedCategory } = useCategory();
 
     return (
-        <div className="flex mt-3 justify-center">
+        <div className="flex mt-3 justify-center border-b sticky top-[64px] z-40 bg-pageBg ">
             <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 py-2 scrollbar-hide">
                 {/* All button */}
                 <button
