@@ -28,7 +28,7 @@ const SummaryPage = () => {
     const ShowCheckout = () => {
         return (
             <div>
-                <SummaryPageNumber />
+                <SummaryPageNumber currentStep="Address" />
                 <div>
                     <SummaryAddress />
                 </div>

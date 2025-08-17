@@ -15,6 +15,11 @@ const ProductCarouselView = () => {
     const [checkDeliveryDate, setCheckDeliveryDate] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    // Scroll to top on page load
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Add this state for the reviews modal
     const [showReviewsModal, setShowReviewsModal] = useState(false);
 
@@ -85,15 +90,18 @@ const ProductCarouselView = () => {
     if (!product) return <div>No product data found</div>;
 
     const images = Array.isArray(product.image) ? product.image : [product.image];
-    console.log('object',images)
+    console.log('object', images)
 
     const handlePrev = () =>
         setCurrentIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
     const handleNext = () =>
         setCurrentIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
 
+    // add to cart
     const handleAddToCart = () => addToCart(product, quantity);
-    const handleBuyNow = () => navigate('/cart');
+
+    // buy now
+    const handleBuyNow = () => navigate('/checkout');
 
     // finding delivery date
     const handleDeliveryDate = () => {
@@ -104,9 +112,18 @@ const ProductCarouselView = () => {
         <div className="flex flex-col md:flex-row min-h-screen p-4 sm:p-6 lg:p-8 gap-6">
             {/* Image Carousel */}
             <div className="w-full md:w-1/2 flex justify-center items-start relative">
+                {/* Always show product image */}
+                <img
+                    src={images[currentIndex]}
+                    alt={`Product Image ${currentIndex + 1}`}
+                    className="w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
+                   rounded-primaryRadius bg-productCardBg 
+                   p-4 sm:p-6 md:p-10 shadow"
+                />
+
+                {/* Show Prev/Next only if multiple images */}
                 {images.length > 1 && (
                     <>
-                        {/* Prev Button */}
                         <button
                             onClick={handlePrev}
                             className="absolute top-1/4 left-3 -translate-y-1/2 
@@ -117,16 +134,6 @@ const ProductCarouselView = () => {
                             ‹
                         </button>
 
-                        {/* Product Image */}
-                        <img
-                            src={images[currentIndex]}
-                            alt={`Product Image ${currentIndex + 1}`}
-                            className="w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
-                   rounded-primaryRadius bg-productCardBg 
-                   p-4 sm:p-6 md:p-10 shadow"
-                        />
-
-                        {/* Next Button */}
                         <button
                             onClick={handleNext}
                             className="absolute top-1/4 right-3 -translate-y-1/2 

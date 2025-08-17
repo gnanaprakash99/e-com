@@ -162,9 +162,11 @@ const Profile = () => {
                                 <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                                 <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <input name="house" value={formData.house} onChange={handleChange} placeholder="House / Building" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             <input name="street" value={formData.street} onChange={handleChange} placeholder="Street / Area" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <select name="country" value={formData.country} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
                                     <option value="India">India</option>

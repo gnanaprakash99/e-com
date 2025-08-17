@@ -66,7 +66,7 @@ const PaymentMethodSection = () => {
 
     return (
         <div className="container mx-auto mb-5 px-4">
-            <SummaryPageNumber />
+            <SummaryPageNumber currentStep="Payment" />
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
                 {/* Payment Method Selection */}

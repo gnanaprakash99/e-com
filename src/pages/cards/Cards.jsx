@@ -14,24 +14,31 @@ const Cards = ({ isOpen, onClose }) => {
     navigate('/checkout');
   }
 
+  const handleContinueShopping = () => {
+    onClose();
+    navigate('/');
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
       <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
         {/* Close Button */}
-        <button
-          className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-cancelButton "
-          onClick={onClose}
-        >
-          &times;
-        </button>
-        <h2 className="text-2xl font-bold mb-3 text-center">Your Cart</h2>
+        <div className="border-b">
+          <button
+            className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-cancelButton "
+            onClick={onClose}
+          >
+            &times;
+          </button>
+          <h2 className="text-2xl font-bold mb-3 text-center">Your Cart</h2>
+        </div>
 
         {cartItems.length === 0 ? (
           <div className="text-center ">
             <h3 className="text-lg mb-5">Your cart is empty</h3>
             <button
               className="mx-auto block border-[1px] border-buttonBorder  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius duration-200"
-              onClick={onClose}
+              onClick={handleContinueShopping}
             >
               Continue Shopping
             </button>
@@ -72,7 +79,7 @@ const Cards = ({ isOpen, onClose }) => {
                 {/* Remove Button */}
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  className="text-primaryBtn hover:underline text-sm"
+                  className="text-secondaryLite hover:underline text-sm"
                 >
                   Remove
                 </button>
