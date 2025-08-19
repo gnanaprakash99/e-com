@@ -10,6 +10,7 @@ import { FaLuggageCart } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useSelector } from 'react-redux';
 import { getPermissions } from '../../utils/UserPermission';
+import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -73,7 +74,7 @@ const Header = () => {
         </div>
 
         {/* Desktop Buttons */}
-        <div className="hidden xl:flex gap-3">
+        <div className="hidden xl:flex gap-3 items-center">
           {!permissions.AddProduct && (
             <button
               onClick={() => setShowAddProduct(true)}
@@ -82,71 +83,17 @@ const Header = () => {
               Add Product
             </button>
           )}
+
           <button
             onClick={handleOrders}
             className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
           >
             Orders
           </button>
+
           <button
             onClick={() => setShowCard(true)}
-            className="relative flex items-center gap-1 text-headerBtnBorder border border-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
-          >
-            <FaLuggageCart />
-            <span>Cart</span>
-            {cartItemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-secondaryLite text-headerTextColor text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {cartItemCount}
-              </span>
-            )}
-          </button>
-          {isLogin ? (
-            <button onClick={handleProfile}>
-              <img
-                src={generatedImage}
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
-              />
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowLogin(true)}
-              className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
-            >
-              Log in
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Dropdown */}
-      <div
-        className={`xl:hidden overflow-hidden transition-all duration-500 ease-in-out ${isDropdownOpen ? "max-h-96 opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"
-          }`}
-      >
-        <div className="text-center space-y-2">
-          <NavLink to="/" className="block text-headerTextColor hover:text-headerHoverNavText">Home</NavLink>
-          <NavLink to="/products" className="block text-headerTextColor hover:text-headerHoverNavText">Product</NavLink>
-          <NavLink to="/about" className="block text-headerTextColor hover:text-headerHoverNavText">About</NavLink>
-          <NavLink to="/contact" className="block text-headerTextColor hover:text-headerHoverNavText">Contact</NavLink>
-
-          {!permissions.AddProduct && (
-            <button
-              onClick={() => setShowAddProduct(true)}
-              className="w-full text-headerTextColor hover:text-headerHoverNavText"
-            >
-              Add Product
-            </button>
-          )}
-          <button
-            onClick={handleOrders}
-            className="w-full text-headerTextColor hover:text-headerHoverNavText"
-          >
-            Orders
-          </button>
-          <button
-            onClick={() => setShowCard(true)}
-            className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
+            className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius flex items-center gap-2"
           >
             <FaLuggageCart />
             Cart
@@ -156,10 +103,11 @@ const Header = () => {
               </span>
             )}
           </button>
+
           {isLogin ? (
             <button
               onClick={handleProfile}
-              className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
+              className="flex items-center gap-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
             >
               <img
                 src={generatedImage}
@@ -170,14 +118,101 @@ const Header = () => {
           ) : (
             <button
               onClick={() => setShowLogin(true)}
-              className="w-full text-headerTextColor hover:text-headerHoverNavText"
+              className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
             >
               Log in
             </button>
           )}
         </div>
-      </div>
 
+        {/* Mobile Dropdown */}
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="xl:hidden flex flex-col items-center gap-2 mt-3 overflow-hidden"
+            >
+              <NavLink
+                to="/"
+                className="block text-headerTextColor hover:text-headerHoverNavText"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                Home
+              </NavLink>
+              <NavLink
+                to="/products"
+                className="block text-headerTextColor hover:text-headerHoverNavText"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                Product
+              </NavLink>
+              <NavLink
+                to="/about"
+                className="block text-headerTextColor hover:text-headerHoverNavText"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                About
+              </NavLink>
+              <NavLink
+                to="/contact"
+                className="block text-headerTextColor hover:text-headerHoverNavText"
+                onClick={() => setIsDropdownOpen(false)}
+              >
+                Contact
+              </NavLink>
+
+              {!permissions.AddProduct && (
+                <button
+                  onClick={() => { setShowAddProduct(true); setIsDropdownOpen(false); }}
+                  className="w-full text-headerTextColor hover:text-headerHoverNavText"
+                >
+                  Add Product
+                </button>
+              )}
+              <button
+                onClick={() => { handleOrders(); setIsDropdownOpen(false); }}
+                className="w-full text-headerTextColor hover:text-headerHoverNavText"
+              >
+                Orders
+              </button>
+              <button
+                onClick={() => { setShowCard(true); setIsDropdownOpen(false); }}
+                className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
+              >
+                <FaLuggageCart />
+                Cart
+                {cartItemCount > 0 && (
+                  <span className="bg-secondaryLite text-headerTextColor text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+              {isLogin ? (
+                <button
+                  onClick={() => { handleProfile(); setIsDropdownOpen(false); }}
+                  className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
+                >
+                  <img
+                    src={generatedImage}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
+                  /> YOU
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
+                  className="w-full text-headerTextColor hover:text-headerHoverNavText"
+                >
+                  Log in
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Modals */}
       <AddProduct isOpen={showAddProduct} onClose={() => setShowAddProduct(false)} />
