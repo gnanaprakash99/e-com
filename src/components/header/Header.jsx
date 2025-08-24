@@ -51,11 +51,11 @@ const Header = () => {
       <div className="flex flex-col xl:flex-row xl:items-center lg:pt-3 xl:justify-between gap-3">
 
         {/* Logo + Hamburger */}
-        <div className="flex items-center justify-between w-full xl:w-auto">
+        <div className="flex items-center p-3 justify-between w-full xl:w-auto">
           <h1 className="text-2xl font-bold text-headerHeading">Muse Market</h1>
 
           {/* Buttons */}
-          <div className='flex gap-3'>
+          <div className='flex text-xl gap-3'>
             <div className="flex xl:hidden items-center">
               <button
                 onClick={() => setShowCard(true)}
@@ -123,10 +123,11 @@ const Header = () => {
         </div>
 
         {/* Mobile Dropdown */}
+        {/* Mobile Dropdown */}
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50"
+              className="fixed inset-0 bg-black/50 flex justify-end z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -135,43 +136,46 @@ const Header = () => {
                 initial={{ x: "100%", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="bg-pageBg rounded-l-primaryRadius w-2/3 sm:w-1/2 max-h-full overflow-y-auto flex flex-col shadow-lg"
+                transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
+                className="bg-pageBg rounded-l-2xl w-3/4 xs:w-4/5 sm:w-2/3 md:w-1/2 lg:w-1/3 h-full overflow-y-auto shadow-2xl flex flex-col"
               >
-
-                <div className="bg-cardBg p-4 border-b flex justify-end items-center">
+                {/* Header / Close Button */}
+                <div className="bg-cardBg p-4 border-b flex justify-between items-center sticky top-0 z-10">
+                  <h2 className="text-lg font-semibold text-headerTextColor">Menu</h2>
                   <button
                     onClick={() => setIsDropdownOpen(false)}
-                    className="text-mutedText hover:text-cancelButton"
+                    className="text-mutedText hover:text-cancelButton transition"
                   >
-                    <IoClose size={24} />
+                    <IoClose size={26} />
                   </button>
                 </div>
-                <div className="px-4 py-3 font-mono text-lg border-b">
+
+                {/* Nav Links */}
+                <nav className="flex flex-col gap-3 px-6 py-6 font-mono text-lg">
                   <NavLink
                     to="/"
-                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    className="py-2 text-headerTextColor hover:text-headerHoverNavText transition"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     Home
                   </NavLink>
                   <NavLink
                     to="/products"
-                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    className="py-2 text-headerTextColor hover:text-headerHoverNavText transition"
                     onClick={() => setIsDropdownOpen(false)}
                   >
-                    Product
+                    Products
                   </NavLink>
                   <NavLink
                     to="/about"
-                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    className="py-2 text-headerTextColor hover:text-headerHoverNavText transition"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     About
                   </NavLink>
                   <NavLink
                     to="/contact"
-                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    className="py-2 text-headerTextColor hover:text-headerHoverNavText transition"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     Contact
@@ -179,31 +183,45 @@ const Header = () => {
 
                   {!permissions.AddProduct && (
                     <button
-                      onClick={() => { setShowAddProduct(true); setIsDropdownOpen(false); }}
-                      className=" text-headerTextColor hover:text-headerHoverNavText"
+                      onClick={() => {
+                        setShowAddProduct(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="py-2 text-left text-headerTextColor hover:text-headerHoverNavText transition"
                     >
                       Add Product
                     </button>
                   )}
-                  <div>
-                    <button
-                      onClick={handleOrders}
-                      className="text-headerTextColor hover:text-headerHoverNavText"
-                    >
-                      Orders
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleOrders}
+                    className="py-2 text-left text-headerTextColor hover:text-headerHoverNavText transition"
+                  >
+                    Orders
+                  </button>
+                </nav>
+
+                {/* Divider */}
+                <div className="border-t my-4 mx-6"></div>
+
+                {/* Auth Buttons */}
+                <div className="px-6 pb-6 flex flex-col gap-3">
                   {isLogin ? (
                     <button
-                      onClick={() => { handleProfile(); setIsDropdownOpen(false); }}
-                      className="flex items-center text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius"
+                      onClick={() => {
+                        handleProfile();
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full py-2 flex items-center justify-center text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
                     >
                       Account
                     </button>
                   ) : (
                     <button
-                      onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
-                      className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius"
+                      onClick={() => {
+                        setShowLogin(true);
+                        setIsDropdownOpen(false);
+                      }}
+                      className="w-full py-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
                     >
                       Log in
                     </button>

@@ -114,8 +114,8 @@ const AddProduct = ({ isOpen, onClose }) => {
                     >
                         <option value="" disabled>Select Category</option>
                         {categories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category.charAt(0).toUpperCase() + category.slice(1)}
+                            <option key={category.id} value={category.categoryName}>
+                                {category.categoryName.charAt(0).toUpperCase() + category.categoryName.slice(1)}
                             </option>
                         ))}
                     </select>

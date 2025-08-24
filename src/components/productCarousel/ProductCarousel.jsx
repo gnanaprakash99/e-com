@@ -52,52 +52,64 @@ const ProductCarousel = ({ selectedProducts }) => {
   }, []);
 
   return (
-    <div className="flex flex-wrap gap-5 my-3 justify-center text-dark ">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
       {filteredProducts.map((item, index) => (
         <div
           key={index}
           data-aos="fade-up"
-          className="w-full mx-3 lg:mx-0 sm:w-[48%] lg:w-[22%] text-primaryText bg-productCardBg border rounded-primaryRadius shadow-cardShadow
-  transform transition-transform duration-300 ease-in-out 
-  hover:scale-105 hover:shadow-hoverCardShadow"
+          className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
         >
-          {/* Image Carousel */}
-          <ProductImageRotator images={item.image} name={item.name} />
+          {/* Sale badge */}
+          <div className="relative">
+            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+              12% OFF
+            </div>
+            {/* Image Carousel */}
+            <ProductImageRotator images={item.image} name={item.name} />
+          </div>
 
-          <div className="px-3 pb-2">
-            <a href="#">
-              <h5 className="text-lg text-primaryText text-center font-semibold tracking-tight">{item.name || item.title}</h5>
-            </a>
-            <div className="flex items-center my-2">
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
+          <div className="p-4 flex flex-col flex-grow">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2 h-14">
+              {item.name || item.title}
+            </h3>
+            
+            {/* Rating section */}
+            <div className="flex items-center mb-3">
+              <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-3.5 h-3.5 ${i < Math.round(item.rating?.rate) ? 'text-ratingStarcolor' : 'text-productCartMutedcolor'}`}
+                    className={`w-4 h-4 ${i < Math.round(item.rating?.rate) ? 'text-yellow-400' : 'text-gray-300'}`}
                     fill="currentColor"
-                    viewBox="0 0 22 20"
+                    viewBox="0 0 20 20"
                   >
-                    <path d="M10 15l-5.878 3.09 1.122-6.545L.488 6.91l6.567-.955L10 0l2.945 5.955 6.567.955-4.756 4.635 1.122 6.545z" />
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ))}
               </div>
-              <span className="bg-secondaryLite text-productCartRatingText text-xs font-semibold px-2 py-0.5 rounded-secondaryRadius ml-2">
+              <span className="bg-blue-100 text-blue-800 text-xs font-semibold ml-2 px-2 py-0.5 rounded">
                 {item.rating?.rate || "0.0"}
               </span>
               {item.rating?.count && (
-                <span className="text-mutedText text-xs font-semibold py-0.5 rounded-sm ml-2">
-                  {`(${item.rating.count})`}
+                <span className="text-gray-500 text-xs ml-2">
+                  ({item.rating.count})
                 </span>
               )}
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-lg font-bold text-primaryText">₹{item.price}</span>
-              <div className="flex gap-1">
+
+            {/* Price section */}
+            <div className="mt-auto">
+              <div className="flex items-center mb-3">
+                <span className="text-xl font-bold text-gray-900">₹{item.price}</span>
+                <span className="text-sm text-gray-500 line-through ml-2">₹{Math.round(item.price / 0.88)}</span>
+              </div>
+              
+              <div className="flex gap-2">
                 <button
                   onClick={() => handleView(item)}
-                  className="text-buttonText border-[1px] border-buttonBorder transition-transform hover:scale-105 bg-primaryBtn text-sm font-medium rounded-primaryRadius px-3 py-1.5"
+                  className="flex-1 bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200"
                 >
-                  View
+                  View Details
                 </button>
               </div>
             </div>
@@ -107,7 +119,13 @@ const ProductCarousel = ({ selectedProducts }) => {
 
       {/* Optional: No results message */}
       {filteredProducts.length === 0 && (
-        <p className="text-center text-mutedText mt-6">No products found.</p>
+        <div className="col-span-full text-center py-12">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-gray-600 text-lg">No products found.</p>
+          <p className="text-gray-500">Try adjusting your search or filters.</p>
+        </div>
       )}
     </div>
   );
