@@ -10,15 +10,18 @@ import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 
 const Profile = () => {
-  const categories = useSelector((state) => state.productCategory.productCategory);
-  const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
-  const dispatch = useDispatch();
+    const categories = useSelector((state) => state.productCategory.productCategory);
+    const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
+    const dispatch = useDispatch();
 
-  const [newCategory, setNewCategory] = useState('');
-  const [showCategory, setShowCategory] = useState(false);
-  const [showBannerList, setShowBannerList] = useState(false);
-  const [newBanner, setNewBanner] = useState('');
-  const fileInputRef = useRef(null);
+    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryImage, setNewCategoryImage] = useState('');
+    const categoryFileInputRef = useRef(null);
+
+    const [showCategory, setShowCategory] = useState(false);
+    const [showBannerList, setShowBannerList] = useState(false);
+    const [newBanner, setNewBanner] = useState('');
+    const fileInputRef = useRef(null);
 
     // Profile info
     const [user, setUser] = useState({
@@ -65,19 +68,40 @@ const Profile = () => {
         fileInputRef.current?.click();
     };
 
+    // File selection for category image
+    const handleCategoryFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const objectUrl = URL.createObjectURL(file);
+            setNewCategoryImage(objectUrl);
+        }
+    };
+
+    // Trigger file input click
+    const triggerCategoryFileInput = () => {
+        categoryFileInputRef.current?.click();
+    };
+
     // add category
     const handleAddCategory = () => {
-        const trimmed = newCategory.trim().toLowerCase();
-        if (trimmed && !categories.includes(trimmed)) {
-            dispatch(addCategory(trimmed));
-            setNewCategory('');
+        const trimmed = newCategoryName.trim();
+        if (trimmed) {
+            const newCat = {
+                id: Date.now().toString(36),
+                categoryName: trimmed,
+                categoryImage: newCategoryImage || "https://via.placeholder.com/150",
+            };
+            dispatch(addCategory(newCat));
+            setNewCategoryName('');
+            setNewCategoryImage('');
         }
     };
 
     // delete category
-    const handleDeleteCategory = (cat) => {
-        dispatch(removeCategory(cat));
+    const handleDeleteCategory = (id) => {
+        dispatch(removeCategory(id));
     };
+
 
     // show category
     const handleCategory = () => {
@@ -163,9 +187,9 @@ const Profile = () => {
                                 <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input name="house" value={formData.house} onChange={handleChange} placeholder="House / Building" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                            <input name="street" value={formData.street} onChange={handleChange} placeholder="Street / Area" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                            <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="house" value={formData.house} onChange={handleChange} placeholder="House / Building" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="street" value={formData.street} onChange={handleChange} placeholder="Street / Area" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 <select name="country" value={formData.country} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
@@ -183,7 +207,7 @@ const Profile = () => {
             </div>
 
             {/* Admin only */}
-            {!permission.controlPanel && (
+            {permission.controlPanel && (
                 <div
                     className="p-3 sm:p-6 relative z-30 rounded-primaryRadius border-2 border-mutedText 
                        mx-4 sm:mx-10 lg:mx-40 mt-10 sm:mt-20 mb-6 bg-cardBg"
@@ -199,28 +223,67 @@ const Profile = () => {
                                     <div className="p-4 sm:p-6">
                                         <h2 className="text-xl sm:text-2xl font-bold mb-4">Manage Categories</h2>
 
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                            {/* Category Name */}
                                             <input
                                                 type="text"
-                                                value={newCategory}
-                                                onChange={(e) => setNewCategory(e.target.value)}
-                                                placeholder="New category"
-                                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius p-2 shadow-sm focus:outline-none focus:ring-1 focus:ring-inputSelectBorder"
+                                                value={newCategoryName}
+                                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                                placeholder="Category name"
+                                                className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none"
                                             />
-                                            <button
-                                                onClick={handleAddCategory}
-                                                type="button"
-                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
-                                            >
-                                                Add
-                                            </button>
-                                            <button
-                                                onClick={handleCategory}
-                                                type="button"
-                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
-                                            >
-                                                Categories
-                                            </button>
+
+                                            {/* File Upload */}
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={triggerCategoryFileInput}
+                                                    className="px-4 py-2 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                >
+                                                    Upload Image
+                                                </button>
+                                                {newCategoryImage && (
+                                                    <div className="relative">
+                                                        <img
+                                                            src={newCategoryImage}
+                                                            alt="preview"
+                                                            className="w-12 h-12 object-cover rounded"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setNewCategoryImage('')}
+                                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    ref={categoryFileInputRef}
+                                                    className="hidden"
+                                                    onChange={handleCategoryFileSelect}
+                                                />
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div>
+                                                <button
+                                                    onClick={handleAddCategory}
+                                                    type="button"
+                                                    className="px-4 mr-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                >
+                                                    Add
+                                                </button>
+                                                <button
+                                                    onClick={handleCategory}
+                                                    type="button"
+                                                    className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                >
+                                                    Categories
+                                                </button>
+                                            </div>
                                         </div>
 
                                         {/* Category list */}
@@ -232,16 +295,19 @@ const Profile = () => {
                                             >
                                                 <div className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius">
                                                     <ul className="space-y-2">
-                                                        {categories.map((cat, index) => (
+                                                        {categories.map((cat) => (
                                                             <li
-                                                                key={index}
+                                                                key={cat.id}
                                                                 className="flex flex-col sm:flex-row sm:justify-between sm:items-center border border-mutedText bg-cardBg p-2 rounded-primaryRadius"
                                                             >
-                                                                <span className="capitalize">{cat}</span>
+                                                                <div className="flex items-center gap-3">
+                                                                    <img src={cat.categoryImage} alt={cat.categoryName} className="w-12 h-12 object-cover rounded" />
+                                                                    <span className="capitalize font-medium">{cat.categoryName}</span>
+                                                                </div>
                                                                 <button
-                                                                    onClick={() => handleDeleteCategory(cat)}
+                                                                    onClick={() => handleDeleteCategory(cat.id)}
                                                                     type="button"
-                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
+                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder hover:scale-105"
                                                                 >
                                                                     Delete
                                                                 </button>

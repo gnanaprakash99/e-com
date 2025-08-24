@@ -2,16 +2,14 @@ import { useMemo, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../context/SearchContext';
-import { useCategory } from '../context/CategoryContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ProductImageRotator from './ProductImageRotator';
 import useProductCarousel from '../../hooks/useProductCarousel';
 
-const ProductCarousel = () => {
+const ProductCarousel = ({ selectedProducts }) => {
   const navigate = useNavigate();
   const { searchQuery } = useSearch();
-  const { selectedCategory } = useCategory();
   const products = useSelector(state => state.ProductData.ProductData);
 
   // calling hooks
@@ -19,22 +17,26 @@ const ProductCarousel = () => {
 
   // Filter products by search query and category bar
   const filteredProducts = useMemo(() => {
-    const query = searchQuery?.toLowerCase?.() || "";
+    const query = searchQuery?.toLowerCase()?.trim() || "";
 
-    return products.filter((product) => {
-      const name = product?.name?.toLowerCase?.() || "";
-      const category = product?.category?.toLowerCase?.() || "";
+    // 1️⃣ If selectedProducts exist, use them
+    if (selectedProducts && selectedProducts.length > 0) {
+      return selectedProducts;
+    }
 
-      const matchesQuery =
-        name.includes(query) || category.includes(query);
+    // 2️⃣ If search query exists, filter products by search query
+    if (query) {
+      return products.filter((product) => {
+        const name = product?.name?.toLowerCase()?.trim() || "";
+        const category = product?.category?.toLowerCase()?.trim() || "";
+        return name.includes(query) || category.includes(query);
+      });
+    }
 
-      const matchesCategory = selectedCategory
-        ? category.trim() === selectedCategory.toLowerCase().trim()
-        : true;
+    // 3️⃣ Fallback: return all products
+    return products;
 
-      return matchesQuery && matchesCategory;
-    });
-  }, [products, searchQuery, selectedCategory]);
+  }, [selectedProducts, products, searchQuery]);
 
   // Handle view button
   const handleView = (product) => {

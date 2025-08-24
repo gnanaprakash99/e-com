@@ -11,6 +11,7 @@ import Orders from '../pages/orders/Orders'
 import Profile from '../pages/profile/Profile'
 import PaymentAddress from '../pages/summaryPage/PaymentMethod'
 import FinalSummary from '../pages/summaryPage/FinalSummary'
+import Selectedcategory from '../components/categoryBar/Selectedcategory'
 
 const AppRoutes = [
   {
@@ -28,6 +29,10 @@ const AppRoutes = [
       {
         path: "productView",
         element: <ProductCarouselView />
+      },
+      {
+        path: "selectedCategory",
+        element: <Selectedcategory />
       },
       {
         path: "about",

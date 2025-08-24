@@ -1,35 +1,96 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useCategory } from '../context/CategoryContext';
+import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
 
 const CategoryBar = () => {
     const categories = useSelector((state) => state.productCategory.productCategory);
-    const { selectedCategory, setSelectedCategory } = useCategory();
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    const scrollRef = React.useRef(null);
+    const navigate = useNavigate();
+
+    const scroll = (direction) => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollBy({
+                left: direction === "left" ? -300 : 300,
+                behavior: "smooth",
+            });
+        }
+    };
+
+    const handleSelectedCategory = (categoryName) => {
+        navigate('/selectedCategory', { state: { category: categoryName.toLowerCase().trim() } });
+    };
+
 
     return (
-        <div className="flex mt-3 justify-center border-b sticky top-[64px] z-40 bg-pageBg ">
-            <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 py-2 scrollbar-hide">
-                {/* All button */}
+        <div className="w-full my-6">
+            {/* Title with arrows */}
+            <div className="flex items-center justify-center gap-4 mb-6">
                 <button
-                    onClick={() => setSelectedCategory('')}
-                    className={`text-primaryText px-3 shrink-0 pb-1 border-b-2 transition-all duration-300 ease-in-out ${selectedCategory === '' ? 'border-secondaryLite font-semibold' : 'border-transparent'
-                        }`}
+                    onClick={() => scroll("left")}
+                    className="p-2 rounded-full hover:bg-gray-200"
                 >
-                    All
+                    <IoChevronBack size={20} />
                 </button>
+                <h1 className="font-medium text-lg text-center">WHAT WE HAVE</h1>
+                <button
+                    onClick={() => scroll("right")}
+                    className="p-2 rounded-full hover:bg-gray-200"
+                >
+                    <IoChevronForward size={20} />
+                </button>
+            </div>
 
-                {/* Category buttons */}
-                {categories.map((item, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setSelectedCategory(item)}
-                        className={`text-primaryText px-3 shrink-0 pb-1 border-b-2 transition-all duration-300 ease-in-out ${selectedCategory === item ? 'border-secondaryLite font-semibold' : 'border-transparent'
-                            }`}
+            {/* Categories list */}
+            <div
+                ref={scrollRef}
+                className="flex gap-6 px-6 overflow-x-auto scrollbar-hide"
+            >
+                {categories.map((item) => (
+                    <div
+                        key={item.id}
+                        onClick={() => handleSelectedCategory(item.categoryName)}
+                        className="flex-shrink-0 w-52 cursor-pointer"
                     >
-                        {item}
-                    </button>
+                        {/* Image */}
+                        <div className="w-full h-64 overflow-hidden">
+                            <img
+                                src={item.categoryImage}
+                                alt={item.categoryName}
+                                className="w-full h-full object-cover transition-transform hover:scale-105"
+                            />
+                        </div>
+
+                        {/* Name */}
+                        <h2
+                            className={`mt-3 text-center text-base ${selectedCategory?.id === item.id
+                                ? "font-semibold text-secondaryLite"
+                                : "text-gray-800"
+                                }`}
+                        >
+                            {item.categoryName.toUpperCase()}
+                        </h2>
+
+                        {/* Product count */}
+                        <p className="text-center text-sm text-gray-500">
+                            {item.count || Math.floor(Math.random() * 120) + 10} products
+                        </p>
+                    </div>
                 ))}
             </div>
+
+            {/* Hide scrollbar cross-browser */}
+            <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
         </div>
     );
 };

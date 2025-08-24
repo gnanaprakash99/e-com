@@ -20,7 +20,7 @@ const BannerCarousel = () => {
   };
 
   return (
-    <div className="w-full mt-3 overflow-hidden">
+    <div className="w-full overflow-hidden">
       <Slider {...settings}>
         {bannerCarouselData.map((item) => (
           <div key={item.id} className="w-full">

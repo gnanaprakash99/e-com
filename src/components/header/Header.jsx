@@ -11,6 +11,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { useSelector } from 'react-redux';
 import { getPermissions } from '../../utils/UserPermission';
 import { motion, AnimatePresence } from "framer-motion";
+import { IoClose } from "react-icons/io5";
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -22,7 +23,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   // login
-  const generatedImage = `https://avatar.iran.liara.run/username`;
   const isLogin = true;
 
   // permissions
@@ -35,32 +35,50 @@ const Header = () => {
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   // navigation
-  const handleOrders = () => navigate('/orders');
+  const handleOrders = () => {
+    if (isLogin) {
+      navigate("/orders");
+      setIsDropdownOpen(false);
+    } else {
+      alert("Please login and try again");
+    }
+  };
+
   const handleProfile = () => navigate('/profile');
 
   return (
-    <nav className="w-full px-3 py-3 bg-headerBg shadow sticky top-0 z-50 border-b">
-      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+    <nav className="w-full px-1 pb-3 bg-headerBg shadow sticky top-0 z-50 ">
+      <div className="flex flex-col xl:flex-row xl:items-center lg:pt-3 xl:justify-between gap-3">
 
         {/* Logo + Hamburger */}
         <div className="flex items-center justify-between w-full xl:w-auto">
           <h1 className="text-2xl font-bold text-headerHeading">Muse Market</h1>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsDropdownOpen(prev => !prev)}
-            className="xl:hidden border border-headerBtnBorder px-3 py-2 rounded-primaryRadius text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText"
-          >
-            <AiOutlineMenu />
-          </button>
-        </div>
+          {/* Buttons */}
+          <div className='flex gap-3'>
+            <div className="flex xl:hidden items-center">
+              <button
+                onClick={() => setShowCard(true)}
+                className="relative text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius flex items-center gap-1"
+              >
+                <FaLuggageCart />
+                Cart
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-3 bg-secondaryLite text-headerTextColor text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden xl:flex gap-3 items-center">
-          <NavLink to="/" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>Home</NavLink>
-          <NavLink to="/products" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Product</NavLink>
-          <NavLink to="/about" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>About</NavLink>
-          <NavLink to="/contact" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Contact</NavLink>
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsDropdownOpen(prev => !prev)}
+              className="xl:hidden border border-headerBtnBorder rounded-primaryRadius text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText"
+            >
+              <AiOutlineMenu />
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -73,24 +91,23 @@ const Header = () => {
           />
         </div>
 
-        {/* Desktop Buttons */}
+        {/* Buttons */}
         <div className="hidden xl:flex gap-3 items-center">
-          {!permissions.AddProduct && (
+          {isLogin ? (
             <button
-              onClick={() => setShowAddProduct(true)}
+              onClick={handleProfile}
+              className="flex items-center gap-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
+            >
+              Account
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowLogin(true)}
               className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
             >
-              Add Product
+              Log in
             </button>
           )}
-
-          <button
-            onClick={handleOrders}
-            className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
-          >
-            Orders
-          </button>
-
           <button
             onClick={() => setShowCard(true)}
             className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius flex items-center gap-2"
@@ -103,115 +120,131 @@ const Header = () => {
               </span>
             )}
           </button>
-
-          {isLogin ? (
-            <button
-              onClick={handleProfile}
-              className="flex items-center gap-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
-            >
-              <img
-                src={generatedImage}
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
-              /> YOU
-            </button>
-          ) : (
-            <button
-              onClick={() => setShowLogin(true)}
-              className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius"
-            >
-              Log in
-            </button>
-          )}
         </div>
 
         {/* Mobile Dropdown */}
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="xl:hidden flex flex-col items-center gap-2 mt-3 overflow-hidden"
+              className="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <NavLink
-                to="/"
-                className="block text-headerTextColor hover:text-headerHoverNavText"
-                onClick={() => setIsDropdownOpen(false)}
+              <motion.div
+                initial={{ x: "100%", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: "100%", opacity: 0 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                className="bg-pageBg rounded-l-primaryRadius w-2/3 sm:w-1/2 max-h-full overflow-y-auto flex flex-col shadow-lg"
               >
-                Home
-              </NavLink>
-              <NavLink
-                to="/products"
-                className="block text-headerTextColor hover:text-headerHoverNavText"
-                onClick={() => setIsDropdownOpen(false)}
-              >
-                Product
-              </NavLink>
-              <NavLink
-                to="/about"
-                className="block text-headerTextColor hover:text-headerHoverNavText"
-                onClick={() => setIsDropdownOpen(false)}
-              >
-                About
-              </NavLink>
-              <NavLink
-                to="/contact"
-                className="block text-headerTextColor hover:text-headerHoverNavText"
-                onClick={() => setIsDropdownOpen(false)}
-              >
-                Contact
-              </NavLink>
 
-              {!permissions.AddProduct && (
-                <button
-                  onClick={() => { setShowAddProduct(true); setIsDropdownOpen(false); }}
-                  className="w-full text-headerTextColor hover:text-headerHoverNavText"
-                >
-                  Add Product
-                </button>
-              )}
-              <button
-                onClick={() => { handleOrders(); setIsDropdownOpen(false); }}
-                className="w-full text-headerTextColor hover:text-headerHoverNavText"
-              >
-                Orders
-              </button>
-              <button
-                onClick={() => { setShowCard(true); setIsDropdownOpen(false); }}
-                className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
-              >
-                <FaLuggageCart />
-                Cart
-                {cartItemCount > 0 && (
-                  <span className="bg-secondaryLite text-headerTextColor text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
-              </button>
-              {isLogin ? (
-                <button
-                  onClick={() => { handleProfile(); setIsDropdownOpen(false); }}
-                  className="w-full flex items-center justify-center gap-2 text-headerTextColor hover:text-headerHoverNavText"
-                >
-                  <img
-                    src={generatedImage}
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full object-cover border border-headerTextColor"
-                  /> YOU
-                </button>
-              ) : (
-                <button
-                  onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
-                  className="w-full text-headerTextColor hover:text-headerHoverNavText"
-                >
-                  Log in
-                </button>
-              )}
+                <div className="bg-cardBg p-4 border-b flex justify-end items-center">
+                  <button
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="text-mutedText hover:text-cancelButton"
+                  >
+                    <IoClose size={24} />
+                  </button>
+                </div>
+                <div className="px-4 py-3 font-mono text-lg border-b">
+                  <NavLink
+                    to="/"
+                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Home
+                  </NavLink>
+                  <NavLink
+                    to="/products"
+                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Product
+                  </NavLink>
+                  <NavLink
+                    to="/about"
+                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    About
+                  </NavLink>
+                  <NavLink
+                    to="/contact"
+                    className="block text-headerTextColor hover:text-headerHoverNavText"
+                    onClick={() => setIsDropdownOpen(false)}
+                  >
+                    Contact
+                  </NavLink>
+
+                  {!permissions.AddProduct && (
+                    <button
+                      onClick={() => { setShowAddProduct(true); setIsDropdownOpen(false); }}
+                      className=" text-headerTextColor hover:text-headerHoverNavText"
+                    >
+                      Add Product
+                    </button>
+                  )}
+                  <div>
+                    <button
+                      onClick={handleOrders}
+                      className="text-headerTextColor hover:text-headerHoverNavText"
+                    >
+                      Orders
+                    </button>
+                  </div>
+                  {isLogin ? (
+                    <button
+                      onClick={() => { handleProfile(); setIsDropdownOpen(false); }}
+                      className="flex items-center text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius"
+                    >
+                      Account
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => { setShowLogin(true); setIsDropdownOpen(false); }}
+                      className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius"
+                    >
+                      Log in
+                    </button>
+                  )}
+                </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+      <div className='hidden xl:flex gap-3 pt-3 items-center justify-center sticky top-[64px] z-40 bg-pageBg'>
+        <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 scrollbar-hide">
+
+          {/* Desktop Nav Links */}
+          <div className="hidden xl:flex gap-3 items-center">
+            <NavLink to="/" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>Home</NavLink>
+            <NavLink to="/products" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Product</NavLink>
+            <NavLink to="/about" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>About</NavLink>
+            <NavLink to="/contact" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Contact</NavLink>
+          </div>
+
+          {/* Desktop Buttons */}
+          <div className="hidden xl:flex gap-3 items-center">
+            <button
+              onClick={handleOrders}
+              className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverNavText px-2 rounded-primaryRadius"
+            >
+              Orders
+            </button>
+            {!permissions.AddProduct && (
+              <button
+                onClick={() => setShowAddProduct(true)}
+                className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverNavText rounded-primaryRadius"
+              >
+                Add Product
+              </button>
+            )}
+
+          </div>
+        </div>
+
       </div>
 
       {/* Modals */}

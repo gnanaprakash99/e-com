@@ -1,7 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&family=Playfair+Display:wght@400;700&family=Inter:wght@400;600&family=League+Spartan:wght@400;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'JK Abode';
+  src: url('/fonts/JKAbode.woff2') format('woff2'),
+       url('/fonts/JKAbode.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
   /* Primary colors  */
@@ -10,9 +19,9 @@
   --color-teritaryLite: #D4C9B6;
 
   /* Header & Tabs  */
-  --color-headerBg: #2E2B28;
-  --color-headerHeading: #FFFFFF;
-  --color-headerTextColor: #FDF8F3;
+  --color-headerBg: #FFFFFF;
+  --color-headerHeading: #af654a;
+  --color-headerTextColor: #000000;
   --color-headerSelectedNavText: #D26A5E;
   --color-headerHoverNavText: #D26A5E;
   --color-headerHoverBtnText: #000000;
@@ -43,7 +52,7 @@
   --color-mutedText: #99948D;
 
   /* button color  */
-  --color-primaryBtn: #FFFFFF;
+  --color-primaryBtn: #e3e2e2;
   --color-secondaryBtn: #8E9B6E;
   --color-buttonText: #000000;
   --color-buttonText2: #FFFFFF;

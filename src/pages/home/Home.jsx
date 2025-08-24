@@ -1,14 +1,18 @@
 import React from 'react'
 import CategoryBar from '../../components/categoryBar/CategoryBar'
 import BannerCarousel from '../../components/bannerCarousel/BannerCarousel'
-import ProductCarousel from '../../components/productCarousel/ProductCarousel'
+import HomeIntro from './HomeIntro'
+import HomeProducts from './HomeProducts'
+import TopSelling from './TopSelling'
 
 const Home = () => {
   return (
     <>
-      <CategoryBar />
       <BannerCarousel />
-      <ProductCarousel />
+      <CategoryBar />
+      <HomeIntro />
+      <TopSelling />
+      <HomeProducts />
     </>
   )
 }
