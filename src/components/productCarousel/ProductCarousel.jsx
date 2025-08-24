@@ -63,7 +63,7 @@ const ProductCarousel = ({ selectedProducts }) => {
 
           {/* Content */}
           <div className="lg:p-4 flex flex-col flex-grow">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2 h-14">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2 ">
               {item.name || item.title}
             </h3>
 
@@ -73,7 +73,7 @@ const ProductCarousel = ({ selectedProducts }) => {
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-4 h-4 ${i < Math.round(item.rating?.rate) ? 'text-yellow-400' : 'text-gray-300'}`}
+                    className={`hidden lg:flex w-4 h-4 ${i < Math.round(item.rating?.rate) ? 'text-yellow-400' : 'text-gray-300'}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -89,16 +89,16 @@ const ProductCarousel = ({ selectedProducts }) => {
               )}
             </div>
 
-            {/* Price */}
+            {/* Price + Button always aligned */}
             <div className="mt-auto">
-              <div className="flex items-center mb-3">
+              <div className="flex items-center ml-3 mb-3">
                 <span className="text-lg sm:text-xl font-bold text-gray-900">₹{item.price}</span>
                 {item.discount && (
-                  <span className="text-sm text-gray-500 line-through ml-2">₹{Math.round(item.price / (1 - item.discount / 100))}</span>
+                  <span className="text-sm text-gray-500 line-through ml-2">
+                    ₹{Math.round(item.price / (1 - item.discount / 100))}
+                  </span>
                 )}
               </div>
-
-              {/* View Button */}
               <button
                 onClick={() => handleView(item)}
                 className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200"
