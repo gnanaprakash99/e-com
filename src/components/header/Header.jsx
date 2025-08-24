@@ -59,7 +59,7 @@ const Header = () => {
             <div className="flex xl:hidden items-center">
               <button
                 onClick={() => setShowCard(true)}
-                className="relative text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius flex items-center gap-1"
+                className="relative text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius flex items-center gap-1"
               >
                 <FaLuggageCart />
                 Cart
@@ -74,7 +74,7 @@ const Header = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsDropdownOpen(prev => !prev)}
-              className="xl:hidden border border-headerBtnBorder rounded-primaryRadius text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText"
+              className="xl:hidden rounded-primaryRadius text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText"
             >
               <AiOutlineMenu />
             </button>
@@ -123,35 +123,29 @@ const Header = () => {
         </div>
 
         {/* Mobile Dropdown */}
-        {/* Mobile Dropdown */}
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              className="fixed inset-0 bg-black/50 flex justify-end z-50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
+              className="fixed top-0 right-0 h-full w-3/4 ml-20 bg-pageBg rounded-l-2xl shadow-2xl flex flex-col z-50"
             >
-              <motion.div
-                initial={{ x: "100%", opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: "100%", opacity: 0 }}
-                transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
-                className="bg-pageBg rounded-l-2xl w-3/4 xs:w-4/5 sm:w-2/3 md:w-1/2 lg:w-1/3 h-full overflow-y-auto shadow-2xl flex flex-col"
-              >
-                {/* Header / Close Button */}
-                <div className="bg-cardBg p-4 border-b flex justify-between items-center sticky top-0 z-10">
-                  <h2 className="text-lg font-semibold text-headerTextColor">Menu</h2>
-                  <button
-                    onClick={() => setIsDropdownOpen(false)}
-                    className="text-mutedText hover:text-cancelButton transition"
-                  >
-                    <IoClose size={26} />
-                  </button>
-                </div>
+              {/* Header */}
+              <div className="bg-cardBg p-4 border-b flex justify-between items-center sticky top-0 z-10">
+                <h2 className="text-lg font-semibold font-playfair text-headerTextColor">Menu</h2>
+                <button
+                  onClick={() => setIsDropdownOpen(false)}
+                  className="text-mutedText hover:text-cancelButton transition"
+                >
+                  <IoClose size={26} />
+                </button>
+              </div>
 
-                {/* Nav Links */}
-                <nav className="flex flex-col gap-3 px-6 py-6 font-mono text-lg">
+              {/* Scrollable Nav */}
+              <div className="flex-grow overflow-y-auto">
+                <nav className="flex flex-col gap-3 px-6 py-6 font-playfair text-lg">
                   <NavLink
                     to="/"
                     className="py-2 text-headerTextColor hover:text-headerHoverNavText transition"
@@ -199,38 +193,36 @@ const Header = () => {
                     Orders
                   </button>
                 </nav>
+              </div>
 
-                {/* Divider */}
-                <div className="border-t my-4 mx-6"></div>
-
-                {/* Auth Buttons */}
-                <div className="px-6 pb-6 flex flex-col gap-3">
-                  {isLogin ? (
-                    <button
-                      onClick={() => {
-                        handleProfile();
-                        setIsDropdownOpen(false);
-                      }}
-                      className="w-full py-2 flex items-center justify-center text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
-                    >
-                      Account
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setShowLogin(true);
-                        setIsDropdownOpen(false);
-                      }}
-                      className="w-full py-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
-                    >
-                      Log in
-                    </button>
-                  )}
-                </div>
-              </motion.div>
+              {/* Footer Account/Login Button */}
+              <div className="px-6 pb-6 pt-4 border-t bg-pageBg">
+                {isLogin ? (
+                  <button
+                    onClick={() => {
+                      handleProfile();
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full py-2 flex items-center justify-center text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
+                  >
+                    Account
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setShowLogin(true);
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full py-2 text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-lg transition"
+                  >
+                    Log in
+                  </button>
+                )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
+
       </div>
       <div className='hidden xl:flex gap-3 pt-3 items-center justify-center sticky top-[64px] z-40 bg-pageBg'>
         <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 scrollbar-hide">
