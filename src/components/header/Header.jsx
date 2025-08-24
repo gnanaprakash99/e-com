@@ -21,6 +21,7 @@ const Header = () => {
   const { setSearchQuery } = useSearch();
   const { cartItems } = useCart();
   const navigate = useNavigate();
+  const products = useSelector(state => state.ProductData.ProductData);
 
   // login
   const isLogin = true;
@@ -41,6 +42,15 @@ const Header = () => {
       setIsDropdownOpen(false);
     } else {
       alert("Please login and try again");
+    }
+  };
+
+  // search
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      const query = e.target.value.trim();
+      setSearchQuery(query);
+      navigate("/products"); // always go to products page
     }
   };
 
@@ -86,6 +96,7 @@ const Header = () => {
           <Search
             placeholder="Search..."
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
             className="w-full sm:w-[200px] md:w-[300px] lg:w-[400px] xl:w-[600px]"
             suggestions={[...new Set(allSuggestions)]}
           />
