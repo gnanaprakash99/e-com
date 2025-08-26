@@ -3,9 +3,30 @@ import { useCart } from "../../components/context/CardContext";
 import { FaTruck } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import SummaryPageNumber from "./SummaryPageNumber";
+import { useNavigate } from "react-router-dom";
+
+// Custom hook to detect screen size
+const useMediaQuery = (query) => {
+    const [matches, setMatches] = React.useState(false);
+
+    React.useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        const listener = () => setMatches(media.matches);
+        media.addEventListener("change", listener);
+        return () => media.removeEventListener("change", listener);
+    }, [matches, query]);
+
+    return matches;
+};
 
 const FinalSummary = () => {
     const { cartItems } = useCart();
+    const navigate = useNavigate();
+
+    const isSmUp = useMediaQuery("(min-width: 640px)");
 
     // Mock data for address & payment (can be from state/props in real use)
     const address = {
@@ -21,6 +42,25 @@ const FinalSummary = () => {
         (total, item) => total + item.price * item.quantity,
         0
     );
+
+    // handle product edit
+    const handleProductEdit = () => {
+        if (isSmUp) {
+            navigate("/address"); // desktop flow
+        } else {
+            navigate("/Product"); // mobile flow
+        }
+    };
+
+    // handle address edit
+    const handleAddressEdit = () => {
+        navigate('/address');
+    }
+
+    // handle payment edit
+    const handlePaymentEdit = () => {
+        navigate('/payment');
+    }
 
     return (
         <div className="container mx-auto mb-5 px-4">
@@ -56,7 +96,10 @@ const FinalSummary = () => {
                                             Size: {item.size || "S"} • Qty: {item.quantity}
                                         </p>
                                     </div>
-                                    <button className="text-teriteryText font-semibold">EDIT</button>
+                                    <button
+                                        onClick={handleProductEdit}
+                                        className="text-teriteryText font-semibold"
+                                    >EDIT</button>
                                 </div>
                                 <div className="flex justify-between px-4 py-2 border-t text-sm text-gray-500">
                                     <span>Sold by: {item.seller || "TANTANATAN TEXTILES"}</span>
@@ -78,7 +121,10 @@ const FinalSummary = () => {
                                 <p className="text-gray-700 text-sm">{address.street}</p>
                                 <p className="text-gray-700 text-sm">{address.phone}</p>
                             </div>
-                            <button className="text-teriteryText font-semibold">EDIT</button>
+                            <button
+                                onClick={handleAddressEdit}
+                                className="text-teriteryText font-semibold"
+                            >EDIT</button>
                         </div>
                     </div>
 
@@ -87,7 +133,10 @@ const FinalSummary = () => {
                         <h2 className="font-semibold text-lg mb-3">Payment Mode</h2>
                         <div className="border rounded-primaryRadius bg-white p-4 flex justify-between items-center">
                             <span>{paymentMode}</span>
-                            <button className="text-teriteryText font-semibold">EDIT</button>
+                            <button
+                                onClick={handlePaymentEdit}
+                                className="text-teriteryText font-semibold"
+                            >EDIT</button>
                         </div>
                     </div>
                 </div>

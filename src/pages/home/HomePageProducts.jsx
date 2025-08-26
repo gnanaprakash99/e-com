@@ -1,6 +1,6 @@
 import React from "react";
 
-const HomeIntro = () => {
+const HomePageProducts = () => {
   const products = [
     {
       title: "Pottery Paintings",
@@ -31,10 +31,10 @@ const HomeIntro = () => {
         <div className="space-y-6">
           <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
             Discover Artistry at{" "}
-            <span className="text-secondaryText">MuseMarket</span>
+            <span className="text-secondaryText">HridyaTarangini</span>
           </h1>
           <p className="text-lg leading-relaxed text-mutedText">
-            MuseMarket is your curated destination for{" "}
+            HridyaTarangini is your curated destination for{" "}
             <span className="font-medium">handcrafted art</span>,{" "}
             <span className="font-medium">unique décor</span>, and{" "}
             <span className="font-medium">creative expression</span>. From
@@ -72,4 +72,4 @@ const HomeIntro = () => {
   );
 };
 
-export default HomeIntro;
+export default HomePageProducts;

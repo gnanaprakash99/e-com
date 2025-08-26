@@ -62,16 +62,26 @@ const Header = () => {
 
         {/* Logo + Hamburger */}
         <div className="flex items-center p-3 justify-between w-full xl:w-auto">
-          <h1 className="text-2xl font-bold text-headerHeading">Muse Market</h1>
+          <h1 className="text-2xl font-bold text-headerHeading">HridyaTarangini</h1>
 
           {/* Buttons */}
           <div className='flex text-xl gap-3'>
-            <div className="flex xl:hidden items-center">
+            <div className="flex xl:hidden pr-3 items-center">
               <button
                 onClick={() => setShowCard(true)}
-                className="relative text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius flex items-center gap-1"
+                className="relative sm:hidden text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius flex items-center gap-1"
               >
                 <FaLuggageCart />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-3 bg-secondaryLite text-headerTextColor text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setShowCard(true)}
+                className="relative hidden sm:flex text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius items-center gap-1"
+              >
                 Cart
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-3 bg-secondaryLite text-headerTextColor text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
@@ -103,7 +113,7 @@ const Header = () => {
         </div>
 
         {/* Buttons */}
-        <div className="hidden xl:flex gap-3 items-center">
+        <div className="hidden pr-6 xl:flex gap-3 items-center">
           {isLogin ? (
             <button
               onClick={handleProfile}
@@ -121,12 +131,11 @@ const Header = () => {
           )}
           <button
             onClick={() => setShowCard(true)}
-            className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText py-1 px-3 rounded-primaryRadius flex items-center gap-2"
+            className="relative hidden sm:flex text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius items-center gap-1"
           >
-            <FaLuggageCart />
             Cart
             {cartItemCount > 0 && (
-              <span className="bg-secondaryLite text-headerTextColor text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-3 bg-secondaryLite text-headerTextColor text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
                 {cartItemCount}
               </span>
             )}

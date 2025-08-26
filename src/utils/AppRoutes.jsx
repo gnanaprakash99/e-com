@@ -12,6 +12,8 @@ import Profile from '../pages/profile/Profile'
 import PaymentAddress from '../pages/summaryPage/PaymentMethod'
 import FinalSummary from '../pages/summaryPage/FinalSummary'
 import Selectedcategory from '../components/categoryBar/Selectedcategory'
+import SummaryAddress from '../pages/summaryPage/SummaryAddress'
+import ProductSummaryPage from '../pages/summaryPage/ProductSummaryPage'
 
 const AppRoutes = [
   {
@@ -55,6 +57,14 @@ const AppRoutes = [
       {
         path: "checkout",
         element: <SummaryPage />
+      },
+      {
+        path: "product",
+        element: <ProductSummaryPage />
+      },
+      {
+        path: "address",
+        element: <SummaryAddress />
       },
       {
         path: "payment",

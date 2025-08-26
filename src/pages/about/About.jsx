@@ -27,13 +27,13 @@ const About = () => {
           <h1 className="text-4xl font-bold text-center mb-4">About Us</h1>
           <div className="w-20 mx-auto border-b-2 border-mutedText mb-6"></div>
           <p className="text-lg text-center leading-relaxed mb-10">
-            Welcome to <span className="font-semibold text-secondaryText">MuseMarket</span>, your curated destination
+            Welcome to <span className="font-semibold text-secondaryText">HridyaTarangini</span>, your curated destination
             for handcrafted artistry, creative expression, and premium-quality
             goods. We are more than just an e-commerce store — we’re a vibrant
             community that connects passionate artists with appreciative buyers
             from around the world.
             <br /><br />
-            At MuseMarket, we believe in celebrating originality. Every product
+            At HridyaTarangini, we believe in celebrating originality. Every product
             featured on our platform is thoughtfully designed, ethically
             crafted, and artist-approved. Whether you're looking for timeless
             wall art, elegant décor, or one-of-a-kind handmade gifts, you'll
@@ -41,7 +41,7 @@ const About = () => {
             <br /><br />
             We are committed to sustainability, quality, and supporting
             independent creators. With a seamless shopping experience, secure
-            payment gateways, and responsive customer service, MuseMarket ensures
+            payment gateways, and responsive customer service, HridyaTarangini ensures
             every step of your journey is inspired and hassle-free.
             <br /><br />
             Join us in redefining how the world discovers and supports creative

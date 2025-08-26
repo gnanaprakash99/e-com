@@ -5,6 +5,7 @@ import SummaryPageNumber from "./SummaryPageNumber";
 import OrderSummary from "./OrderSummary";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import paymentQR from "../../assets/paymentQR.jpeg";
 
 const PaymentMethodSection = () => {
     const [activeSection, setActiveSection] = useState(null);
@@ -70,11 +71,11 @@ const PaymentMethodSection = () => {
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
                 {/* Payment Method Selection */}
-                <div className="w-full mt-5 lg:w-2/3 bg-white p-4 sm:p-6 rounded-primaryRadius shadow">
+                <div className="w-full mt-5 lg:w-2/3 bg-white p-4 sm:p-6 rounded-primaryRadius ">
                     <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
 
                     {/* Card Payment */}
-                    <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 mb-5 space-y-6">
+                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
                         <div>
                             <button
                                 onClick={() => toggleSection("card")}
@@ -142,7 +143,7 @@ const PaymentMethodSection = () => {
                     </div>
 
                     {/* UPI Payment */}
-                    <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 mb-5 space-y-6">
+                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
                         <div>
                             <button
                                 onClick={() => toggleSection("upi")}
@@ -189,7 +190,7 @@ const PaymentMethodSection = () => {
                     </div>
 
                     {/* Pay Online */}
-                    <div className="bg-cardBg rounded-primaryRadius shadow-md p-6 mb-5 space-y-6">
+                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
                         <div>
                             <button
                                 onClick={() => toggleSection("onlinePay")}
@@ -247,6 +248,36 @@ const PaymentMethodSection = () => {
                         </AnimatePresence>
                     </div>
 
+                    {/* scan and pay */}
+                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 space-y-6">
+                        <div className="border-b border-buttonBorder p-5 ">
+                            <button
+                                onClick={() => toggleSection("scanAndPay")}
+                                className="font-bold"
+                            >
+                                Scan and pay
+                            </button>
+                        </div>
+                        <AnimatePresence>
+                            {activeSection === "scanAndPay" && (
+                                <motion.div
+                                    key="onlinePaySection"
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className="pb-5 "
+                                >
+                                    <div className="">
+                                        <div>
+                                            <img src={paymentQR} alt="paymentQR" className="w-80 h-70 object-contain mx-auto" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
                     {/* Continue Button */}
                     <div className="flex justify-end">
                         <button
@@ -260,7 +291,7 @@ const PaymentMethodSection = () => {
                 </div>
 
                 {/* Order Summary */}
-                <div className="w-full mt-5 lg:w-1/3">
+                <div className="hidden sm:flex w-full mt-5 lg:w-1/3">
                     <OrderSummary />
                 </div>
             </div>

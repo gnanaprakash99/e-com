@@ -48,16 +48,15 @@ const ProductCarousel = ({ selectedProducts }) => {
         <div
           key={index}
           data-aos="fade-up"
-          className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full"
+          className="bg-white transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full"
         >
           {/* Sale badge */}
-          <div className="relative">
+          <div className="relative h-60 w-full">
             {item.discount && (
-              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 z-10">
                 {item.discount}% OFF
               </div>
             )}
-            {/* Image Carousel */}
             <ProductImageRotator images={item.image} name={item.name} />
           </div>
 

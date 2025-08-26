@@ -46,16 +46,16 @@ const CategoryBar = () => {
             {/* Categories list */}
             <div
                 ref={scrollRef}
-                className="flex gap-6 px-6 overflow-x-auto scrollbar-hide"
+                className="flex gap-4 px-6 overflow-x-auto scrollbar-hide"
             >
                 {categories.map((item) => (
                     <div
                         key={item.id}
                         onClick={() => handleSelectedCategory(item.categoryName)}
-                        className="flex-shrink-0 w-52 cursor-pointer"
+                        className="flex-shrink-0 cursor-pointer w-1/2 sm:w-1/3 lg:w-1/4 px-2"
                     >
                         {/* Image */}
-                        <div className="w-full h-64 overflow-hidden">
+                        <div className="w-full h-40 sm:h-56 lg:h-64 overflow-hidden rounded-lg shadow-md">
                             <img
                                 src={item.categoryImage}
                                 alt={item.categoryName}
@@ -64,19 +64,19 @@ const CategoryBar = () => {
                         </div>
 
                         {/* Name */}
-                        <h2
-                            className={`mt-3 text-center text-base ${selectedCategory?.id === item.id
-                                ? "font-semibold text-secondaryLite"
-                                : "text-gray-800"
+                        <h1
+                            className={`mt-3 text-center font-bold text-base ${selectedCategory?.id === item.id
+                                    ? "font-semibold text-secondaryLite"
+                                    : "text-gray-800"
                                 }`}
                         >
                             {item.categoryName.toUpperCase()}
-                        </h2>
+                        </h1>
 
                         {/* Product count */}
-                        <p className="text-center text-sm text-gray-500">
+                        <h2 className="text-center text-sm text-primaryText">
                             {item.count || Math.floor(Math.random() * 120) + 10} products
-                        </p>
+                        </h2>
                     </div>
                 ))}
             </div>

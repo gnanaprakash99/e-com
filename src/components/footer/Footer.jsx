@@ -8,7 +8,7 @@ const Footer = () => {
                     <div className="mb-6 md:mb-0">
                         <a href="https://flowbite.com/" className="flex items-center">
                             {/* <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 me-3" alt="FlowBite Logo" /> */}
-                            <span className="self-center text-2xl font-semibold whitespace-nowrap ">Muse Market</span>
+                            <span className="self-center text-2xl font-semibold whitespace-nowrap ">HridyaTarangini</span>
                         </a>
                     </div>
                     <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -49,7 +49,7 @@ const Footer = () => {
                 </div>
                 <hr className="my-6 sm:mx-auto border-mutedText lg:my-8" />
                 <div className="sm:flex sm:items-center sm:justify-between">
-                    <span className="text-sm  sm:text-center">© 2025 <a href="" className="hover:underline">Muse Market</a>. All Rights Reserved.
+                    <span className="text-sm  sm:text-center">© 2025 <a href="" className="hover:underline">HridyaTarangini</a>. All Rights Reserved.
                     </span>
                     <div className="flex mt-4 sm:justify-center sm:mt-0">
                         <a href="#" className=" hover:text-buttonText">
