@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const Cards = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, incrementQuantity, decrementQuantity } = useCart();
-  console.log('object', cartItems)
 
   if (!isOpen) return null;
 
@@ -37,7 +36,7 @@ const Cards = ({ isOpen, onClose }) => {
           <div className="text-center ">
             <h3 className="text-lg mb-5">Your cart is empty</h3>
             <button
-              className="mx-auto block border-[1px] border-buttonBorder  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius duration-200"
+              className="mx-auto block mb-6 border-[1px] border-buttonBorder  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  bg-primaryBtn text-buttonText font-semibold py-2 px-6 rounded-primaryRadius duration-200"
               onClick={handleContinueShopping}
             >
               Continue Shopping

@@ -6,8 +6,12 @@ import OrderSummary from "./OrderSummary";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import paymentQR from "../../assets/paymentQR.jpeg";
+import { RiArrowDownSLine } from "react-icons/ri";
+import { useCart } from "../../components/context/CardContext";
+import { Link } from "react-router-dom";
 
 const PaymentMethodSection = () => {
+    const { cartItems } = useCart();
     const [activeSection, setActiveSection] = useState(null);
 
     const toggleSection = (section) => {
@@ -70,238 +74,274 @@ const PaymentMethodSection = () => {
         }
     };
 
-    return (
-        <div className="container mx-auto mb-5 px-4">
-            <SummaryPageNumber currentStep="Payment" />
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-
-                {/* Payment Method Selection */}
-                <div className="w-full mt-5 lg:w-2/3 bg-white p-4 sm:p-6 rounded-primaryRadius ">
-                    <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
-
-                    {/* Card Payment */}
-                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
-                        <div>
-                            <button
-                                onClick={() => toggleSection("card")}
-                                className="font-bold"
-                            >
-                                Debit/Credit Cards
-                            </button>
-                        </div>
-                        <AnimatePresence>
-                            {activeSection === "card" && (
-                                <motion.div
-                                    key="cardSection"
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block font-medium mb-1">Name on Card</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
-                                            />
-                                            <small>Full name as displayed on card</small>
-                                        </div>
-                                        <div>
-                                            <label className="block font-medium mb-1">Card Number</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block font-medium mb-1">Expiration</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                placeholder="MM/YY"
-                                                className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block font-medium mb-1">CVV</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="submit"
-                                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
-                                        >
-                                            Verify card details
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* UPI Payment */}
-                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
-                        <div>
-                            <button
-                                onClick={() => toggleSection("upi")}
-                                className="font-bold"
-                            >
-                                UPI Payment
-                            </button>
-                        </div>
-                        <AnimatePresence>
-                            {activeSection === "upi" && (
-                                <motion.div
-                                    key="upiSection"
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                >
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block font-medium mb-1">UPI ID</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                placeholder="example@upi"
-                                                className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                            />
-                                        </div>
-                                        <p className="text-sm text-mutedText">
-                                            You will receive a request in your UPI app to complete the payment.
-                                        </p>
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="submit"
-                                            disabled
-                                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-bold py-3 rounded-primaryRadius mt-6 shadow"
-                                        >
-                                            Verify UPI ID
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Pay Online */}
-                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
-                        <div>
-                            <button
-                                onClick={() => toggleSection("onlinePay")}
-                                className="font-bold"
-                            >
-                                Pay Online
-                            </button>
-                        </div>
-                        <AnimatePresence>
-                            {activeSection === "onlinePay" && (
-                                <motion.div
-                                    key="onlinePaySection"
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                >
-                                    <div className="space-y-4">
-                                        <p className="text-sm">Select your preferred app:</p>
-                                        <div className="space-y-3">
-                                            {wallets.map((wallet, index) => (
-                                                <div key={index} className="flex items-center space-x-3">
-                                                    <input
-                                                        type="radio"
-                                                        id={wallet.name}
-                                                        name="wallet"
-                                                        value={wallet.name}
-                                                        checked={selectedWallet === wallet.name}
-                                                        onChange={() => setSelectedWallet(wallet.name)}
-                                                        className="cursor-pointer"
-                                                    />
-                                                    <label
-                                                        htmlFor={wallet.name}
-                                                        className="flex items-center space-x-2 cursor-pointer"
-                                                    >
-                                                        {wallet.icon}
-                                                        <span>{wallet.name}</span>
-                                                    </label>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-end">
-                                        <button
-                                            type="submit"
-                                            onClick={handleWalletPayment}
-                                            disabled={!selectedWallet}
-                                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
-                                        >
-                                            Pay Now
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* scan and pay */}
-                    <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 space-y-6">
-                        <div className="border-b border-buttonBorder p-5 ">
-                            <button
-                                onClick={() => toggleSection("scanAndPay")}
-                                className="font-bold"
-                            >
-                                Scan and pay
-                            </button>
-                        </div>
-                        <AnimatePresence>
-                            {activeSection === "scanAndPay" && (
-                                <motion.div
-                                    key="onlinePaySection"
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                                    className="pb-5 "
-                                >
-                                    <div className="">
-                                        <div>
-                                            <img src={paymentQR} alt="paymentQR" className="w-80 h-70 object-contain mx-auto" />
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Continue Button */}
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            onClick={handlePaymentProcess}
-                            className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
-                        >
-                            Continue
-                        </button>
-                    </div>
-                </div>
-
-                {/* Order Summary */}
-                <div className="hidden sm:flex w-full mt-5 lg:w-1/3">
-                    <OrderSummary />
+    const EmptyCart = () => (
+        <div className="container mx-auto my-12 py-12 px-4">
+            <div className="flex justify-center">
+                <div className="w-full max-w-md text-center bg-cardBg p-6 md:p-8 rounded-primaryRadius shadow">
+                    <h4 className="text-xl md:text-2xl font-semibold mb-6">
+                        No items in your cart
+                    </h4>
+                    <Link
+                        to="/"
+                        className="inline-flex items-center px-4 py-2 md:px-6 md:py-3 border text-buttonText bg-primaryBtn rounded-primaryRadius transition"
+                    >
+                        <i className="fa fa-arrow-left mr-2"></i> Continue Shopping
+                    </Link>
                 </div>
             </div>
         </div>
     );
+
+    const ShowCheckout = () => {
+
+        return (
+            <div className="container mx-auto mb-5 px-4">
+                <SummaryPageNumber currentStep="Payment" />
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+
+                    {/* Payment Method Selection */}
+                    <div className="w-full mt-5 lg:w-2/3 bg-white p-4 sm:p-6 rounded-primaryRadius ">
+                        <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
+
+                        {/* Card Payment */}
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
+                            <div className="flex justify-between ">
+                                <button
+                                    onClick={() => toggleSection("card")}
+                                    className="font-bold"
+                                >
+                                    Debit/Credit Cards
+                                </button>
+                                <button onClick={() => toggleSection("card")}>
+                                    <RiArrowDownSLine className="inline-block ml-2 text-2xl" />
+                                </button>
+                            </div>
+                            <AnimatePresence>
+                                {activeSection === "card" && (
+                                    <motion.div
+                                        key="cardSection"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    >
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block font-medium mb-1">Name on Card</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
+                                                />
+                                                <small>Full name as displayed on card</small>
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium mb-1">Card Number</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium mb-1">Expiration</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="MM/YY"
+                                                    className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block font-medium mb-1">CVV</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    className="w-full border-b-2 border-mutedText bg-transparent focus:border-inputSelectBorder focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="submit"
+                                                className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
+                                            >
+                                                Verify card details
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* UPI Payment */}
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
+                            <div className="flex justify-between ">
+                                <button
+                                    onClick={() => toggleSection("upi")}
+                                    className="font-bold"
+                                >
+                                    UPI Payment
+                                </button>
+                                <button onClick={() => toggleSection("upi")}>
+                                    <RiArrowDownSLine className="inline-block ml-2 text-2xl" />
+                                </button>
+                            </div>
+                            <AnimatePresence>
+                                {activeSection === "upi" && (
+                                    <motion.div
+                                        key="upiSection"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    >
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block font-medium mb-1">UPI ID</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="example@upi"
+                                                    className="w-full border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
+                                                />
+                                            </div>
+                                            <p className="text-sm text-mutedText">
+                                                You will receive a request in your UPI app to complete the payment.
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="submit"
+                                                disabled
+                                                className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-bold py-3 rounded-primaryRadius mt-6 shadow"
+                                            >
+                                                Verify UPI ID
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Pay Online */}
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder p-6 mb-5 space-y-6">
+                            <div className="flex justify-between ">
+                                <button
+                                    onClick={() => toggleSection("onlinePay")}
+                                    className="font-bold"
+                                >
+                                    Pay Online
+                                </button>
+                                <button onClick={() => toggleSection("onlinePay")}>
+                                    <RiArrowDownSLine className="inline-block ml-2 text-2xl" />
+                                </button>
+                            </div>
+                            <AnimatePresence>
+                                {activeSection === "onlinePay" && (
+                                    <motion.div
+                                        key="onlinePaySection"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    >
+                                        <div className="space-y-4">
+                                            <p className="text-sm">Select your preferred app:</p>
+                                            <div className="space-y-3">
+                                                {wallets.map((wallet, index) => (
+                                                    <div key={index} className="flex items-center space-x-3">
+                                                        <input
+                                                            type="radio"
+                                                            id={wallet.name}
+                                                            name="wallet"
+                                                            value={wallet.name}
+                                                            checked={selectedWallet === wallet.name}
+                                                            onChange={() => setSelectedWallet(wallet.name)}
+                                                            className="cursor-pointer"
+                                                        />
+                                                        <label
+                                                            htmlFor={wallet.name}
+                                                            className="flex items-center space-x-2 cursor-pointer"
+                                                        >
+                                                            {wallet.icon}
+                                                            <span>{wallet.name}</span>
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-end">
+                                            <button
+                                                type="submit"
+                                                onClick={handleWalletPayment}
+                                                disabled={!selectedWallet}
+                                                className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
+                                            >
+                                                Pay Now
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* scan and pay */}
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 space-y-6">
+                            <div className="flex justify-between border-b border-buttonBorder p-5 ">
+
+                                <button
+                                    onClick={() => toggleSection("scanAndPay")}
+                                    className="font-bold"
+                                >
+                                    Scan and pay
+                                </button>
+                                <button onClick={() => toggleSection("scanAndPay")}>
+                                    <RiArrowDownSLine className="inline-block ml-2 text-2xl" />
+                                </button>
+                            </div>
+                            <AnimatePresence>
+                                {activeSection === "scanAndPay" && (
+                                    <motion.div
+                                        key="onlinePaySection"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                                        className="pb-5 "
+                                    >
+                                        <div className="">
+                                            <div>
+                                                <img src={paymentQR} alt="paymentQR" className="w-80 h-70 object-contain mx-auto" />
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Continue Button */}
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                onClick={handlePaymentProcess}
+                                className="border-[1px] border-buttonBorder cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 w-primaryWidth bg-primaryBtn text-buttonText font-medium py-3 rounded-primaryRadius mt-6 shadow"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Order Summary */}
+                    <div className="hidden sm:flex w-full mt-5 lg:w-1/3">
+                        <OrderSummary />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return cartItems.length === 0 ? <EmptyCart /> : <ShowCheckout />;
 };
 
 export default PaymentMethodSection;

@@ -117,7 +117,7 @@ const FinalSummary = () => {
                     {/* Delivery Address */}
                     <div>
                         <div className="flex items-center gap-2 mb-3">
-                            <FaMapMarkerAlt className="text-teriteryText" />
+                            <FaMapMarkerAlt className="text-success" />
                             <h2 className="font-semibold text-lg">Delivery Address</h2>
                         </div>
                         <div className="border rounded-primaryRadius bg-white p-4 flex justify-between items-start">
