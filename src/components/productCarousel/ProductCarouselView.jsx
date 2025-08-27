@@ -132,7 +132,7 @@ const ProductCarouselView = () => {
                     <>
                         <button
                             onClick={handlePrev}
-                            className="absolute top-2/4 sm:top-1/4 left-3 -translate-y-1/2 
+                            className="absolute top-3/4 sm:top-1/4 left-3 -translate-y-1/2 
            bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
            flex items-center justify-center rounded-full 
            text-2xl sm:text-3xl hover:bg-black/60 transition"
@@ -142,7 +142,7 @@ const ProductCarouselView = () => {
 
                         <button
                             onClick={handleNext}
-                            className="absolute top-2/4 sm:top-1/4 right-3 -translate-y-1/2 
+                            className="absolute top-3/4 sm:top-1/4 right-3 -translate-y-1/2 
            bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
            flex items-center justify-center rounded-full 
            text-2xl sm:text-3xl hover:bg-black/60 transition"
