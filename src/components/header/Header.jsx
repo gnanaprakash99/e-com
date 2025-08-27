@@ -102,7 +102,7 @@ const Header = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="w-full xl:w-auto flex justify-center">
+        <div className="w-full xl:w-auto px-3 sm:px-0 flex justify-center">
           <Search
             placeholder="Search..."
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -150,11 +150,11 @@ const Header = () => {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
-              className="fixed top-0 right-0 h-full w-3/4 ml-20 bg-pageBg rounded-l-2xl shadow-2xl flex flex-col z-50"
+              className="fixed top-0 right-0 h-full w-3/4 sm:w-1/2 lg:w-1/3 ml-20 bg-pageBg rounded-l-2xl shadow-2xl flex flex-col z-50"
             >
               {/* Header */}
               <div className="bg-cardBg p-4 border-b flex justify-between items-center sticky top-0 z-10">
-                <h2 className="text-lg font-semibold font-playfair text-headerTextColor">Menu</h2>
+                <h2 className="text-lg font-semibold text-headerTextColor">Menu</h2>
                 <button
                   onClick={() => setIsDropdownOpen(false)}
                   className="text-mutedText hover:text-cancelButton transition"
@@ -245,10 +245,10 @@ const Header = () => {
 
       </div>
       <div className='hidden xl:flex gap-3 pt-3 items-center justify-center sticky top-[64px] z-40 bg-pageBg'>
-        <div className="flex overflow-x-auto whitespace-nowrap gap-2 px-4 scrollbar-hide">
+        <div className="flex overflow-x-auto whitespace-nowrap gap-5 px-4 scrollbar-hide">
 
           {/* Desktop Nav Links */}
-          <div className="hidden xl:flex gap-3 items-center">
+          <div className="hidden xl:flex gap-5 items-center">
             <NavLink to="/" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>Home</NavLink>
             <NavLink to="/products" className={({ isActive }) => isActive ? 'text-headerHoverNavText' : 'text-headerTextColor hover:text-headerHoverNavText'}>Product</NavLink>
             <NavLink to="/about" className={({ isActive }) => isActive ? 'text-headerHoverNavText px-2' : 'text-headerTextColor hover:text-headerHoverNavText px-2'}>About</NavLink>
@@ -256,7 +256,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Buttons */}
-          <div className="hidden xl:flex gap-3 items-center">
+          <div className="hidden xl:flex gap-5 items-center">
             <button
               onClick={handleOrders}
               className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverNavText px-2 rounded-primaryRadius"

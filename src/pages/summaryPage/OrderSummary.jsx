@@ -31,7 +31,7 @@ const OrderSummary = () => {
                                     {/* Product Info */}
                                     <div className="flex-1">
                                         <h4 className="text-sm md:text-lg font-semibold">{item.name}</h4>
-                                        <p className="text-xs md:text-sm text-secondaryText">
+                                        <p className="text-xs md:text-sm font-jkabode text-secondaryText">
                                             ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
                                         </p>
                                     </div>
@@ -62,18 +62,18 @@ const OrderSummary = () => {
                 <div className="flex flex-col border-b border-mutedText">
                     <div className="flex justify-between pt-2">
                         <span>Products ({totalItems})</span>
-                        <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
+                        <span className="font-semibold font-jkabode">₹{subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between mb-3">
                         <span>Shipping</span>
-                        <span className="font-semibold">₹{shipping.toFixed(2)}</span>
+                        <span className="font-semibold font-jkabode">₹{shipping.toFixed(2)}</span>
                     </div>
                 </div>
 
                 {/* Total */}
                 <div className="flex justify-between font-semibold text-lg">
                     <span>Total</span>
-                    <span>₹{(subtotal + shipping).toFixed(2)}</span>
+                    <span className='font-jkabode'>₹{(subtotal + shipping).toFixed(2)}</span>
                 </div>
             </div>
         </div>

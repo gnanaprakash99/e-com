@@ -1,28 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import banner1 from '../../assets/banner1.jpeg'
+import banner2 from '../../assets/banner2.jpeg'
+import banner3 from '../../assets/banner3.jpeg'
 
 let initialState = {
     bannerCarouselData: [
-        {
-            id: 1,
-            Imgsrc:
-                "https://rukminim1.flixcart.com/fk-p-flap/844/140/image/13d4b7ac61ff30ee.jpg?q=50",
-        },
-        {
-            id: 2,
-            Imgsrc:
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlWeaIA6lfGH3OUs6S9jLJBIxr1SwVGVyOEw&s",
-        },
-        {
-            id: 3,
-            Imgsrc:
-                "https://rukminim1.flixcart.com/fk-p-flap/844/140/image/13d4b7ac61ff30ee.jpg?q=50",
-        },
-        {
-            id: 4,
-            Imgsrc:
-                "https://rukminim1.flixcart.com/fk-p-flap/1688/280/image/61c104839324e184.jpg?q=50",
-        },
-    ]
+        { id: 1, Imgsrc: banner1 },
+        { id: 2, Imgsrc: banner2 },
+        { id: 3, Imgsrc: banner3 },
+    ],
 }
 
 const BannerCarouselSlice = createSlice({

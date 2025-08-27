@@ -82,7 +82,7 @@ const CategoryBar = () => {
             </div>
 
             {/* Hide scrollbar cross-browser */}
-            <style jsx>{`
+            <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SiGooglepay, SiPhonepe, SiPaytm } from "react-icons/si";
 import { FaAmazonPay } from "react-icons/fa";
 import SummaryPageNumber from "./SummaryPageNumber";
@@ -13,6 +13,11 @@ const PaymentMethodSection = () => {
     const toggleSection = (section) => {
         setActiveSection((prev) => (prev === section ? null : section));
     };
+
+    // Scroll to top on page load
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const navigate = useNavigate();
 

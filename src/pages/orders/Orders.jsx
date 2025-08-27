@@ -31,7 +31,7 @@ const Orders = () => {
               </div>
 
               <div className="text-right">
-                <p className="text-lg font-semibold">₹{order.totalPrice}</p>
+                <p className="text-lg font-jkabode font-semibold">₹{order.totalPrice}</p>
                 <span
                   className={`text-sm font-medium px-2 py-1 rounded-primaryRadius ${
                     order.status === "Delivered"

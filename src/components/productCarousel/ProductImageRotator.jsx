@@ -21,7 +21,7 @@ const ProductImageRotator = ({ images, name }) => {
     }, [imageList.length]);
 
     return (
-        <div className="w-full h-60 bg-gray-100 rounded-t-primaryRadius flex items-center justify-center overflow-hidden">
+        <div className="w-full h-60 bg-gray-100 flex items-center justify-center overflow-hidden">
             <img
                 className={`max-w-full max-h-full object-contain transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
                 src={imageList[index]}

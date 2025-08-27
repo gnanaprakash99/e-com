@@ -91,7 +91,7 @@ const ProductCarousel = ({ selectedProducts }) => {
             {/* Price + Button always aligned */}
             <div className="mt-auto">
               <div className="flex items-center ml-3 mb-3">
-                <span className="text-lg sm:text-xl font-bold text-gray-900">₹{item.price}</span>
+                <span className="text-lg sm:text-xl font-bold font-jkabode text-gray-900">₹{item.price}</span>
                 {item.discount && (
                   <span className="text-sm text-gray-500 line-through ml-2">
                     ₹{Math.round(item.price / (1 - item.discount / 100))}
@@ -100,7 +100,7 @@ const ProductCarousel = ({ selectedProducts }) => {
               </div>
               <button
                 onClick={() => handleView(item)}
-                className="w-full bg-gray-900 text-white py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200"
+                className="w-full bg-secondaryLite text-white py-2.5 rounded-lg font-medium transition-colors duration-200"
               >
                 View Details
               </button>

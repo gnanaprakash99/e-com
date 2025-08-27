@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCart } from "../../components/context/CardContext";
 import { FaTruck } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -8,6 +8,11 @@ import { useNavigate } from "react-router-dom";
 // Custom hook to detect screen size
 const useMediaQuery = (query) => {
     const [matches, setMatches] = React.useState(false);
+
+    // Scroll to top on page load
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     React.useEffect(() => {
         const media = window.matchMedia(query);

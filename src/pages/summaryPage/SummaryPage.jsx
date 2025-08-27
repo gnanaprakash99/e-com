@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SummaryPageNumber from "./SummaryPageNumber";
 import SummaryAddress from "./SummaryAddress";
 import { useCart } from "../../components/context/CardContext";
@@ -25,6 +25,11 @@ const useMediaQuery = (query) => {
 const SummaryPage = () => {
   const { cartItems } = useCart();
 
+  // ✅ scroll to top when this page mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // check if screen is sm and up
   const isSmUp = useMediaQuery("(max-width: 640px)");
 
@@ -48,7 +53,7 @@ const SummaryPage = () => {
 
   const ShowCheckout = () => {
     if (!isSmUp) {
-      // 👉 Desktop flow
+      // Desktop flow
       return (
         <div>
           <SummaryPageNumber currentStep="Address" />
@@ -56,7 +61,7 @@ const SummaryPage = () => {
         </div>
       );
     } else {
-      // 👉 Mobile flow
+      // Mobile flow
       return (
         <div>
           <SummaryPageNumber currentStep="Product" />

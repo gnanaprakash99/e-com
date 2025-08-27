@@ -21,16 +21,16 @@ const Cards = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-      <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
+      <div className="w-full max-w-md bg-cardBg text-primaryText m-4 rounded-primaryRadius shadow-lg relative">
         {/* Close Button */}
-        <div className="border-b">
+        <div className="border-b bg-secondaryLite p-4 rounded-t-primaryRadius">
           <button
             className="absolute top-4 right-4 hover:font-medium text-2xl hover:text-cancelButton "
             onClick={onClose}
           >
             &times;
           </button>
-          <h2 className="text-2xl font-bold mb-3 text-center">Your Cart</h2>
+          <h2 className="text-2xl font-bold text-center">Your Cart</h2>
         </div>
 
         {cartItems.length === 0 ? (
@@ -44,7 +44,7 @@ const Cards = ({ isOpen, onClose }) => {
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 p-4">
             {cartItems.map((item) => (
               <div key={item.id} className="flex gap-3 justify-between items-center border-b pb-3">
                 {item.image && (
@@ -54,7 +54,7 @@ const Cards = ({ isOpen, onClose }) => {
                 {/* Product Info */}
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold">{item.name}</h4>
-                  <p className="text-sm text-">
+                  <p className="text-sm text- font-jkabode">
                     ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
                   </p>
                 </div>

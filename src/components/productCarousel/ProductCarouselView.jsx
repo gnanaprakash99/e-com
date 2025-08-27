@@ -169,7 +169,7 @@ const ProductCarouselView = () => {
                     </div>
 
                     {/* Price */}
-                    <p className="text-2xl sm:text-3xl font-semibold">₹{product.price}</p>
+                    <p className="text-2xl sm:text-3xl font-jkabode font-semibold">₹{product.price}</p>
                 </div>
 
                 {/* Quantity & Buttons */}

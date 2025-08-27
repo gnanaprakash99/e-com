@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import IndianStates from "../../utils/IndianStates";
 import OrderSummary from './OrderSummary';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,11 @@ const SummaryAddress = ({ setStep }) => {
     const handlePaymentProcess = () => {
         navigate('/payment');
     };
+
+    // Scroll to top on page load
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // Address State
     const [addresses, setAddresses] = useState([

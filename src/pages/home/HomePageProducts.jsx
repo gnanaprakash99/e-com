@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const HomePageProducts = () => {
+  const navigate = useNavigate();
+
   const products = [
     {
       title: "Pottery Paintings",
@@ -24,6 +27,10 @@ const HomePageProducts = () => {
     },
   ];
 
+  const handleExplore = () => {
+    navigate("/products");
+  };
+
   return (
     <section className="bg-[#f9f9f9] text-primaryText px-6 py-16 sm:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-12">
@@ -41,7 +48,10 @@ const HomePageProducts = () => {
             timeless paintings to elegant pottery, we bring you masterpieces
             that connect culture, craftsmanship, and creativity.
           </p>
-          <button className="bg-secondaryText text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-secondaryText/90 transition">
+          <button
+            onClick={handleExplore}
+            className="bg-secondaryText text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-secondaryText/90 transition"
+          >
             Explore Collection
           </button>
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 
 // Custom hook to detect screen size
-const useMediaQuery = (query) => {
+export const useMediaQuery = (query) => {
   const [matches, setMatches] = React.useState(false);
 
   React.useEffect(() => {
