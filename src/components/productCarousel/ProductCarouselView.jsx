@@ -111,35 +111,41 @@ const ProductCarouselView = () => {
     return (
         <div className="flex flex-col md:flex-row min-h-screen p-4 sm:p-6 lg:p-8 gap-6">
             {/* Image Carousel */}
-            <div className="w-full md:w-1/2 flex justify-center items-start relative">
-                {/* Always show product image */}
-                <img
-                    src={images[currentIndex]}
-                    alt={`Product Image ${currentIndex + 1}`}
-                    className="w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
-                   rounded-primaryRadius bg-productCardBg 
-                   p-4 sm:p-6 md:p-10 shadow"
-                />
+            <div className="w-full md:w-1/2 flex justify-center items-start relative overflow-hidden">
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={currentIndex} // ensures animation triggers on change
+                        src={images[currentIndex]}
+                        alt={`Product Image ${currentIndex + 1}`}
+                        className="w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
+                 rounded-primaryRadius bg-productCardBg 
+                 p-4 sm:p-6 md:p-10 sm:m-20 lg:m-0 shadow"
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                    />
+                </AnimatePresence>
 
                 {/* Show Prev/Next only if multiple images */}
                 {images.length > 1 && (
                     <>
                         <button
                             onClick={handlePrev}
-                            className="absolute top-1/4 left-3 -translate-y-1/2 
-                   bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
-                   flex items-center justify-center rounded-full 
-                   text-2xl sm:text-3xl hover:bg-black/60 transition"
+                            className="absolute top-2/4 sm:top-1/4 left-3 -translate-y-1/2 
+           bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
+           flex items-center justify-center rounded-full 
+           text-2xl sm:text-3xl hover:bg-black/60 transition"
                         >
                             ‹
                         </button>
 
                         <button
                             onClick={handleNext}
-                            className="absolute top-1/4 right-3 -translate-y-1/2 
-                   bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
-                   flex items-center justify-center rounded-full 
-                   text-2xl sm:text-3xl hover:bg-black/60 transition"
+                            className="absolute top-2/4 sm:top-1/4 right-3 -translate-y-1/2 
+           bg-black/40 text-white w-10 h-10 sm:w-12 sm:h-12 
+           flex items-center justify-center rounded-full 
+           text-2xl sm:text-3xl hover:bg-black/60 transition"
                         >
                             ›
                         </button>

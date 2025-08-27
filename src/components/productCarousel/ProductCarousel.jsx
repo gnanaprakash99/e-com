@@ -62,7 +62,7 @@ const ProductCarousel = ({ selectedProducts }) => {
 
           {/* Content */}
           <div className="lg:p-4 flex flex-col flex-grow">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2 ">
+            <h3 className="text-base sm:text-lg text-left font-semibold text-gray-800 mb-2 line-clamp-2 ">
               {item.name || item.title}
             </h3>
 
