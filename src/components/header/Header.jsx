@@ -62,7 +62,11 @@ const Header = () => {
 
         {/* Logo + Hamburger */}
         <div className="flex items-center p-3 justify-between w-full xl:w-auto">
-          <h1 className="text-2xl font-bold text-headerHeading">HridyaTarangini</h1>
+          <NavLink
+            to="/"
+          >
+            <h1 className="text-2xl font-bold text-headerHeading">HridyaTarangini</h1>
+          </NavLink>
 
           {/* Buttons */}
           <div className='flex text-xl gap-3'>

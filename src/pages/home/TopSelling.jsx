@@ -5,22 +5,22 @@ const TopSelling = () => {
     {
       title: "Abstract Canvas",
       price: "₹2,499",
-      img: "https://www.tallengestore.com/cdn/shop/products/AcrylicArt-Ganesha_1_a0983c03-4f37-457d-afa1-59db818d2669_grande.jpg?v=1603783936?auto=compress&cs=tinysrgb&w=600",
+      img: "https://rukminim2.flixcart.com/image/704/844/kkcwo7k0/poster/4/z/6/extra-large-abstract-painting-print-waterproof-canvas-poster-24-original-imafzq3muggpq5kk.jpeg?q=90&crop=false",
     },
     {
       title: "Handcrafted Pottery",
       price: "₹1,899",
-      img: "https://images.pexels.com/photos/357428/pexels-photo-357428.jpeg?auto=compress&cs=tinysrgb&w=600",
+      img: "https://u-mercari-images.mercdn.net/photos/m50632315278_1.jpg",
     },
     {
       title: "Watercolour Artwork",
       price: "₹1,299",
-      img: "https://i0.wp.com/micheleclamp.com/wp-content/uploads/2022/02/IMG_4321-scaled.jpg?auto=compress&cs=tinysrgb&w=600",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGoG_diADDzjHMVU0jNNZQ17PD7TjGcnqUYA&s",
     },
     {
       title: "Pottery Painting",
       price: "₹2,999",
-      img: "https://scenebooking.com/wp-content/uploads/2024/11/Untitled-design-1-2.png?auto=compress&cs=tinysrgb&w=600",
+      img: "https://m.media-amazon.com/images/I/81i-nqT6adL.jpg",
     },
   ];
 
