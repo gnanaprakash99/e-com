@@ -4,12 +4,14 @@ import { useCart } from '../context/CardContext';
 import { CiDeliveryTruck } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
+import Cards from "../../pages/cards/Cards";
 
 const ProductCarouselView = () => {
     const location = useLocation();
     const product = location.state?.product;
-    const { addToCart } = useCart();
+    const { addToCart, cartItems } = useCart();
     const navigate = useNavigate();
+    const [showCard, setShowCard] = useState(false);
 
     const [quantity, setQuantity] = useState(1);
     const [checkDeliveryDate, setCheckDeliveryDate] = useState(false);
@@ -108,6 +110,9 @@ const ProductCarouselView = () => {
         setCheckDeliveryDate(true);
     }
 
+    // Check if product is already in cart
+    const isInCart = cartItems.some(item => item.id === product.id);
+
     return (
         <div className="flex flex-col md:flex-row min-h-screen p-4 sm:p-6 lg:p-8 gap-6">
             {/* Image Carousel */}
@@ -180,12 +185,21 @@ const ProductCarouselView = () => {
 
                 {/* Quantity & Buttons */}
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-4">
-                    <button
-                        onClick={handleAddToCart}
-                        className="bg-primaryBtn text-buttonText h-10 sm:h-primaryHeight px-4 sm:w-primaryWidth rounded-primaryRadius text-sm sm:text-lg font-medium border border-buttonBorder hover:scale-105 transition-transform"
-                    >
-                        Add to Cart
-                    </button>
+                    {isInCart ? (
+                        <button
+                            onClick={() => setShowCard(true)}
+                            className="bg-primaryBtn text-buttonText h-10 sm:h-primaryHeight px-4 sm:w-primaryWidth rounded-primaryRadius text-sm sm:text-lg font-medium border border-buttonBorder hover:scale-105 transition-transform"
+                        >
+                            Go To Cart
+                        </button>
+                    ) : (
+                        <button
+                            onClick={handleAddToCart}
+                            className="bg-primaryBtn text-buttonText h-10 sm:h-primaryHeight px-4 sm:w-primaryWidth rounded-primaryRadius text-sm sm:text-lg font-medium border border-buttonBorder hover:scale-105 transition-transform"
+                        >
+                            Add to Cart
+                        </button>
+                    )}
                     <button
                         onClick={handleBuyNow}
                         className="bg-secondaryBtn text-buttonText2 h-10 sm:h-primaryHeight px-4 sm:w-primaryWidth rounded-primaryRadius text-sm sm:text-lg font-medium border border-buttonBorder hover:scale-105 transition-transform"
@@ -339,6 +353,8 @@ const ProductCarouselView = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <Cards isOpen={showCard} onClose={() => setShowCard(false)} />
         </div>
     );
 };

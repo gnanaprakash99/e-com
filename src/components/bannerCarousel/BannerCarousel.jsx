@@ -12,11 +12,11 @@ const BannerCarousel = () => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 700,
+    speed: 1200,
     autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
   };
 
   return (

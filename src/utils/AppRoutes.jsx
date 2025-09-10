@@ -14,6 +14,7 @@ import FinalSummary from '../pages/summaryPage/FinalSummary'
 import Selectedcategory from '../components/categoryBar/Selectedcategory'
 import SummaryAddress from '../pages/summaryPage/SummaryAddress'
 import ProductSummaryPage from '../pages/summaryPage/ProductSummaryPage'
+import Cards from '../pages/cards/Cards'
 
 const AppRoutes = [
   {
@@ -49,6 +50,10 @@ const AppRoutes = [
       {
         path: "profile",
         element: <Profile />
+      },
+      {
+        path: "cart",
+        element: <Cards />
       },
       {
         path: "orders",
