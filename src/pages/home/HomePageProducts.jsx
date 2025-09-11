@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import LazyImage from "../../components/loader/LazyImage";
 
 const HomePageProducts = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const HomePageProducts = () => {
               className="min-w-[240px] bg-white border rounded-2xl overflow-hidden shadow hover:shadow-lg transition duration-300"
             >
               <div className="h-44 w-full overflow-hidden">
-                <img
+                <LazyImage
                   src={item.img}
                   alt={item.title}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"

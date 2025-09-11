@@ -1,4 +1,5 @@
 import React from "react";
+import LazyImage from "../../components/loader/LazyImage";
 
 const TopSelling = () => {
   const products = [
@@ -37,7 +38,7 @@ const TopSelling = () => {
               className="min-w-[220px] bg-white rounded-xl shadow hover:shadow-lg border transition duration-300"
             >
               <div className="h-44 w-full overflow-hidden rounded-t-xl">
-                <img
+                <LazyImage
                   src={item.img}
                   alt={item.title}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"

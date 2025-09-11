@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import LazyImage from '../loader/LazyImage';
 
 const ProductImageRotator = ({ images, name }) => {
   const isArray = Array.isArray(images);
@@ -54,12 +55,10 @@ const ProductImageRotator = ({ images, name }) => {
       onTouchEnd={stopRotation}
       onTouchCancel={stopRotation}
     >
-      <img
-        className={`max-w-full max-h-full object-contain transition-opacity duration-500 ease-in-out ${
-          fade ? "opacity-100" : "opacity-0"
-        }`}
+      <LazyImage
         src={imageList[index]}
         alt={name}
+        className={`transition-opacity duration-500 ease-in-out ${fade ? "opacity-100" : "opacity-0"}`}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../loader/LazyImage';
 
 const CategoryBar = () => {
   const categories = useSelector((state) => state.productCategory.productCategory);
@@ -68,7 +69,7 @@ const CategoryBar = () => {
             >
               {/* Image */}
               <div className="w-full h-40 sm:h-56 lg:h-64 overflow-hidden rounded-lg shadow-md">
-                <img
+                <LazyImage
                   src={item.categoryImage}
                   alt={item.categoryName}
                   className="w-full h-full object-cover transition-transform hover:scale-105"

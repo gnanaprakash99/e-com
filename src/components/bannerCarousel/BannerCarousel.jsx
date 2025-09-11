@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import LazyImage from '../loader/LazyImage';
 
 const BannerCarousel = () => {
   const bannerCarouselData = useSelector(
@@ -24,7 +25,7 @@ const BannerCarousel = () => {
       <Slider {...settings}>
         {bannerCarouselData.map((item) => (
           <div key={item.id} className="w-full">
-            <img
+            <LazyImage
               src={item.Imgsrc}
               alt=""
               className="
