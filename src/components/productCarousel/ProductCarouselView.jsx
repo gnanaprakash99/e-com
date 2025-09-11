@@ -11,11 +11,15 @@ const ProductCarouselView = () => {
     const product = location.state?.product;
     const { addToCart, cartItems } = useCart();
     const navigate = useNavigate();
-    const [showCard, setShowCard] = useState(false);
+    const [showCard, setShowCard] = useState(false); 
+    const [pincode, setPincode] = useState("");
 
     const [quantity, setQuantity] = useState(1);
     const [checkDeliveryDate, setCheckDeliveryDate] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    // lazy loading for delivery date
+    const [loadingDelivery, setLoadingDelivery] = useState(false);
 
     // Scroll to top on page load
     useEffect(() => {
@@ -107,8 +111,15 @@ const ProductCarouselView = () => {
 
     // finding delivery date
     const handleDeliveryDate = () => {
-        setCheckDeliveryDate(true);
-    }
+        setLoadingDelivery(true);
+        setCheckDeliveryDate(false);
+
+        // Simulate API delay
+        setTimeout(() => {
+            setLoadingDelivery(false);
+            setCheckDeliveryDate(true);
+        }, 2000); // 2 seconds
+    };
 
     // Check if product is already in cart
     const isInCart = cartItems.some(item => item.id === product.id);
@@ -227,12 +238,19 @@ const ProductCarouselView = () => {
                     <div className="flex items-center gap-2 border-b pb-2 mb-3">
                         <input
                             type="text"
+                            value={pincode}
+                            onChange={(e) => setPincode(e.target.value)}
+                            maxLength={6}
                             placeholder="Enter Delivery Pincode"
-                            className="flex-1 border-none focus:ring-0 text-base text-secondaryText"
+                            className="flex-1 outline-none text-base text-secondaryText"
                         />
                         <button
                             onClick={handleDeliveryDate}
-                            className="text-primary font-semibold"
+                            disabled={pincode.length !== 6}
+                            className={`font-semibold px-3 py-1 rounded ${pincode.length === 6
+                                ? "text-primary hover:scale-105 transition-transform"
+                                : "text-gray-400 cursor-not-allowed"
+                                }`}
                         >
                             CHECK
                         </button>
@@ -240,18 +258,30 @@ const ProductCarouselView = () => {
 
                     <div className="space-y-2 font-bold text-xl sm:text-base">
                         <div className="flex items-center gap-2">
-                            <CiDeliveryTruck />
-                            {checkDeliveryDate ? (
-                                <span className="material-icons">
-                                    Delivered within 10days
-                                </span>
+                            <CiDeliveryTruck className="text-2xl" />
+
+                            {loadingDelivery ? (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-500 animate-pulse">Checking availability...</span>
+                                </div>
+                            ) : checkDeliveryDate ? (
+                                <span className="text-green-600">Delivered within 10 days ✅</span>
                             ) : (
-                                <span className="material-icons">
+                                <span className="text-gray-500">
                                     Enter Pincode for Estimated Delivery Date
                                 </span>
                             )}
                         </div>
                     </div>
+
+                    <style>
+                        {`
+    @keyframes truckmove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(120px); }
+    }
+  `}
+                    </style>
                 </div>
 
                 {/* Product Ratings & Reviews Section */}

@@ -1,20 +1,22 @@
-import React from 'react'
 import MainPage from '../pages/MainPage'
-import Home from '../pages/home/Home'
-import Login from '../pages/login/Login'
-import Products from '../pages/products/Products'
 import About from '../pages/about/About'
 import Contact from '../pages/contact/Contact'
-import ProductCarouselView from '../components/productCarousel/ProductCarouselView'
-import SummaryPage from '../pages/summaryPage/SummaryPage'
-import Orders from '../pages/orders/Orders'
 import Profile from '../pages/profile/Profile'
 import PaymentAddress from '../pages/summaryPage/PaymentMethod'
 import FinalSummary from '../pages/summaryPage/FinalSummary'
-import Selectedcategory from '../components/categoryBar/Selectedcategory'
 import SummaryAddress from '../pages/summaryPage/SummaryAddress'
 import ProductSummaryPage from '../pages/summaryPage/ProductSummaryPage'
 import Cards from '../pages/cards/Cards'
+import BrandedLoader from '../components/loader/BrandedLoader'
+import React, { Suspense, lazy } from "react";
+
+// Lazy loaded pages
+const Home = lazy(() => import("../pages/home/Home"));
+const Products = lazy(() => import("../pages/products/Products"));
+const ProductCarouselView = lazy(() => import("../components/productCarousel/ProductCarouselView"));
+const Selectedcategory = lazy(() => import("../components/categoryBar/Selectedcategory"));
+const Orders = lazy(() => import("../pages/orders/Orders"));
+const SummaryPage = lazy(() => import("../pages/summaryPage/SummaryPage"));
 
 const AppRoutes = [
   {
@@ -23,19 +25,35 @@ const AppRoutes = [
     children: [
       {
         index: true,
-        element: <Home />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: "products",
-        element: <Products />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <Products />
+          </Suspense>
+        ),
       },
       {
         path: "productView",
-        element: <ProductCarouselView />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <ProductCarouselView />
+          </Suspense>
+        ),
       },
       {
         path: "selectedCategory",
-        element: <Selectedcategory />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <Selectedcategory />
+          </Suspense>
+        ),
       },
       {
         path: "about",
@@ -57,11 +75,19 @@ const AppRoutes = [
       },
       {
         path: "orders",
-        element: <Orders />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <Orders />
+          </Suspense>
+        ),
       },
       {
         path: "checkout",
-        element: <SummaryPage />
+        element: (
+          <Suspense fallback={<BrandedLoader />}>
+            <SummaryPage />
+          </Suspense>
+        ),
       },
       {
         path: "product",
