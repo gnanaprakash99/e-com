@@ -5,15 +5,18 @@ import { useSearch } from '../context/SearchContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ProductImageRotator from './ProductImageRotator';
-import useProductCarousel from '../../hooks/useProductCarousel';
+import useProduct from '../../hooks/useProduct';
 
 const ProductCarousel = ({ selectedProducts }) => {
   const navigate = useNavigate();
   const { searchQuery } = useSearch();
+
+  // Accessing products from Redux store (if needed)
+  // const { ProductQuery, products } = useProduct();
   const products = useSelector((state) => state.ProductData.ProductData);
 
   // calling hooks
-  const { isLoading, isError } = useProductCarousel();
+  const { isLoading, isError } = useProduct();
 
   // Filter products by search query and category
   const filteredProducts = useMemo(() => {
