@@ -3,57 +3,132 @@ import axiosInstance from "../utils/AxiosInstance";
 import ApiRoutes from "../utils/ApiRoutes";
 
 const useAuth = () => {
-    // User registration mutation
-    const createUserMutation = useMutation({
-        mutationKey: ['createUser'],
+
+    // ✅ Signup
+    const signUpMutation = useMutation({
+        mutationKey: ["createUser"],
         mutationFn: async (userData) => {
-            const response = await axiosInstance.post(ApiRoutes.CREATE_USER.path, userData);
+            const response = await axiosInstance.post(ApiRoutes.SIGNUP.path, userData);
             return response.data;
         },
         onSuccess: (data) => {
-            console.log('User created successfully:', data);
+            console.log("✅ User Created:", data);
         },
-        onError: (error) => {
-            console.error('Error creating user:', error);
-        },
+        onError: (err) => console.error("❌ Signup Error:", err),
     });
 
-    // User login mutation
-    const userLoginMutation = useMutation({
-        mutationKey: ['userLogin'],
+    // ✅ Login
+    const loginMutation = useMutation({
+        mutationKey: ["userLogin"],
         mutationFn: async (loginData) => {
-            const response = await axiosInstance.post(ApiRoutes.USER_LOGIN.path, loginData);
+            const response = await axiosInstance.post(ApiRoutes.LOGIN.path, loginData);
             return response.data;
         },
-        onSuccess: (data) => {
-            console.log('User logged in successfully:', data);
-            localStorage.setItem("accessToken", data.token); // Store token in localStorage
+        onSuccess: async (data) => {
+            await userProfileRefetch();
+            console.log("✅ Login Success:", data);
+            localStorage.setItem("refreshToken", data?.refresh);
+            localStorage.setItem("accessToken", data?.access || data.token);
+        },
+        onError: (err) => console.error("❌ Login Error:", err),
+    });
+
+    // ✅ Get Profile
+    const { data: profileQuery, refetch: userProfileRefetch } = useQuery({
+        queryKey: ["userProfile"],
+        queryFn: async () => {
+            const token = localStorage.getItem("accessToken");
+            const response = await axiosInstance.get(ApiRoutes.CURRENT_USER.path, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            localStorage.setItem("userInfo", response.data);
+            return response.data;
+        },
+
+        enabled: !!localStorage.getItem("accessToken"),
+        onError: (err) => console.error("❌ Profile Error:", err),
+    });
+
+    // ✅ Reset Password
+    const resetPasswordMutation = useMutation({
+        mutationKey: ['resetPassword'],
+        mutationFn: async (data) => {
+            const response = await axiosInstance.post(ApiRoutes.RESET_PASSWORD.path, data);
+            return response.data;
+        },
+        onSuccess: () => {
+            console.log("Reset email sent!");
         },
         onError: (error) => {
-            console.error('Error logging in user:', error);
+            console.error("Reset password error:", error);
         },
     });
 
-    // Fetch user profile
-    const userProfileQuery = useQuery({
-        queryKey: ['userProfile'],
-        queryFn: async () => {
-            const accessToken = localStorage.getItem("accessToken");
-            const response = await axiosInstance.get(ApiRoutes.GET_USER_PROFILE.path, {
-                headers: { Authorization: `${accessToken}` },
+    // ✅ REFRESH TOKEN
+    const refreshTokenMutation = useMutation({
+        mutationKey: ['refreshToken'],
+        mutationFn: async () => {
+            const refreshToken = localStorage.getItem("refreshToken");
+
+            const response = await axiosInstance.post(ApiRoutes.REFRESH_TOKEN.path, {
+                refresh: refreshToken,
             });
+
+            localStorage.setItem("accessToken", response.data.access);
             return response.data;
         },
-        enabled: !!localStorage.getItem("accessToken"), // Only run this query if the accessToken exists
-        onError: (error) => {
-            console.error('Error fetching user profile:', error);
+    });
+
+    // ✅ Logout
+    const logoutMutation = useMutation({
+        mutationKey: ["logoutUser"],
+        mutationFn: async () => {
+            const token = localStorage.getItem("accessToken");
+            const response = await axiosInstance.post(
+                ApiRoutes.LOGOUT.path,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            return response.data;
         },
+        onSuccess: () => {
+            console.log("✅ Logged Out");
+            localStorage.clear();
+            window.location.reload();
+        },
+        onError: (err) => console.error("❌ Logout Error:", err),
+    });
+
+    // ✅ Logout All Devices
+    const logoutAllMutation = useMutation({
+        mutationKey: ["logoutAll"],
+        mutationFn: async () => {
+            const token = localStorage.getItem("accessToken");
+            const response = await axiosInstance.post(
+                ApiRoutes.LOGOUT_ALL.path,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            console.log("✅ Logged out from all devices");
+            localStorage.clear();
+            window.location.reload();
+        },
+        onError: (err) => console.error("❌ Logout All Error:", err),
     });
 
     return {
-        createUserMutation,
-        userLoginMutation,
-        userProfileQuery,
+        signUpMutation,
+        loginMutation,
+        profileQuery,
+        profileData: profileQuery ?? [],
+        resetPasswordMutation,
+        refreshTokenMutation,
+        logoutMutation,
+        logoutAllMutation,
     };
-}
+};
+
 export default useAuth;

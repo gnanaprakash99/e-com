@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
 import { addCategory, removeCategory } from '../../store/slice/ProductCategorySlice';
@@ -8,169 +8,162 @@ import IndianStates from '../../utils/IndianStates';
 import { FaUserCircle } from "react-icons/fa";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
+import useProfile from '../../hooks/useProfile';
+import { adminStatus } from '../../utils/ApiRoutes';
+import useAuth from '../../hooks/useAuth';
 
 const Profile = () => {
-    const categories = useSelector((state) => state.productCategory.productCategory);
-    const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
     const dispatch = useDispatch();
+    const permission = getPermissions();
 
-    const [newCategoryName, setNewCategoryName] = useState('');
-    const [newCategoryImage, setNewCategoryImage] = useState('');
-    const categoryFileInputRef = useRef(null);
+    // admin status
+    const isAdmin = adminStatus;
 
-    const [showCategory, setShowCategory] = useState(false);
-    const [showBannerList, setShowBannerList] = useState(false);
-    const [newBanner, setNewBanner] = useState('');
-    const fileInputRef = useRef(null);
+    // ✅ Get API values
+    const { updateProfileMutation } = useProfile();
+    // const { profileData } = useAuth();
 
-    // Profile info
-    const [user, setUser] = useState({
+    const profileData = {
         firstName: "John",
         lastName: "Doe",
         email: "johndoe@email.com",
-        phone: "+91 98765 43210",
-        house: "123",
-        street: "MG Road",
-        landmark: "",
-        country: "India",
-        state: "Karnataka",
+        contact_number: "+91 98765 43210",
+        address_line_1: ["123", "MG Road"],
+        address_line_2: [],
         city: "Bangalore",
-        zip: "560001",
-    });
+        state: "Karnataka",
+        postal_code: "560001",
+        country: "India",
+    }
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState(user);
+    // ✅ Start empty, fill when API loads
+    const [formData, setFormData] = useState({});
 
-    const handleEdit = () => setIsEditing(true);
-    const handleSave = () => {
-        setUser(formData);
-        setIsEditing(false);
-    };
+    useEffect(() => {
+        if (profileData) {
+            setFormData(profileData);
+        }
+    }, [profileData]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // permissions
-    const permission = getPermissions();
+    const [isEditing, setIsEditing] = useState(false);
 
-    // File selection handler
-    const handleFileSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const objectUrl = URL.createObjectURL(file);
-            setNewBanner(objectUrl);
-        }
+    const handleEdit = () => {
+        setIsEditing(true);
     };
 
-    // Trigger file input click
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
+    const handleUpdate = () => {
+        updateProfileMutation.mutate(formData, {
+            onSuccess: () => {
+                alert("Profile Updated Successfully");
+                setIsEditing(false);
+            },
+            onError: () => {
+                alert("Failed to update profile");
+            }
+        });
     };
 
-    // File selection for category image
+    // CATEGORY
+    const categories = useSelector((state) => state.productCategory.productCategory);
+    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryImage, setNewCategoryImage] = useState('');
+    const categoryFileInputRef = useRef(null);
+
+    const [showCategory, setShowCategory] = useState(false);
+
     const handleCategoryFileSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const objectUrl = URL.createObjectURL(file);
-            setNewCategoryImage(objectUrl);
+            setNewCategoryImage(URL.createObjectURL(file));
         }
     };
 
-    // Trigger file input click
-    const triggerCategoryFileInput = () => {
-        categoryFileInputRef.current?.click();
-    };
+    const triggerCategoryFileInput = () => categoryFileInputRef.current?.click();
 
-    // add category
     const handleAddCategory = () => {
-        const trimmed = newCategoryName.trim();
-        if (trimmed) {
-            const newCat = {
-                id: Date.now().toString(36),
-                categoryName: trimmed,
-                categoryImage: newCategoryImage || "https://via.placeholder.com/150",
-            };
-            dispatch(addCategory(newCat));
-            setNewCategoryName('');
-            setNewCategoryImage('');
-        }
+        if (!newCategoryName.trim()) return;
+        dispatch(addCategory({
+            id: Date.now().toString(36),
+            categoryName: newCategoryName,
+            categoryImage: newCategoryImage || "https://via.placeholder.com/150",
+        }));
+        setNewCategoryName('');
+        setNewCategoryImage('');
     };
 
-    // delete category
-    const handleDeleteCategory = (id) => {
-        dispatch(removeCategory(id));
+    const handleDeleteCategory = (id) => dispatch(removeCategory(id));
+
+    // BANNER
+    const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
+    const [showBannerList, setShowBannerList] = useState(false);
+    const [newBanner, setNewBanner] = useState('');
+    const fileInputRef = useRef(null);
+
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) setNewBanner(URL.createObjectURL(file));
     };
 
+    const triggerFileInput = () => fileInputRef.current?.click();
 
-    // show category
-    const handleCategory = () => {
-        setShowCategory(true);
-    }
-
-    // add banner
     const handleAddBanner = () => {
-        const trimmed = newBanner.trim();
-        if (trimmed) {
-            dispatch(addBanner(trimmed));
-            setNewBanner('');
-        }
+        if (!newBanner.trim()) return;
+        dispatch(addBanner({ id: Date.now(), Imgsrc: newBanner }));
+        setNewBanner('');
     };
 
-    // delete banner
-    const handleDeleteBanner = (id) => {
-        dispatch(removeBanner(id));
-    };
+    const handleDeleteBanner = (id) => dispatch(removeBanner(id));
+
+    if (!formData || Object.keys(formData).length === 0) {
+        return <p className="text-center mt-10">Loading Profile...</p>;
+    }
 
     return (
         <div>
-            {/* Profile View or Edit */}
+            {/* Profile View / Edit */}
             <div className="p-6 lg:p-10 mx-4 sm:mx-10 lg:mx-40 mt-10 rounded-primaryRadius border-2 border-mutedText bg-cardBg">
                 {!isEditing ? (
                     <>
-                        {/* User Info */}
                         <div className="flex justify-between items-center border-b pb-6">
                             <div className='flex items-center gap-4'>
                                 <FaUserCircle className="text-6xl text-gray-400" />
-                                <h2 className="text-2xl font-semibold">{user.firstName} {user.lastName}</h2>
+                                <h2 className="text-2xl font-semibold">
+                                    {formData.firstName} {formData.lastName}
+                                </h2>
                             </div>
-                            <button
-                                onClick={handleEdit}
+                            <button onClick={handleEdit}
                                 className="px-6 py-2 rounded-primaryRadius font-semibold bg-primaryBtn text-buttonText border border-buttonBorder hover:scale-105 transition"
                             >
                                 Edit
                             </button>
                         </div>
 
-                        {/* Profile Details */}
                         <div className="mt-6 text-gray-700 space-y-2">
-                            <p><MdEmail className="inline mr-1" /> {user.email}</p>
-                            <p><MdPhone className="inline mr-1" /> {user.phone}</p>
-                            <p><MdLocationOn className="inline mr-1" /> {user.house}, {user.street}, {user.city}, {user.state} - {user.zip}</p>
+                            <p><MdEmail className="inline mr-1" /> {formData.email}</p>
+                            <p><MdPhone className="inline mr-1" /> {formData.contact_number}</p>
+                            <p>
+                                <MdLocationOn className="inline mr-1" />
+                                {formData.address_line_1}, {formData.address_line_2},
+                                {formData.city}, {formData.state} - {formData.postal_code}
+                            </p>
                         </div>
 
-                        {/* Order History */}
-                        <div className="mt-10">
-                            <h3 className="text-lg font-semibold mb-4">Recent Orders</h3>
-                            <div className="border rounded-lg p-4 text-gray-600">
-                                <p>No orders yet.</p>
-                            </div>
-                        </div>
-
-                        {/* Logout */}
                         <div className="mt-10 flex justify-end">
-                            <button className="flex items-center gap-2 text-secondaryLite font-medium border border-secondaryLite p-2 rounded-primaryRadius">
+                            <button className="flex items-center gap-2 text-secondaryLite border p-2 rounded-primaryRadius">
                                 <FiLogOut /> Logout
                             </button>
                         </div>
                     </>
                 ) : (
                     <>
-                        {/* Edit Form */}
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-bold">Edit Profile</h2>
-                            <button
-                                onClick={handleSave}
+                            <button onClick={handleUpdate}
                                 className="px-6 py-2 rounded-primaryRadius font-semibold bg-primaryBtn text-buttonText border border-buttonBorder hover:scale-105 transition"
                             >
                                 Save
@@ -179,35 +172,36 @@ const Profile = () => {
 
                         <form className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                                <input name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="firstName" value={formData.firstName || ""} onChange={handleChange} placeholder="First Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="lastName" value={formData.lastName || ""} onChange={handleChange} placeholder="Last Name" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                                <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="email" value={formData.email || ""} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="contact_number" value={formData.contact_number || ""} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input name="house" value={formData.house} onChange={handleChange} placeholder="House / Building" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                                <input name="street" value={formData.street} onChange={handleChange} placeholder="Street / Area" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                                <input name="landmark" value={formData.landmark} onChange={handleChange} placeholder="Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                            </div>
+
+                            <input name="address_line_1" value={formData.address_line_1 || ""} onChange={handleChange} placeholder="House / Street" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                            <input name="address_line_2" value={formData.address_line_2 || ""} onChange={handleChange} placeholder="Area / Landmark" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                <select name="country" value={formData.country} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
+                                <select name="country" value={formData.country || ""} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
                                     <option value="India">India</option>
                                 </select>
-                                <select name="state" value={formData.state} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
-                                    {IndianStates.map(s => <option key={s} value={s}>{s}</option>)}
+
+                                <select name="state" value={formData.state || ""} onChange={handleChange} className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none">
+                                    {IndianStates.map(s => <option key={s}>{s}</option>)}
                                 </select>
-                                <input name="city" value={formData.city} onChange={handleChange} placeholder="City" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
-                                <input name="zip" value={formData.zip} onChange={handleChange} placeholder="Zip" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+
+                                <input name="city" value={formData.city || ""} onChange={handleChange} placeholder="City" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="postal_code" value={formData.postal_code || ""} onChange={handleChange} placeholder="Postal Code" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
                         </form>
                     </>
                 )}
             </div>
 
-            {/* Admin only */}
-            {permission.controlPanel && (
+            {isAdmin && (
                 <div
                     className="p-3 sm:p-6 relative z-30 rounded-primaryRadius border-2 border-mutedText 
                        mx-4 sm:mx-10 lg:mx-40 mt-10 sm:mt-20 mb-6 bg-cardBg"
@@ -277,7 +271,7 @@ const Profile = () => {
                                                     Add
                                                 </button>
                                                 <button
-                                                    onClick={handleCategory}
+                                                    onClick={() => setShowCategory(!showCategory)}
                                                     type="button"
                                                     className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
                                                 >
@@ -402,8 +396,7 @@ const Profile = () => {
                 </div>
             )}
         </div>
+    );
+};
 
-    )
-}
-
-export default Profile
+export default Profile;

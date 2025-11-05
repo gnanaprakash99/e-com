@@ -5,18 +5,24 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import Cards from "../../pages/cards/Cards";
+import { loginStatus } from "../../utils/ApiRoutes";
+import LoginRequest from "../LoginRequest";
 
 const ProductCarouselView = () => {
     const location = useLocation();
     const product = location.state?.product;
     const { addToCart, cartItems } = useCart();
     const navigate = useNavigate();
-    const [showCard, setShowCard] = useState(false); 
+    const [showCard, setShowCard] = useState(false);
     const [pincode, setPincode] = useState("");
-
     const [quantity, setQuantity] = useState(1);
     const [checkDeliveryDate, setCheckDeliveryDate] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    // login status
+    const [showLoginRequest, setShowLoginRequest] = useState(false);
+    const [label, setLabel] = useState('');
+    const isLogin = loginStatus;
 
     // lazy loading for delivery date
     const [loadingDelivery, setLoadingDelivery] = useState(false);
@@ -104,10 +110,24 @@ const ProductCarouselView = () => {
         setCurrentIndex(prev => (prev === images.length - 1 ? 0 : prev + 1));
 
     // add to cart
-    const handleAddToCart = () => addToCart(product, quantity);
+    const handleAddToCart = () => {
+        if (isLogin) {
+            addToCart(product, quantity);
+        } else {
+            setShowLoginRequest(true);
+            setLabel('to add items in cart');
+        }
+    }
 
     // buy now
-    const handleBuyNow = () => navigate('/checkout');
+    const handleBuyNow = () => {
+        if (isLogin) {
+            navigate('/checkout');
+        } else {
+            setShowLoginRequest(true);
+            setLabel('for buying');
+        }
+    }
 
     // finding delivery date
     const handleDeliveryDate = () => {
@@ -385,6 +405,9 @@ const ProductCarouselView = () => {
             </AnimatePresence>
 
             <Cards isOpen={showCard} onClose={() => setShowCard(false)} />
+            {showLoginRequest && (
+                <LoginRequest label={label} onclose={() => setShowLoginRequest(false)} />
+            )}
         </div>
     );
 };

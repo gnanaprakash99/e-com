@@ -8,9 +8,11 @@ const useCart = () => {
         queryKey: ['cart'],
         queryFn: async () => {
             const accessToken = localStorage.getItem("accessToken");
-            const response = await axiosInstance.get(ApiRoutes.GET_USER_CART.path, {
-                headers: { Authorization: `${accessToken}` },
-            });
+            const response = await axiosInstance.get(ApiRoutes.GET_USER_CART.path,
+                //      {
+                //     headers: { Authorization: `${accessToken}` },
+                // }
+            );
             return response.data;
         }
     });

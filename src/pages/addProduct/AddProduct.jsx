@@ -1,27 +1,41 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProduct } from '../../store/slice/ProductCarouselSlice';
+// import { addProduct, updateProduct } from '../../store/slice/ProductCarouselSlice';
+import useProduct from '../../hooks/useProduct';
 
-
-const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
-};
-
-const AddProduct = ({ isOpen, onClose }) => {
+const AddProduct = ({ isOpen, onClose, editData }) => {
     const [productName, setProductName] = useState('');
     const [productCategory, setProductCategory] = useState('');
     const [productPrice, setProductPrice] = useState('');
+    const [productStock, setProductStock] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const fileInputRef = useRef(null);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
+    const { createdProductMutation, updateProductMutation } = useProduct();
     const categories = useSelector((state) => state.productCategory.productCategory);
+
+    // Pre-fill data when editing
+    useEffect(() => {
+        if (editData) {
+            setProductName(editData.name);
+            setProductCategory(editData.category);
+            setProductPrice(editData.price);
+            setProductStock(editData.stock);
+            setProductDescription(editData.description);
+
+            // existing images (preview only)
+            if (editData.image && editData.image.length > 0) {
+                const previews = editData.images.map(img => ({
+                    file: null,
+                    preview: img, // URL or base64 string stored in DB
+                    existing: true
+                }));
+                setSelectedFiles(previews);
+            }
+        }
+    }, [editData]);
 
     if (!isOpen) return null;
 
@@ -30,7 +44,7 @@ const AddProduct = ({ isOpen, onClose }) => {
         const totalFiles = selectedFiles.length + files.length;
 
         if (totalFiles > 10) {
-            alert('You can upload up to 10 images only.');
+            alert('Max 10 images allowed');
             return;
         }
 
@@ -39,136 +53,115 @@ const AddProduct = ({ isOpen, onClose }) => {
             preview: URL.createObjectURL(file)
         }));
 
-        setSelectedFiles((prev) => [...prev, ...filesWithPreviews]);
+        setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
     };
 
     const handleFileRemove = (index) => {
-        const fileToRemove = selectedFiles[index];
-        URL.revokeObjectURL(fileToRemove.preview);
-        const updatedFiles = [...selectedFiles];
-        updatedFiles.splice(index, 1);
-        setSelectedFiles(updatedFiles);
+        URL.revokeObjectURL(selectedFiles[index].preview);
+        const updated = [...selectedFiles];
+        updated.splice(index, 1);
+        setSelectedFiles(updated);
     };
 
     const handleClearAll = () => {
+        selectedFiles.forEach(f => f.preview && URL.revokeObjectURL(f.preview));
         setSelectedFiles([]);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
+        fileInputRef.current.value = '';
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const base64Images = await Promise.all(
-            selectedFiles.map(fileObj => convertToBase64(fileObj.file))
-        );
+        // Create FormData
+        const formData = new FormData();
+        formData.append('name', productName);
+        formData.append('category', productCategory);
+        formData.append('price', productPrice);
+        formData.append('stock', productStock);
+        formData.append('description', productDescription);
 
-        const newProduct = {
-            name: productName,
-            category: productCategory,
-            price: Number(productPrice),
-            description: productDescription,
-            images: base64Images
-        };
+        // Append only new files
+        selectedFiles.forEach((fileObj) => {
+            if (!fileObj.existing && fileObj.file) {
+                formData.append('image', fileObj.file);
+            }
+        });
 
-        dispatch(addProduct(newProduct));
+        if (editData) {
+            // Update
+            formData.append('productId', editData.id);
 
-        // Clear form
+            await updateProductMutation.mutateAsync(formData);
+            // dispatch(updateProduct({ id: editData.id, data: { productName, productCategory, productPrice, productDescription } }));
+
+        } else {
+            // Create
+            await createdProductMutation.mutateAsync(formData);
+            // dispatch(addProduct({ productName, productCategory, productPrice, productDescription }));
+        }
+
+        // Reset
         setProductName('');
         setProductCategory('');
         setProductPrice('');
         setProductDescription('');
-        setSelectedFiles([]);
-        fileInputRef.current.value = '';
+        handleClearAll();
         onClose();
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="w-full max-w-md bg-cardBg text-primaryText p-8 rounded-primaryRadius shadow-lg relative">
-                <button
-                    className="absolute top-4 right-4 text-2xl hover:text-cancelButton"
-                    onClick={onClose}
-                >
+                <button className="absolute top-4 right-4 text-2xl hover:text-cancelButton" onClick={onClose}>
                     &times;
                 </button>
 
-                <h2 className="text-2xl font-bold mb-6 text-center">Add Products</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center">
+                    {editData ? 'Update Product' : 'Add Product'}
+                </h2>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Product Name"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
-                        required
-                    />
+                    <input type="text" placeholder="Product Name" value={productName}
+                        onChange={(e) => setProductName(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
 
-                    <select
-                        value={productCategory}
-                        onChange={(e) => setProductCategory(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
-                        required
-                    >
+                    <select value={productCategory} onChange={(e) => setProductCategory(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required>
                         <option value="" disabled>Select Category</option>
-                        {categories.map((category, index) => (
+                        {categories.map(category => (
                             <option key={category.id} value={category.categoryName}>
-                                {category.categoryName.charAt(0).toUpperCase() + category.categoryName.slice(1)}
+                                {category.categoryName}
                             </option>
                         ))}
                     </select>
 
-                    <input
-                        type="number"
-                        placeholder="Product Price"
-                        value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
-                        required
-                    />
+                    <input type="number" placeholder="Product Price" value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
 
-                    <textarea
-                        placeholder="Product Description"
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
-                        required
-                    />
+                    <input type="number" placeholder="Product Stock" value={productStock}
+                        onChange={(e) => setProductStock(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
 
-                    <div className="space-y-2">
-                        <input
-                            type="file"
-                            multiple
-                            accept="image/*"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius"
-                        />
-                        {selectedFiles.map((fileObj, index) => (
-                            <div key={index} className="relative">
-                                <img
-                                    src={fileObj.preview}
-                                    alt={`preview-${index}`}
-                                    className="w-16 h-16 object-cover rounded border"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => handleFileRemove(index)}
-                                    className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                                >
+                    <textarea placeholder="Product Description" value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
+
+                    {/* Image Upload */}
+                    <input type="file" multiple accept="image/*" ref={fileInputRef}
+                        onChange={handleFileChange} className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius" />
+
+                    <div className="flex gap-2 flex-wrap mt-2">
+                        {selectedFiles.map((fileObj, i) => (
+                            <div key={i} className="relative">
+                                <img src={fileObj.preview} className="w-16 h-16 object-cover rounded border" />
+                                <button type="button" onClick={() => handleFileRemove(i)}
+                                    className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
                                     ×
                                 </button>
                             </div>
                         ))}
                     </div>
 
-                    <button
-                        type="submit"
-                        className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  transform duration-300 ease-in-out "
-                    >
-                        Submit
+                    <button type="submit"
+                        className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition">
+                        {editData ? 'Update' : 'Submit'}
                     </button>
                 </form>
             </div>

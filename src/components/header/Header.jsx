@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux';
 import { getPermissions } from '../../utils/UserPermission';
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
+import LoginRequest from '../LoginRequest';
+import { loginStatus, adminStatus } from '../../utils/ApiRoutes';
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -22,9 +24,14 @@ const Header = () => {
   const { cartItems } = useCart();
   const navigate = useNavigate();
   const products = useSelector(state => state.ProductData.ProductData);
+  const [showLoginRequest, setShowLoginRequest] = useState(false);
+  const [label, setLabel] = useState('');
 
-  // login
-  const isLogin = true;
+  // login status
+  const isLogin = loginStatus;
+
+  // admin status
+  const isAdmin = adminStatus;
 
   // permissions
   const permissions = getPermissions();
@@ -41,7 +48,17 @@ const Header = () => {
       navigate("/orders");
       setIsDropdownOpen(false);
     } else {
-      alert("Please login and try again");
+      setShowLoginRequest(true);
+      setLabel('Orders');
+    }
+  };
+
+  const handleCart = () => {
+    if (isLogin) {
+      setShowCard(true)
+    } else {
+      setShowLoginRequest(true);
+      setLabel('cart');
     }
   };
 
@@ -134,7 +151,7 @@ const Header = () => {
             </button>
           )}
           <button
-            onClick={() => setShowCard(true)}
+            onClick={handleCart}
             className="relative hidden sm:flex text-headerTextColor hover:bg-headerHoverBtnBg hover:text-headerHoverBtnText rounded-primaryRadius items-center gap-1"
           >
             Cart
@@ -199,7 +216,7 @@ const Header = () => {
                     Contact
                   </NavLink>
 
-                  {!permissions.AddProduct && (
+                  {isAdmin && isLogin && (
                     <button
                       onClick={() => {
                         setShowAddProduct(true);
@@ -267,7 +284,7 @@ const Header = () => {
             >
               Orders
             </button>
-            {!permissions.AddProduct && (
+            {isAdmin && isLogin && (
               <button
                 onClick={() => setShowAddProduct(true)}
                 className="text-headerTextColor border border-headerBtnBorder hover:bg-headerHoverBtnBg hover:text-headerHoverNavText rounded-primaryRadius"
@@ -285,6 +302,13 @@ const Header = () => {
       <AddProduct isOpen={showAddProduct} onClose={() => setShowAddProduct(false)} />
       <Cards isOpen={showCard} onClose={() => setShowCard(false)} />
       <Login isOpen={showLogin} onClose={() => setShowLogin(false)} />
+      {showLoginRequest && (
+        <LoginRequest
+          label={label}
+          onclose={() => setShowLoginRequest(false)}
+        />
+      )}
+
     </nav>
   );
 };

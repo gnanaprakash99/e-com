@@ -12,11 +12,8 @@ const ProductCarousel = ({ selectedProducts }) => {
   const { searchQuery } = useSearch();
 
   // Accessing products from Redux store (if needed)
-  // const { ProductQuery, products } = useProduct();
-  const products = useSelector((state) => state.ProductData.ProductData);
-
-  // calling hooks
-  const { isLoading, isError } = useProduct();
+  const { ProductQuery, products } = useProduct();
+  // const products = useSelector((state) => state.ProductData.ProductData);
 
   // Filter products by search query and category
   const filteredProducts = useMemo(() => {
