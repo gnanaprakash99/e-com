@@ -115,7 +115,7 @@ const Login = ({ isOpen, onClose }) => {
               type="submit"
               className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
             >
-              Login
+              {loginMutation.isPending ? 'Logging In' : 'Login'}
             </button>
 
             <button
@@ -179,7 +179,7 @@ const Login = ({ isOpen, onClose }) => {
               type="submit"
               className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
             >
-              Sign Up
+              {signUpMutation.isPending ? 'Signing Up' : 'Sign Up'}
             </button>
           </form>
         )}

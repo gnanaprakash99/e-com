@@ -1,11 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import useOrders from '../../hooks/useOrders';
 
 const Orders = () => {
   // api calls
-  // const {orderedData} = useOrders();
-  const orderedData = useSelector(state => state.OrderedData.orderedData);
+  const {orderedData} = useOrders();
 
   return (
     <div className="p-4 sm:p-8 min-h-screen text-primaryText">

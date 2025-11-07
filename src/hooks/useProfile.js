@@ -12,8 +12,19 @@ const useProfile = () => {
         }
     })
 
+    // get 
+    const { data: profile, refetch: refetchProfile } = useQuery({
+        queryKey: ['profile'],
+        queryFn: async () => {
+            const { data } = await axiosInstance.get(ApiRoutes.GET_PROFILE.path)
+            return data;
+        }
+    })
+
     return {
         updateProfileMutation,
+        profile,
+        refetchProfile,
     }
 
 }

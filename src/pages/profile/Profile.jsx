@@ -10,7 +10,6 @@ import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import useProfile from '../../hooks/useProfile';
 import { adminStatus } from '../../utils/ApiRoutes';
-import useAuth from '../../hooks/useAuth';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -20,30 +19,20 @@ const Profile = () => {
     const isAdmin = adminStatus;
 
     // ✅ Get API values
-    const { updateProfileMutation } = useProfile();
-    // const { profileData } = useAuth();
-
-    const profileData = {
-        firstName: "John",
-        lastName: "Doe",
-        email: "johndoe@email.com",
-        contact_number: "+91 98765 43210",
-        address_line_1: ["123", "MG Road"],
-        address_line_2: [],
-        city: "Bangalore",
-        state: "Karnataka",
-        postal_code: "560001",
-        country: "India",
-    }
+    const { updateProfileMutation, profile } = useProfile();
+    console.log('profile', profile)
 
     // ✅ Start empty, fill when API loads
     const [formData, setFormData] = useState({});
+    console.log(formData, '1212')
 
     useEffect(() => {
-        if (profileData) {
-            setFormData(profileData);
+        if (Array.isArray(profile) && profile.length > 0) {
+            setFormData(profile[0]); // since your API returns [{...}]
+        } else if (profile && typeof profile === 'object') {
+            setFormData(profile); // in case it's already an object
         }
-    }, [profileData]);
+    }, [profile]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

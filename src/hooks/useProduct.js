@@ -42,6 +42,7 @@ import ApiRoutes from "../utils/ApiRoutes";
 
 const useProduct = () => {
 
+    // get 
     const ProductQuery = useQuery({
         queryKey: ['productQuery'],
         queryFn: async () => {
@@ -50,12 +51,13 @@ const useProduct = () => {
 
             });
             const data = response.data;
-            console.log('API data:', data);
-            return data;
+            console.log('API data:', data.data);
+            return data.data;
         },
         retry:false
     });
 
+    // create
     const createdProductMutation = useMutation({
         mutationKey: ['createProduct'],
         mutationFn: async (productData) => {
