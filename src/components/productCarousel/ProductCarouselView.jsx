@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CardContext';
+import useCart from "../../hooks/useCart";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
-import Cards from "../../pages/cards/Cards";
+import Carts from "../../pages/cards/Carts";
 import { loginStatus } from "../../utils/ApiRoutes";
 import LoginRequest from "../LoginRequest";
 
 const ProductCarouselView = () => {
     const location = useLocation();
     const product = location.state?.product;
-    const { addToCart, cartItems } = useCart();
+    const { cartItems, addToCartMutation } = useCart();
     const navigate = useNavigate();
     const [showCard, setShowCard] = useState(false);
     const [pincode, setPincode] = useState("");
@@ -112,12 +112,18 @@ const ProductCarouselView = () => {
     // add to cart
     const handleAddToCart = () => {
         if (isLogin) {
-            addToCart(product, quantity);
+            const cartData = {
+                product_id: product.id,
+                action: "ADD",
+                quantity: quantity,
+            };
+
+            addToCartMutation.mutate(cartData);
         } else {
             setShowLoginRequest(true);
             setLabel('to add items in cart');
         }
-    }
+    };
 
     // buy now
     const handleBuyNow = () => {
@@ -404,7 +410,7 @@ const ProductCarouselView = () => {
                 )}
             </AnimatePresence>
 
-            <Cards isOpen={showCard} onClose={() => setShowCard(false)} />
+            <Carts isOpen={showCard} onClose={() => setShowCard(false)} />
             {showLoginRequest && (
                 <LoginRequest label={label} onclose={() => setShowLoginRequest(false)} />
             )}

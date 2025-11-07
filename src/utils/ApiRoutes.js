@@ -1,10 +1,8 @@
-import { path } from "framer-motion/client";
-
 // Access token for authentication
 export const accessToken = localStorage.getItem("accessToken") || " ";
 
 // profile data
-export const profile = localStorage.getItem("userInfo") || " ";
+export const localProfile = localStorage.getItem("userInfo") || " ";
 
 // login status
 export const loginStatus = !!localStorage.getItem("accessToken");
@@ -12,6 +10,9 @@ export const loginStatus = !!localStorage.getItem("accessToken");
 // admin status
 export const isAdmin = localStorage.getItem("isAdmin") || " ";
 export const adminStatus = isAdmin;
+
+// profile update status
+export const updateStatus = localProfile?.is_updated;
 
 // Base URL for the API
 export const BASE_URL = "http://13.238.142.220";
@@ -40,15 +41,15 @@ const ApiRoutes = {
 
     // CART ROUTES
     GET_USER_CART: {
-        path: '/api/v1/user/cart/',
+        path: '/api/v1/cart/',
         authenticate: true
     },
     ADD_TO_CART: {
-        path: '/user/cart/add',
+        path: '/api/v1/cart/add',
         authenticate: true
     },
     REMOVE_FROM_CART: {
-        path: (id) => `/user/cart/remove/${id}`,
+        path: (id) => `/api/v1/cart/remove/${id}`,
         authenticate: true
     },
 

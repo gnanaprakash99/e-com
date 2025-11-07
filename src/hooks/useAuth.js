@@ -123,6 +123,7 @@ const useAuth = () => {
     });
 
     return {
+        userProfileRefetch,
         signUpMutation,
         loginMutation,
         profileQuery,

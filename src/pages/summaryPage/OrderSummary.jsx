@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCart } from '../../components/context/CardContext';
+import useCart from '../../hooks/useCart';
 
 const OrderSummary = () => {
     const { cartItems, incrementQuantity, decrementQuantity } = useCart();

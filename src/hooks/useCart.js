@@ -7,13 +7,8 @@ const useCart = () => {
     const cartQuery = useQuery({
         queryKey: ['cart'],
         queryFn: async () => {
-            const accessToken = localStorage.getItem("accessToken");
-            const response = await axiosInstance.get(ApiRoutes.GET_USER_CART.path,
-                //      {
-                //     headers: { Authorization: `${accessToken}` },
-                // }
-            );
-            return response.data;
+            const response = await axiosInstance.get(ApiRoutes.GET_USER_CART.path);
+            return response.data.items;
         }
     });
 
@@ -21,10 +16,7 @@ const useCart = () => {
     const addToCartMutation = useMutation({
         mutationKey: ['addToCart'],
         mutationFn: async (cartData) => {
-            const accessToken = localStorage.getItem("accessToken");
-            const response = await axiosInstance.post(ApiRoutes.ADD_TO_CART.path, cartData, {
-                headers: { Authorization: `${accessToken}` },
-            });
+            const response = await axiosInstance.post(ApiRoutes.ADD_TO_CART.path, cartData);
             return response.data;
         },
         onSuccess: (data) => {
@@ -40,10 +32,7 @@ const useCart = () => {
     const removeFromCartMutation = useMutation({
         mutationKey: ['removeFromCart'],
         mutationFn: async (id) => {
-            const accessToken = localStorage.getItem("accessToken");
-            const response = await axiosInstance.delete(ApiRoutes.REMOVE_FROM_CART.path(id), {
-                headers: { Authorization: `${accessToken}` },
-            });
+            const response = await axiosInstance.delete(ApiRoutes.REMOVE_FROM_CART.path(id));
             return response.data;
         },
         onSuccess: (data) => {

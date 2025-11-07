@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import paymentQR from "../../assets/paymentQR.jpeg";
 import { RiArrowDownSLine } from "react-icons/ri";
-import { useCart } from "../../components/context/CardContext";
+import useCart from "../../hooks/useCart";
 import { Link } from "react-router-dom";
 
 const PaymentMethodSection = () => {

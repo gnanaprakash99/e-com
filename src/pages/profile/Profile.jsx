@@ -18,6 +18,9 @@ const Profile = () => {
     // admin status
     const isAdmin = adminStatus;
 
+    // email
+    const email = localStorage.getItem("email") || " ";
+
     // ✅ Get API values
     const { updateProfileMutation, profile } = useProfile();
     console.log('profile', profile)
@@ -133,7 +136,7 @@ const Profile = () => {
                         </div>
 
                         <div className="mt-6 text-gray-700 space-y-2">
-                            <p><MdEmail className="inline mr-1" /> {formData.email}</p>
+                            <p><MdEmail className="inline mr-1" /> {email}</p>
                             <p><MdPhone className="inline mr-1" /> {formData.contact_number}</p>
                             <p>
                                 <MdLocationOn className="inline mr-1" />
@@ -166,7 +169,7 @@ const Profile = () => {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input name="email" value={formData.email || ""} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
+                                <input name="email" value={email || ""} onChange={handleChange} placeholder="Email" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                                 <input name="contact_number" value={formData.contact_number || ""} onChange={handleChange} placeholder="Mobile Number" className="border-b-2 bg-transparent focus:border-inputSelectBorder outline-none" />
                             </div>
 

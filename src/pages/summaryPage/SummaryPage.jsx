@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import SummaryPageNumber from "./SummaryPageNumber";
 import SummaryAddress from "./SummaryAddress";
-import { useCart } from "../../components/context/CardContext";
+import useCart from "../../hooks/useCart";
 import { Link } from "react-router-dom";
 import ProductSummaryPage from "./ProductSummaryPage";
 

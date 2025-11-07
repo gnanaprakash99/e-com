@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useCart } from "../../components/context/CardContext";
+import useCart from "../../hooks/useCart";
 import { FaTruck } from "react-icons/fa";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import SummaryPageNumber from "./SummaryPageNumber";

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Login from '../../pages/login/Login';
-import Cards from '../../pages/cards/Cards';
+import Carts from '../../pages/cards/Carts';
 import AddProduct from '../../pages/addProduct/AddProduct';
 import Search from '../search/Search';
 import { useSearch } from '../context/SearchContext';
-import { useCart } from '../context/CardContext';
+import useCart from '../../hooks/useCart';
 import { FaLuggageCart } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useSelector } from 'react-redux';
@@ -300,7 +300,7 @@ const Header = () => {
 
       {/* Modals */}
       <AddProduct isOpen={showAddProduct} onClose={() => setShowAddProduct(false)} />
-      <Cards isOpen={showCard} onClose={() => setShowCard(false)} />
+      <Carts isOpen={showCard} onClose={() => setShowCard(false)} />
       <Login isOpen={showLogin} onClose={() => setShowLogin(false)} />
       {showLoginRequest && (
         <LoginRequest

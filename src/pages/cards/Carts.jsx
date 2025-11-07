@@ -1,16 +1,22 @@
 import React from 'react';
-import { useCart } from '../../components/context/CardContext';
 import { useNavigate } from 'react-router-dom';
+import useCart from '../../hooks/useCart';
+import { updateStatus } from '../../utils/ApiRoutes';
+import toast from 'react-hot-toast';
 
-const Cards = ({ isOpen, onClose }) => {
+const Carts = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, incrementQuantity, decrementQuantity } = useCart();
+  const { cartItems, removeFromCartMutation } = useCart();
 
   if (!isOpen) return null;
 
   const handleCheckout = () => {
-    onClose();
-    navigate('/checkout');
+    if (updateStatus == true) {
+      onClose();
+      navigate('/checkout');
+    } else {
+      toast.error("Please update profile and try again")
+    }
   }
 
   const handleContinueShopping = () => {
@@ -59,7 +65,7 @@ const Cards = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Quantity Controls */}
-                <div className="flex items-center gap-1 mr-2">
+                {/* <div className="flex items-center gap-1 mr-2">
                   <button
                     onClick={() => decrementQuantity(item.id)}
                     className="px-1 py-1 border rounded-md text-lg"
@@ -73,11 +79,11 @@ const Cards = ({ isOpen, onClose }) => {
                   >
                     +
                   </button>
-                </div>
+                </div> */}
 
                 {/* Remove Button */}
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCartMutation(item.id)}
                   className="text-secondaryLite hover:underline text-sm"
                 >
                   Remove
@@ -99,4 +105,4 @@ const Cards = ({ isOpen, onClose }) => {
   );
 };
 
-export default Cards;
+export default Carts;

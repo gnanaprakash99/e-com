@@ -6,7 +6,7 @@ import PaymentAddress from '../pages/summaryPage/PaymentMethod'
 import FinalSummary from '../pages/summaryPage/FinalSummary'
 import SummaryAddress from '../pages/summaryPage/SummaryAddress'
 import ProductSummaryPage from '../pages/summaryPage/ProductSummaryPage'
-import Cards from '../pages/cards/Cards'
+import Carts from '../pages/cards/Carts'
 import BrandedLoader from '../components/loader/BrandedLoader'
 import React, { Suspense, lazy } from "react";
 
@@ -71,7 +71,7 @@ const AppRoutes = [
       },
       {
         path: "cart",
-        element: <Cards />
+        element: <Carts />
       },
       {
         path: "orders",

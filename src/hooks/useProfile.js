@@ -1,14 +1,19 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/AxiosInstance";
 import ApiRoutes from "../utils/ApiRoutes";
+import useAuth from "./useAuth";
 
 const useProfile = () => {
+    const { userProfileRefetch } = useAuth();
 
     // update Profile
     const updateProfileMutation = useMutation({
         mutationFn: async (data) => {
-            const res = await axiosInstance.post(ApiRoutes.UPDATE_PROFILE.path, data)
+            const res = await axiosInstance.put(ApiRoutes.UPDATE_PROFILE.path, data)
             return res.data;
+        },
+        onSuccess: async () => {
+            await userProfileRefetch();
         }
     })
 
