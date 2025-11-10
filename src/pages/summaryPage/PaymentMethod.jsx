@@ -27,6 +27,21 @@ const PaymentMethodSection = () => {
 
     // Handle navigation to summary page
     const handlePaymentProcess = () => {
+        if (!selectedAddress) return alert("Please select a delivery address first.");
+
+        // 🟢 Get existing directBuyItem from localStorage
+        const existingItem = JSON.parse(localStorage.getItem("directBuyItem")) || {};
+
+        // 🟢 Merge addressId into the existing object
+        const updatedItem = {
+            ...existingItem,
+            paymentType: selectedAddress.id,
+        };
+
+        // 🟢 Save back to localStorage
+        localStorage.setItem("directBuyItem", JSON.stringify(updatedItem));
+
+        // 🟢 Navigate to final Summary page
         navigate('/finalSummaryPage');
     };
 
@@ -287,7 +302,7 @@ const PaymentMethodSection = () => {
                         </div>
 
                         {/* scan and pay */}
-                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 space-y-6">
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 mb-5 space-y-6">
                             <div className="flex justify-between border-b border-buttonBorder p-5 ">
 
                                 <button
@@ -320,6 +335,18 @@ const PaymentMethodSection = () => {
                             </AnimatePresence>
                         </div>
 
+                        {/* cash on delivery */}
+                        <div className="bg-cardBg rounded-secondaryRadius border-[1px] border-buttonBorder px-1 space-y-6">
+                            <div className="flex justify-between  p-5 ">
+
+                                <button
+                                    className="font-bold"
+                                >
+                                    Cash on delivery
+                                </button>
+                            </div>
+                        </div>
+
                         {/* Continue Button */}
                         <div className="flex justify-end">
                             <button
@@ -333,7 +360,7 @@ const PaymentMethodSection = () => {
                     </div>
 
                     {/* Order Summary */}
-                    <div className="hidden sm:flex w-full mt-5 lg:w-1/3">
+                    <div className="hidden sm:flex sm:justify-center w-full lg:w-1/3">
                         <OrderSummary />
                     </div>
                 </div>

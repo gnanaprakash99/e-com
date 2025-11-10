@@ -19,6 +19,15 @@ const Carts = ({ isOpen, onClose }) => {
     }
   }
 
+  const handleRemove = (id, quantity) => {
+    const cartData = {
+      product_id: id,
+      quantity: quantity,
+    };
+    removeFromCartMutation.mutate(cartData);
+
+  }
+
   const handleContinueShopping = () => {
     onClose();
     navigate('/');
@@ -52,15 +61,15 @@ const Carts = ({ isOpen, onClose }) => {
           <div className="space-y-4 p-4">
             {cartItems.map((item) => (
               <div key={item.id} className="flex gap-3 justify-between items-center border-b pb-3">
-                {item.image && (
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                {item.product.image && (
+                  <img src={item.product.image} alt={item.product.name} className="w-16 h-16 object-cover rounded-md" />
                 )}
 
                 {/* Product Info */}
                 <div className="flex-1">
-                  <h4 className="text-lg font-semibold">{item.name}</h4>
+                  <h4 className="text-lg font-semibold">{item.product.name}</h4>
                   <p className="text-sm text- font-jkabode">
-                    ₹{item.price} × {item.quantity} = ₹{item.price * item.quantity}
+                    ₹{item.product.price} × {item.quantity} = ₹{item.product.price * item.quantity}
                   </p>
                 </div>
 
@@ -83,7 +92,7 @@ const Carts = ({ isOpen, onClose }) => {
 
                 {/* Remove Button */}
                 <button
-                  onClick={() => removeFromCartMutation(item.id)}
+                  onClick={() => handleRemove(item.product.id, item.quantity)}
                   className="text-secondaryLite hover:underline text-sm"
                 >
                   Remove

@@ -51,7 +51,6 @@ const useProduct = () => {
 
             });
             const data = response.data;
-            console.log('API data:', data.data);
             return data.data;
         },
         retry:false

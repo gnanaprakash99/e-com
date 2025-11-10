@@ -11,6 +11,10 @@ export const loginStatus = !!localStorage.getItem("accessToken");
 export const isAdmin = localStorage.getItem("isAdmin") || " ";
 export const adminStatus = isAdmin;
 
+// admin status
+export const isId = localStorage.getItem("id") || " ";
+export const id = isId;
+
 // profile update status
 export const updateStatus = localProfile?.is_updated;
 
@@ -35,7 +39,7 @@ const ApiRoutes = {
         authenticate: true
     },
     UPDATE_PRODUCT: {
-        path: (id) => `/api/v1/products/update/${id}`,
+        path: (id) => `/api/v1/products/update/${id}/`,  // put api 
         authenticate: true
     },
 
@@ -45,17 +49,17 @@ const ApiRoutes = {
         authenticate: true
     },
     ADD_TO_CART: {
-        path: '/api/v1/cart/add',
+        path: '/api/v1/cart/add/',
         authenticate: true
     },
     REMOVE_FROM_CART: {
-        path: (id) => `/api/v1/cart/remove/${id}`,
+        path:`/api/v1/cart/remove/`,
         authenticate: true
     },
 
-    // SHOPPING (ADDRESS)
-    CREATE_ADDRESS: { path: '/api/v1/shopping/addresses/', authenticate: true },
-    GET_ADDRESS: { path: '/api/v1/shopping/addresses/', authenticate: true },
+    // SHIPPING (ADDRESS)
+    CREATE_ADDRESS: { path: '/api/v1/shipping/address/', authenticate: true },
+    GET_ADDRESS: { path: '/api/v1/shipping/address/', authenticate: true },
 
     // orders
     CREATE_ORDERS: { path: 'api/v1/order/create/', authenticate: true },

@@ -1,19 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SummaryPageNumber from "./SummaryPageNumber";
 import SummaryAddress from "./SummaryAddress";
 import useCart from "../../hooks/useCart";
 import { Link } from "react-router-dom";
 import ProductSummaryPage from "./ProductSummaryPage";
 
-// Custom hook to detect screen size
 const useMediaQuery = (query) => {
   const [matches, setMatches] = React.useState(false);
 
   React.useEffect(() => {
     const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
+    if (media.matches !== matches) setMatches(media.matches);
     const listener = () => setMatches(media.matches);
     media.addEventListener("change", listener);
     return () => media.removeEventListener("change", listener);
@@ -24,13 +21,14 @@ const useMediaQuery = (query) => {
 
 const SummaryPage = () => {
   const { cartItems } = useCart();
+  const [directBuyItem, setDirectBuyItem] = useState(null);
 
-  // ✅ scroll to top when this page mounts
   useEffect(() => {
     window.scrollTo(0, 0);
+    const savedItem = localStorage.getItem("directBuyItem");
+    if (savedItem) setDirectBuyItem(JSON.parse(savedItem));
   }, []);
 
-  // check if screen is sm and up
   const isSmUp = useMediaQuery("(max-width: 640px)");
 
   const EmptyCart = () => (
@@ -53,7 +51,6 @@ const SummaryPage = () => {
 
   const ShowCheckout = () => {
     if (!isSmUp) {
-      // Desktop flow
       return (
         <div>
           <SummaryPageNumber currentStep="Address" />
@@ -61,7 +58,6 @@ const SummaryPage = () => {
         </div>
       );
     } else {
-      // Mobile flow
       return (
         <div>
           <SummaryPageNumber currentStep="Product" />
@@ -71,7 +67,13 @@ const SummaryPage = () => {
     }
   };
 
-  return cartItems.length === 0 ? <EmptyCart /> : <ShowCheckout />;
+  // 🟢 If direct buy item exists → treat it as the only item
+  const hasDirectBuy = !!directBuyItem;
+  const hasCartItems = cartItems.length > 0;
+
+  if (!hasCartItems && !hasDirectBuy) return <EmptyCart />;
+
+  return <ShowCheckout />;
 };
 
 export default SummaryPage;

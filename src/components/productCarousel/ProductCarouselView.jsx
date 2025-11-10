@@ -102,7 +102,6 @@ const ProductCarouselView = () => {
     if (!product) return <div>No product data found</div>;
 
     const images = Array.isArray(product.image) ? product.image : [product.image];
-    console.log('object', images)
 
     const handlePrev = () =>
         setCurrentIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));
@@ -128,12 +127,23 @@ const ProductCarouselView = () => {
     // buy now
     const handleBuyNow = () => {
         if (isLogin) {
-            navigate('/checkout');
+            const directBuyItem = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                quantity: 1,
+            };
+
+            // Save to localStorage temporarily for checkout
+            localStorage.setItem("directBuyItem", JSON.stringify(directBuyItem));
+
+            navigate("/checkout");
         } else {
             setShowLoginRequest(true);
-            setLabel('for buying');
+            setLabel("for buying");
         }
-    }
+    };
 
     // finding delivery date
     const handleDeliveryDate = () => {

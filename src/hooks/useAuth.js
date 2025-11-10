@@ -26,7 +26,6 @@ const useAuth = () => {
         },
         onSuccess: async (data) => {
             await userProfileRefetch();
-            console.log("✅ Login Success:", data);
             localStorage.setItem("refreshToken", data?.refresh);
             localStorage.setItem("accessToken", data?.access);
         },
@@ -41,10 +40,10 @@ const useAuth = () => {
             const response = await axiosInstance.get(ApiRoutes.CURRENT_USER.path, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log('11111', response.data)
             localStorage.setItem("userInfo", JSON.stringify(response.data.data.user_profile)); 
             localStorage.setItem("isAdmin", response.data.data.is_admin);
             localStorage.setItem("email", response.data.data.email);
+            localStorage.setItem("id", response.data.data.id);
             return response.data;
         },
 

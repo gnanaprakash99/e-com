@@ -23,11 +23,9 @@ const Profile = () => {
 
     // ✅ Get API values
     const { updateProfileMutation, profile } = useProfile();
-    console.log('profile', profile)
 
     // ✅ Start empty, fill when API loads
     const [formData, setFormData] = useState({});
-    console.log(formData, '1212')
 
     useEffect(() => {
         if (Array.isArray(profile) && profile.length > 0) {

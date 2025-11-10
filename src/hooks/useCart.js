@@ -31,8 +31,8 @@ const useCart = () => {
     // remove cart
     const removeFromCartMutation = useMutation({
         mutationKey: ['removeFromCart'],
-        mutationFn: async (id) => {
-            const response = await axiosInstance.delete(ApiRoutes.REMOVE_FROM_CART.path(id));
+        mutationFn: async (cartData) => {
+            const response = await axiosInstance.post(ApiRoutes.REMOVE_FROM_CART.path, cartData);
             return response.data;
         },
         onSuccess: (data) => {
