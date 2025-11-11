@@ -1,20 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import useCart from "../../hooks/useCart";
-import { FaTruck } from "react-icons/fa";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaTruck, FaMapMarkerAlt } from "react-icons/fa";
 import SummaryPageNumber from "./SummaryPageNumber";
 import { useNavigate } from "react-router-dom";
+import useShipping from "../../hooks/useShipping";
+import useOrders from "../../hooks/useOrders";
 
-// Custom hook to detect screen size
 const useMediaQuery = (query) => {
     const [matches, setMatches] = React.useState(false);
 
-    // Scroll to top on page load
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-    React.useEffect(() => {
         const media = window.matchMedia(query);
         if (media.matches !== matches) {
             setMatches(media.matches);
@@ -30,88 +25,145 @@ const useMediaQuery = (query) => {
 const FinalSummary = () => {
     const { cartItems } = useCart();
     const navigate = useNavigate();
+    const { addressData } = useShipping();
 
+    // api calls
+    const { createOrdersMutation } = useOrders();
+
+    // 🟢 Detect screen
     const isSmUp = useMediaQuery("(min-width: 640px)");
 
-    // Mock data for address & payment (can be from state/props in real use)
-    const address = {
-        name: "prakash",
-        street:
-            "4/305-A, vadakku thotam, near sakthi Vinayagar temple , Pachagoundenpalayam, Sulur, Coimbatore District, Coimbatore District, Tamil Nadu - 642202",
-        phone: "6383569191",
-    };
+    // 🟢 Get localStorage data
+    const directBuy = JSON.parse(localStorage.getItem("directBuyItem")) || null;
+    const cartBuy = JSON.parse(localStorage.getItem("cartBuy")) || null;
 
-    const paymentMode = "Cash on Delivery";
+    // 🟢 Determine flow type and address ID
+    const isDirectBuy = !!directBuy;
+    const addressId = isDirectBuy ? directBuy?.addressId : cartBuy?.addressId;
 
-    const subtotal = cartItems.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-    );
+    // 🟢 Find the corresponding address from fetched data
+    const selectedAddress = useMemo(() => {
+        if (!addressData || !addressId) return null;
+        return addressData.find((addr) => addr.id === addressId) || null;
+    }, [addressData, addressId]);
 
-    // handle product edit
+    // 🟢 Determine items to display
+    const finalItems = isDirectBuy ? [directBuy?.product] : cartItems;
+
+    // 🟢 Determine payment mode
+    const paymentMode = isDirectBuy
+        ? directBuy?.payment?.paymentMethod || "Not selected"
+        : cartBuy?.payment?.paymentMethod || "Not selected";
+
+    // 🟢 Subtotal calculation
+    const subtotal = isDirectBuy
+        ? (directBuy?.product?.price || 0) * (directBuy?.quantity || 1)
+        : cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+
+    // 🟢 Navigation handlers
     const handleProductEdit = () => {
-        if (isSmUp) {
-            navigate("/address"); // desktop flow
-        } else {
-            navigate("/Product"); // mobile flow
-        }
+        if (isSmUp) navigate("/address");
+        else navigate("/product");
     };
 
-    // handle address edit
-    const handleAddressEdit = () => {
-        navigate('/address');
-    }
+    const handleAddressEdit = () => navigate("/address");
+    const handlePaymentEdit = () => navigate("/payment");
 
-    // handle payment edit
-    const handlePaymentEdit = () => {
-        navigate('/payment');
-    }
+    const handleSubmit = () => {
+        if (!selectedAddress) {
+            alert("Please select a delivery address.");
+            return;
+        }
+
+        if (!paymentMode || paymentMode === "Not selected") {
+            alert("Please select a payment method.");
+            return;
+        }
+
+        // 🟢 Prepare order payload
+        const orderData = {
+            address_id: selectedAddress.id,
+            payment_method: paymentMode,
+            order_items: isDirectBuy
+                ? [
+                    {
+                        product_id: directBuy?.product?.id,
+                        quantity: directBuy?.quantity || 1,
+                        price: directBuy?.product?.price,
+                    },
+                ]
+                : cartItems.map((item) => ({
+                    product_id: item.product.id,
+                    quantity: item.quantity,
+                    price: item.product.price,
+                })),
+            total_price: subtotal,
+        };
+
+        // 🟢 Trigger order creation
+        createOrdersMutation.mutate(orderData, {
+            onSuccess: (res) => {
+                localStorage.removeItem("directBuyItem");
+                localStorage.removeItem("cartBuy");
+                navigate("/orderSuccess");
+            },
+            onError: (err) => {
+                console.error("❌ Order Failed:", err);
+            },
+        });
+    };
 
     return (
         <div className="container mx-auto mb-5 px-4">
             <SummaryPageNumber currentStep="Summary" />
             <div className="flex flex-col lg:flex-row gap-6 lg:mx-20 p-4">
-                {/* Left Side */}
+                {/* LEFT SIDE */}
                 <div className="flex-1 space-y-6">
                     {/* Product Details */}
                     <div>
                         <h2 className="font-semibold text-lg mb-3">Product Details</h2>
-                        {cartItems.map((item, index) => (
-                            <div
-                                key={index}
-                                className="border rounded-primaryRadius overflow-hidden bg-white"
-                            >
-                                <div className="flex items-center gap-2 px-4 py-2 border-b text-gray-700 font-medium">
-                                    <FaTruck className="text-gray-500" />
-                                    Estimated Delivery by Monday, 25th Aug
-                                </div>
-                                <div className="flex p-4">
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-20 h-20 object-cover rounded-md"
-                                    />
-                                    <div className="ml-4 flex-1">
-                                        <h3 className="font-medium">{item.name}</h3>
-                                        <p className="text-gray-700">₹{item.price}</p>
-                                        <p className="text-sm text-gray-500">
-                                            All issue easy returns
-                                        </p>
-                                        <p className="text-sm text-gray-500">
-                                            Size: {item.size || "S"} • Qty: {item.quantity}
-                                        </p>
+                        {finalItems && finalItems.length > 0 ? (
+                            finalItems.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="border rounded-primaryRadius overflow-hidden bg-white"
+                                >
+                                    <div className="flex items-center gap-2 px-4 py-2 border-b text-gray-700 font-medium">
+                                        <FaTruck className="text-gray-500" />
+                                        Estimated Delivery by Monday, 25th Aug
                                     </div>
-                                    <button
-                                        onClick={handleProductEdit}
-                                        className="text-teriteryText font-semibold"
-                                    >EDIT</button>
+                                    <div className="flex p-4">
+                                        <img
+                                            src={item?.product?.image || item?.image}
+                                            alt={item?.product?.name || item?.name}
+                                            className="w-20 h-20 object-cover rounded-md"
+                                        />
+                                        <div className="ml-4 flex-1">
+                                            <h3 className="font-medium">
+                                                {item?.product?.name || item?.name}
+                                            </h3>
+                                            <p className="text-gray-700">₹{item?.product?.price || item?.price}</p>
+                                            <p className="text-sm text-gray-500">All issues easy returns</p>
+                                            <p className="text-sm text-gray-500">
+                                                Qty: {item?.quantity || directBuy?.quantity || 1}
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={handleProductEdit}
+                                            className="text-teriteryText font-semibold"
+                                        >
+                                            EDIT
+                                        </button>
+                                    </div>
+                                    <div className="flex justify-between px-4 py-2 border-t text-sm text-gray-500">
+                                        <span>Sold by: {item.seller || "TANTANATAN TEXTILES"}</span>
+                                        <span>Free Delivery</span>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between px-4 py-2 border-t text-sm text-gray-500">
-                                    <span>Sold by: {item.seller || "TANTANATAN TEXTILES"}</span>
-                                    <span>Free Delivery</span>
-                                </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="text-gray-500">No items found.</p>
+                        )}
                     </div>
 
                     {/* Delivery Address */}
@@ -120,17 +172,28 @@ const FinalSummary = () => {
                             <FaMapMarkerAlt className="text-success" />
                             <h2 className="font-semibold text-lg">Delivery Address</h2>
                         </div>
-                        <div className="border rounded-primaryRadius bg-white p-4 flex justify-between items-start">
-                            <div>
-                                <p className="font-medium">{address.name}</p>
-                                <p className="text-gray-700 text-sm">{address.street}</p>
-                                <p className="text-gray-700 text-sm">{address.phone}</p>
+                        {selectedAddress ? (
+                            <div className="border rounded-primaryRadius bg-white p-4 flex justify-between items-start">
+                                <div>
+                                    <p className="font-medium">{selectedAddress.full_name}</p>
+                                    <p className="text-gray-700 text-sm">
+                                        {selectedAddress.address_line1},{" "}
+                                        {selectedAddress.address_line2 && `${selectedAddress.address_line2}, `}
+                                        {selectedAddress.city}, {selectedAddress.state},{" "}
+                                        {selectedAddress.country} - {selectedAddress.postal_code}
+                                    </p>
+                                    <p className="text-gray-700 text-sm">Phone: {selectedAddress.phone}</p>
+                                </div>
+                                <button
+                                    onClick={handleAddressEdit}
+                                    className="text-teriteryText font-semibold"
+                                >
+                                    EDIT
+                                </button>
                             </div>
-                            <button
-                                onClick={handleAddressEdit}
-                                className="text-teriteryText font-semibold"
-                            >EDIT</button>
-                        </div>
+                        ) : (
+                            <p className="text-gray-500">No delivery address selected.</p>
+                        )}
                     </div>
 
                     {/* Payment Mode */}
@@ -141,15 +204,18 @@ const FinalSummary = () => {
                             <button
                                 onClick={handlePaymentEdit}
                                 className="text-teriteryText font-semibold"
-                            >EDIT</button>
+                            >
+                                EDIT
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Side - Price Details */}
+                {/* RIGHT SIDE - Price Details */}
                 <div className="lg:w-1/3 mt-10 bg-white border rounded-primaryRadius p-6 h-fit">
                     <h2 className="font-semibold text-lg mb-4">
-                        Price Details ({cartItems.length} Items)
+                        Price Details ({isDirectBuy ? 1 : cartItems.length} Item
+                        {isDirectBuy ? "" : "s"})
                     </h2>
                     <div className="flex justify-between text-gray-700 mb-2">
                         <span>Total Product Price</span>
@@ -161,7 +227,9 @@ const FinalSummary = () => {
                         <span>₹{subtotal}</span>
                     </div>
                     <button
-                        className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius  cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50  transform duration-300 ease-in-out "                >
+                        onClick={handleSubmit}
+                        className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 transform duration-300 ease-in-out"
+                    >
                         Place Order
                     </button>
                 </div>

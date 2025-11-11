@@ -11,7 +11,6 @@ const SummaryAddress = () => {
 
     // 🟢 API Hooks
     const { addressData, createAddressMutation } = useShipping();
-    console.log('addressData', addressData)
 
     // 🟢 UI States
     const [selectedAddress, setSelectedAddress] = useState(null);
@@ -97,17 +96,24 @@ const SummaryAddress = () => {
     const handlePaymentProcess = () => {
         if (!selectedAddress) return alert("Please select a delivery address first.");
 
-        // 🟢 Get existing directBuyItem from localStorage
-        const existingItem = JSON.parse(localStorage.getItem("directBuyItem")) || {};
+        // 🟢 Check which mode we're in (direct buy or cart checkout)
+        const directBuyItem = JSON.parse(localStorage.getItem("directBuyItem"));
+        const isDirectBuy = !!directBuyItem; // true if directBuyItem exists
 
-        // 🟢 Merge addressId into the existing object
-        const updatedItem = {
-            ...existingItem,
-            addressId: selectedAddress.id,
-        };
-
-        // 🟢 Save back to localStorage
-        localStorage.setItem("directBuyItem", JSON.stringify(updatedItem));
+        if (isDirectBuy) {
+            // ✅ Direct Buy flow
+            const updatedItem = {
+                ...directBuyItem,
+                addressId: selectedAddress.id,
+            };
+            localStorage.setItem("directBuyItem", JSON.stringify(updatedItem));
+        } else {
+            // 🛒 Cart Checkout flow
+            const updatedCart = {
+                addressId: selectedAddress.id,
+            };
+            localStorage.setItem("cartBuy", JSON.stringify(updatedCart));
+        }
 
         // 🟢 Navigate to payment page
         navigate("/payment");
@@ -160,10 +166,7 @@ const SummaryAddress = () => {
                                             <div
                                                 key={addr.id}
                                                 className={`border bg-cardBg rounded-primaryRadius shadow-md p-4 cursor-pointer 
-                                                    ${selectedAddress?.id === addr.id 
-                                                        ? "text-primaryText border-teritaryLite border-[2px] " 
-                                                        : ""
-                                                    }`}
+      ${selectedAddress?.id === addr.id ? "text-primaryText border-teritaryLite border-[2px]" : ""}`}
                                                 onClick={() => setSelectedAddress(addr)}
                                             >
                                                 <div className="flex justify-between items-start">

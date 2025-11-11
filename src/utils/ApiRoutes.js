@@ -2,7 +2,7 @@
 export const accessToken = localStorage.getItem("accessToken") || " ";
 
 // profile data
-export const localProfile = localStorage.getItem("userInfo") || " ";
+export const localProfile = JSON.parse(localStorage.getItem("userInfo") || "{}");
 
 // login status
 export const loginStatus = !!localStorage.getItem("accessToken");
@@ -62,7 +62,7 @@ const ApiRoutes = {
     GET_ADDRESS: { path: '/api/v1/shipping/address/', authenticate: true },
 
     // orders
-    CREATE_ORDERS: { path: 'api/v1/order/create/', authenticate: true },
+    CREATE_ORDERS: { path: 'api/v1/order/place/', authenticate: true },
     GET_ORDERS: { path: 'api/v1/order/', authenticate: true },
 
     // payments
