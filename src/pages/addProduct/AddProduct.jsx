@@ -72,35 +72,34 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Create FormData
-        const formData = new FormData();
-        formData.append('name', productName);
-        formData.append('category', productCategory);
-        formData.append('price', productPrice);
-        formData.append('stock', productStock);
-        formData.append('description', productDescription);
+        // Convert images to base64 strings
+        const imageBase64Array = await Promise.all(
+            selectedFiles.map((fileObj) => {
+                if (fileObj.existing) return fileObj.preview; // existing URLs
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => resolve(event.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(fileObj.file);
+                });
+            })
+        );
 
-        // Append only new files
-        selectedFiles.forEach((fileObj) => {
-            if (!fileObj.existing && fileObj.file) {
-                formData.append('image', fileObj.file);
-            }
-        });
+        const payload = {
+            name: productName,
+            category: productCategory,
+            price: productPrice,
+            stock: productStock,
+            description: productDescription,
+            image: imageBase64Array, // 👈 now valid array of strings
+        };
 
         if (editData) {
-            // Update
-            formData.append('productId', editData.id);
-
-            await updateProductMutation.mutateAsync(formData);
-            // dispatch(updateProduct({ id: editData.id, data: { productName, productCategory, productPrice, productDescription } }));
-
+            await updateProductMutation.mutateAsync(payload);
         } else {
-            // Create
-            await createdProductMutation.mutateAsync(formData);
-            // dispatch(addProduct({ productName, productCategory, productPrice, productDescription }));
+            await createdProductMutation.mutateAsync(payload);
         }
 
-        // Reset
         setProductName('');
         setProductCategory('');
         setProductPrice('');
