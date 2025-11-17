@@ -13,7 +13,8 @@ import { getPermissions } from '../../utils/UserPermission';
 import { motion, AnimatePresence } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import LoginRequest from '../LoginRequest';
-import { loginStatus, adminStatus } from '../../utils/ApiRoutes';
+import { adminStatus } from '../../utils/ApiRoutes';
+import { getAuthData } from '../../utils/ApiRoutes';
 
 const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -28,6 +29,7 @@ const Header = () => {
   const [label, setLabel] = useState('');
 
   // login status
+  const { loginStatus } = getAuthData();
   const isLogin = loginStatus;
 
   // admin status

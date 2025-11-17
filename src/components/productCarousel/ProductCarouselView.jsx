@@ -5,7 +5,7 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import Carts from "../../pages/cards/Carts";
-import { loginStatus } from "../../utils/ApiRoutes";
+import { getAuthData } from "../../utils/ApiRoutes";
 import LoginRequest from "../LoginRequest";
 
 const ProductCarouselView = () => {
@@ -22,6 +22,7 @@ const ProductCarouselView = () => {
     // login status
     const [showLoginRequest, setShowLoginRequest] = useState(false);
     const [label, setLabel] = useState('');
+    const { loginStatus } = getAuthData();
     const isLogin = loginStatus;
 
     // lazy loading for delivery date
