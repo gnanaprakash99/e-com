@@ -38,7 +38,7 @@ const useBanner = () => {
     const removeFrombannerMutation = useMutation({
         mutationKey: ['removeFrombanner'],
         mutationFn: async (id) => {
-            const response = await axiosInstance.post(ApiRoutes.REMOVE_FROM_BANNER.path(id));
+            const response = await axiosInstance.delete(ApiRoutes.REMOVE_FROM_BANNER.path(id));
             return response.data;
         },
         onSuccess: () => {

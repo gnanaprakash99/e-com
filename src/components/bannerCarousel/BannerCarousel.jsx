@@ -1,20 +1,24 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import LazyImage from '../loader/LazyImage';
+import useBanner from '../../hooks/useBanner';
 
 const BannerCarousel = () => {
-  const bannerCarouselData = useSelector(
-    (state) => state.bannerCarouselData.bannerCarouselData
-  );
+
+  const { bannerData = [] } = useBanner();
+
+  // Filter only ACTIVE banners
+  const activeBanners = bannerData.filter((item) => item.status === "ACTIVE");
+
+  const isSingle = activeBanners.length === 1;
 
   const settings = {
     dots: false,
-    infinite: true,
+    infinite: !isSingle,     // ❗Stop infinite loop when only one banner
+    autoplay: !isSingle,     // ❗Disable autoplay for a single image
     speed: 1200,
-    autoplay: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplaySpeed: 3000,
@@ -23,10 +27,10 @@ const BannerCarousel = () => {
   return (
     <div className="w-full overflow-hidden">
       <Slider {...settings}>
-        {bannerCarouselData.map((item) => (
+        {activeBanners.map((item) => (
           <div key={item.id} className="w-full">
             <LazyImage
-              src={item.Imgsrc}
+              src={item.image}
               alt=""
               className="
                 w-full 
