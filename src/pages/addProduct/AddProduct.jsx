@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-// import { addProduct, updateProduct } from '../../store/slice/ProductCarouselSlice';
 import useProduct from '../../hooks/useProduct';
+import useCategory from '../../hooks/useCategory';
 
 const AddProduct = ({ isOpen, onClose, editData }) => {
     const [productName, setProductName] = useState('');
@@ -11,25 +10,22 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
     const [productDescription, setProductDescription] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
     const fileInputRef = useRef(null);
-    // const dispatch = useDispatch();
 
     const { createdProductMutation, updateProductMutation } = useProduct();
-    const categories = useSelector((state) => state.productCategory.productCategory);
+    const { categories } = useCategory();
 
-    // Pre-fill data when editing
     useEffect(() => {
         if (editData) {
             setProductName(editData.name);
-            setProductCategory(editData.category);
+            setProductCategory(editData.category); // ID
             setProductPrice(editData.price);
             setProductStock(editData.stock);
             setProductDescription(editData.description);
 
-            // existing images (preview only)
             if (editData.image && editData.image.length > 0) {
-                const previews = editData.images.map(img => ({
+                const previews = editData.image.map(img => ({
                     file: null,
-                    preview: img, // URL or base64 string stored in DB
+                    preview: img,
                     existing: true
                 }));
                 setSelectedFiles(previews);
@@ -50,7 +46,8 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
 
         const filesWithPreviews = files.map(file => ({
             file,
-            preview: URL.createObjectURL(file)
+            preview: URL.createObjectURL(file),
+            existing: false
         }));
 
         setSelectedFiles(prev => [...prev, ...filesWithPreviews]);
@@ -69,20 +66,22 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
         fileInputRef.current.value = '';
     };
 
+    // Convert file to base64
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Convert images to base64 strings
-        const imageBase64Array = await Promise.all(
-            selectedFiles.map((fileObj) => {
-                if (fileObj.existing) return fileObj.preview; // existing URLs
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = (event) => resolve(event.target.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(fileObj.file);
-                });
-            })
+        // Convert all selected files to base64
+        const imagesArray = await Promise.all(
+            selectedFiles.map(f => f.existing ? f.preview : fileToBase64(f.file))
         );
 
         const payload = {
@@ -91,21 +90,26 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
             price: productPrice,
             stock: productStock,
             description: productDescription,
-            image: imageBase64Array, // 👈 now valid array of strings
+            image: imagesArray, // ✅ array of strings
         };
 
-        if (editData) {
-            await updateProductMutation.mutateAsync(payload);
-        } else {
-            await createdProductMutation.mutateAsync(payload);
-        }
+        try {
+            if (editData) {
+                await updateProductMutation.mutateAsync({ id: editData.id, updatedData: payload });
+            } else {
+                await createdProductMutation.mutateAsync(payload);
+            }
 
-        setProductName('');
-        setProductCategory('');
-        setProductPrice('');
-        setProductDescription('');
-        handleClearAll();
-        onClose();
+            setProductName('');
+            setProductCategory('');
+            setProductPrice('');
+            setProductStock('');
+            setProductDescription('');
+            handleClearAll();
+            onClose();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
@@ -120,36 +124,66 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
                 </h2>
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Product Name" value={productName}
-                        onChange={(e) => setProductName(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
+                    <input
+                        type="text"
+                        placeholder="Product Name"
+                        value={productName}
+                        onChange={(e) => setProductName(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                        required
+                    />
 
-                    <select value={productCategory} onChange={(e) => setProductCategory(e.target.value)}
-                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required>
+                    <select
+                        value={productCategory}
+                        onChange={(e) => setProductCategory(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                        required
+                    >
                         <option value="" disabled>Select Category</option>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.categoryName}>
-                                {category.categoryName}
-                            </option>
+                        {categories.filter(c => c.status === "ACTIVE").map(c => (
+                            <option key={c.id} value={c.id}>{c.category_name}</option>
                         ))}
                     </select>
 
-                    <input type="number" placeholder="Product Price" value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
+                    <input
+                        type="number"
+                        placeholder="Product Price"
+                        value={productPrice}
+                        onChange={(e) => setProductPrice(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                        required
+                    />
 
-                    <input type="number" placeholder="Product Stock" value={productStock}
-                        onChange={(e) => setProductStock(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
+                    <input
+                        type="number"
+                        placeholder="Product Stock"
+                        value={productStock}
+                        onChange={(e) => setProductStock(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                        required
+                    />
 
-                    <textarea placeholder="Product Description" value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)} className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius" required />
+                    <textarea
+                        placeholder="Product Description"
+                        value={productDescription}
+                        onChange={(e) => setProductDescription(e.target.value)}
+                        className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                        required
+                    />
 
-                    {/* Image Upload */}
-                    <input type="file" multiple accept="image/*" ref={fileInputRef}
-                        onChange={handleFileChange} className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius" />
+                    <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="w-full px-4 py-2 bg-inputBg rounded-primaryRadius"
+                    />
 
                     <div className="flex gap-2 flex-wrap mt-2">
-                        {selectedFiles.map((fileObj, i) => (
+                        {selectedFiles.map((f, i) => (
                             <div key={i} className="relative">
-                                <img src={fileObj.preview} className="w-16 h-16 object-cover rounded border" />
+                                <img src={f.preview} className="w-16 h-16 object-cover rounded border" />
                                 <button type="button" onClick={() => handleFileRemove(i)}
                                     className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
                                     ×
@@ -158,9 +192,15 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
                         ))}
                     </div>
 
-                    <button type="submit"
-                        className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition">
-                        {editData ? 'Update' : 'Submit'}
+                    <button
+                        type="submit"
+                        disabled={createdProductMutation.isLoading || updateProductMutation.isLoading}
+                        className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
+                    >
+                        {editData
+                            ? updateProductMutation.isPending ? 'Updating...' : 'Update'
+                            : createdProductMutation.isPending ? 'Creating...' : 'Create'
+                        }
                     </button>
                 </form>
             </div>
