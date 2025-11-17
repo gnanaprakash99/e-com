@@ -3,52 +3,47 @@ import axiosInstance from "../utils/AxiosInstance";
 import ApiRoutes from "../utils/ApiRoutes";
 
 const useCart = () => {
-    // Fetch cart items
-    const cartQuery = useQuery({
+
+    const { data: cartQuery, refetch: cartQueryRefetch } = useQuery({
         queryKey: ['cart'],
         queryFn: async () => {
+            const token = localStorage.getItem("accessToken");
+            if (!token) return [];  
+
             const response = await axiosInstance.get(ApiRoutes.GET_USER_CART.path);
             return response.data.items;
-        }
+        },
+        enabled: !!localStorage.getItem("accessToken"),
     });
 
-    // add cart
     const addToCartMutation = useMutation({
         mutationKey: ['addToCart'],
         mutationFn: async (cartData) => {
             const response = await axiosInstance.post(ApiRoutes.ADD_TO_CART.path, cartData);
             return response.data;
         },
-        onSuccess: (data) => {
-            console.log('Item added to cart successfully:', data);
-            cartQuery.refetch(); // Refetch cart items after successful addition
-        },
-        onError: (error) => {
-            console.error('Error adding item to cart:', error);
+        onSuccess: () => {
+            cartQueryRefetch();  
         },
     });
 
-    // remove cart
     const removeFromCartMutation = useMutation({
         mutationKey: ['removeFromCart'],
         mutationFn: async (cartData) => {
             const response = await axiosInstance.post(ApiRoutes.REMOVE_FROM_CART.path, cartData);
             return response.data;
         },
-        onSuccess: (data) => {
-            console.log('Item removed from cart successfully:', data);
-            cartQuery.refetch(); // Refetch cart items after successful removal
-        },
-        onError: (error) => {
-            console.error('Error removing item from cart:', error);
+        onSuccess: () => {
+            cartQueryRefetch();  
         },
     });
 
     return {
-        cartQuery,
-        cartItems: cartQuery.data ?? [],
+        cartItems: cartQuery ?? [],   
+        cartQueryRefetch,
         addToCartMutation,
         removeFromCartMutation,
     };
-}
+};
+
 export default useCart;

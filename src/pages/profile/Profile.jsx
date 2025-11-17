@@ -1,15 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
+import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
+import { FaUserCircle } from "react-icons/fa";
 import { addCategory, removeCategory } from '../../store/slice/ProductCategorySlice';
 import { addBanner, removeBanner } from '../../store/slice/BannerCarouselSlice';
 import { getPermissions } from '../../utils/UserPermission';
 import IndianStates from '../../utils/IndianStates';
-import { FaUserCircle } from "react-icons/fa";
-import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
-import { FiLogOut } from "react-icons/fi";
 import useProfile from '../../hooks/useProfile';
 import { adminStatus } from '../../utils/ApiRoutes';
+import useAuth from '../../hooks/useAuth';
+import useCategory from '../../hooks/useCategory';
+import useBanner from '../../hooks/useBanner';
+import ImageLoader from '../../components/loader/ImageLoader';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -21,8 +25,11 @@ const Profile = () => {
     // email
     const email = localStorage.getItem("email") || " ";
 
-    // ✅ Get API values
+    // API calls
     const { updateProfileMutation, profile } = useProfile();
+    const { logoutMutation } = useAuth();
+    const { categories, addTocategoryMutation, removeFromcategoryMutation } = useCategory();
+    const { bannerData, addTobannerMutation, removeFrombannerMutation } = useBanner();
 
     // ✅ Start empty, fill when API loads
     const [formData, setFormData] = useState({});
@@ -59,17 +66,17 @@ const Profile = () => {
     };
 
     // CATEGORY
-    const categories = useSelector((state) => state.productCategory.productCategory);
     const [newCategoryName, setNewCategoryName] = useState('');
-    const [newCategoryImage, setNewCategoryImage] = useState('');
+    const [newCategoryImage, setNewCategoryImage] = useState(null);
     const categoryFileInputRef = useRef(null);
-
     const [showCategory, setShowCategory] = useState(false);
+    const [categoryPreview, setCategoryPreview] = useState("");
 
     const handleCategoryFileSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setNewCategoryImage(URL.createObjectURL(file));
+            setNewCategoryImage(file);
+            setCategoryPreview(URL.createObjectURL(file));
         }
     };
 
@@ -77,41 +84,81 @@ const Profile = () => {
 
     const handleAddCategory = () => {
         if (!newCategoryName.trim()) return;
-        dispatch(addCategory({
-            id: Date.now().toString(36),
-            categoryName: newCategoryName,
-            categoryImage: newCategoryImage || "https://via.placeholder.com/150",
-        }));
+
+        const formData = new FormData();
+        formData.append("category_name", newCategoryName);
+
+        if (newCategoryImage) {
+            formData.append("image", newCategoryImage);
+        }
+
+        addTocategoryMutation.mutate(formData);
+
         setNewCategoryName('');
-        setNewCategoryImage('');
+        setNewCategoryImage(null);
+        setCategoryPreview("");
     };
 
-    const handleDeleteCategory = (id) => dispatch(removeCategory(id));
+    const handleDeleteCategory = (id) => removeFromcategoryMutation.mutate(id);
 
-    // BANNER
-    const bannerData = useSelector((state) => state.bannerCarouselData.bannerCarouselData);
+    // BANNER STATES 
     const [showBannerList, setShowBannerList] = useState(false);
-    const [newBanner, setNewBanner] = useState('');
+    const [newBannerUrl, setNewBannerUrl] = useState("");
+    const [newBannerFile, setNewBannerFile] = useState(null);
+    const [previewBanner, setPreviewBanner] = useState("");
     const fileInputRef = useRef(null);
 
     const handleFileSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) setNewBanner(URL.createObjectURL(file));
+        const file = e?.target?.files?.[0];
+        if (!file) return;
+        setNewBannerFile(file);
+        setPreviewBanner(URL.createObjectURL(file));
+        setNewBannerUrl("");
     };
 
-    const triggerFileInput = () => fileInputRef.current?.click();
+    const triggerFileInput = () => {
+        if (!fileInputRef.current) return;
+        fileInputRef.current.value = null;
+        fileInputRef.current.click();
+    };
 
     const handleAddBanner = () => {
-        if (!newBanner.trim()) return;
-        dispatch(addBanner({ id: Date.now(), Imgsrc: newBanner }));
-        setNewBanner('');
+        if (!newBannerFile && newBannerUrl.trim() === "") {
+            console.warn("No banner to upload");
+            return;
+        }
+
+        if (newBannerFile) {
+            const fd = new FormData();
+            fd.append("image", newBannerFile);
+            for (const p of fd.entries()) console.log("FormData:", p[0], p[1]);
+            addTobannerMutation.mutate(fd);
+        } else {
+            // URL case
+            addTobannerMutation.mutate({ image: newBannerUrl });
+        }
+
+        setNewBannerFile(null);
+        setPreviewBanner("");
+        setNewBannerUrl("");
+        if (fileInputRef.current) fileInputRef.current.value = null;
     };
 
-    const handleDeleteBanner = (id) => dispatch(removeBanner(id));
+    // delete banner
+    const handleDeleteBanner = (id) => removeFrombannerMutation.mutate(id);
 
     if (!formData || Object.keys(formData).length === 0) {
         return <p className="text-center mt-10">Loading Profile...</p>;
     }
+
+    // Handle Logout
+    const handleLogout = async () => {
+        try {
+            await logoutMutation.mutateAsync();
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    };
 
     return (
         <div>
@@ -144,7 +191,10 @@ const Profile = () => {
                         </div>
 
                         <div className="mt-10 flex justify-end">
-                            <button className="flex items-center gap-2 text-secondaryLite border p-2 rounded-primaryRadius">
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center gap-2 text-secondaryLite border p-2 rounded-primaryRadius"
+                            >
                                 <FiLogOut /> Logout
                             </button>
                         </div>
@@ -226,17 +276,23 @@ const Profile = () => {
                                                 >
                                                     Upload Image
                                                 </button>
-                                                {newCategoryImage && (
-                                                    <div className="relative">
+                                                {categoryPreview && (
+                                                    <div className="relative inline-block">
                                                         <img
-                                                            src={newCategoryImage}
-                                                            alt="preview"
+                                                            src={categoryPreview}
                                                             className="w-12 h-12 object-cover rounded"
+                                                            alt="preview"
                                                         />
+
+                                                        {/* REMOVE BUTTON */}
                                                         <button
                                                             type="button"
-                                                            onClick={() => setNewCategoryImage('')}
-                                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow"
+                                                            onClick={() => {
+                                                                setCategoryPreview("");
+                                                                setNewCategoryFile(null);
+                                                                categoryFileInputRef.current.value = null; // reset input
+                                                            }}
+                                                            className="absolute -top-2 -right-2 bg-red-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs shadow"
                                                         >
                                                             ✕
                                                         </button>
@@ -258,7 +314,7 @@ const Profile = () => {
                                                     type="button"
                                                     className="px-4 mr-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
                                                 >
-                                                    Add
+                                                    {addTocategoryMutation.isPending ? "Adding..." : "Add"}
                                                 </button>
                                                 <button
                                                     onClick={() => setShowCategory(!showCategory)}
@@ -279,24 +335,30 @@ const Profile = () => {
                                             >
                                                 <div className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius">
                                                     <ul className="space-y-2">
-                                                        {categories.map((cat) => (
-                                                            <li
-                                                                key={cat.id}
-                                                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center border border-mutedText bg-cardBg p-2 rounded-primaryRadius"
-                                                            >
-                                                                <div className="flex items-center gap-3">
-                                                                    <img src={cat.categoryImage} alt={cat.categoryName} className="w-12 h-12 object-cover rounded" />
-                                                                    <span className="capitalize font-medium">{cat.categoryName}</span>
-                                                                </div>
-                                                                <button
-                                                                    onClick={() => handleDeleteCategory(cat.id)}
-                                                                    type="button"
-                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                        {categories
+                                                            .filter(cat => cat.status === "ACTIVE") // <-- only active categories
+                                                            .map((cat) => (
+                                                                <li
+                                                                    key={cat.id}
+                                                                    className="flex flex-col sm:flex-row sm:justify-between sm:items-center border border-mutedText bg-cardBg p-2 rounded-primaryRadius"
                                                                 >
-                                                                    Delete
-                                                                </button>
-                                                            </li>
-                                                        ))}
+                                                                    <div className="flex items-center gap-3">
+                                                                        <ImageLoader
+                                                                            src={cat.image }
+                                                                            alt={cat.category_name}
+                                                                            className="w-12 h-12 object-cover rounded"
+                                                                        />
+                                                                        <span className="capitalize font-medium">{cat.category_name}</span>
+                                                                    </div>
+                                                                    <button
+                                                                        onClick={() => handleDeleteCategory(cat.id)}
+                                                                        type="button"
+                                                                        className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </li>
+                                                            ))}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -308,21 +370,15 @@ const Profile = () => {
                                 <div className="md:col-span-2">
                                     <div className="p-4 sm:p-6">
                                         <h2 className="text-xl sm:text-2xl font-bold mb-4">Banner Carousel</h2>
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-                                            <div className="relative w-full">
-                                                <input
-                                                    type="text"
-                                                    value={newBanner}
-                                                    onChange={(e) => setNewBanner(e.target.value)}
-                                                    placeholder="Enter banner URL"
-                                                    className="w-full pr-10 border border-mutedText bg-inputBg rounded-primaryRadius focus:ring-1 focus:ring-inputSelectBorder focus:outline-none p-2 shadow-sm"
-                                                />
+
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex gap-3">
                                                 <button
                                                     type="button"
                                                     onClick={triggerFileInput}
-                                                    className="absolute inset-y-0 right-2 flex items-center"
+                                                    className="flex gap-2 px-4 py-2 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder"
                                                 >
-                                                    <MdAddPhotoAlternate className="w-5 h-5 text-gray-600" />
+                                                    Upload Image <MdAddPhotoAlternate className="w-5 h-5" />
                                                 </button>
 
                                                 <input
@@ -332,48 +388,78 @@ const Profile = () => {
                                                     className="hidden"
                                                     onChange={handleFileSelect}
                                                 />
+
+                                                {previewBanner && (
+                                                    <div className="relative inline-block">
+                                                        <img src={previewBanner} alt="preview" className="w-16 h-10 object-cover rounded" />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setCategoryPreview("");
+                                                                setNewCategoryImage(null);
+                                                                categoryFileInputRef.current.value = null;
+                                                            }}
+                                                            className="absolute -top-2 -right-2 bg-red-600 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs shadow"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <button
-                                                type="button"
-                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
-                                                onClick={handleAddBanner}
-                                            >
-                                                Add
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
-                                                onClick={() => setShowBannerList(true)}
-                                            >
-                                                Banners
-                                            </button>
+
+                                            <div className=''>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAddBanner}
+                                                    className="px-4 mr-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                >
+                                                    {addTobannerMutation?.isPending ? 'Adding...' : 'Add'}
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowBannerList(!showBannerList)}
+                                                    className="px-4 sm:px-6 py-2 bg-primaryBtn text-buttonText font-semibold rounded-primaryRadius border border-buttonBorder hover:scale-105"
+                                                >
+                                                    Banners
+                                                </button>
+                                            </div>
                                         </div>
 
-                                        {/* Banner list */}
+                                        {/* Banner List */}
                                         {showBannerList && (
                                             <div
                                                 className="relative"
                                                 onMouseEnter={() => setShowBannerList(true)}
                                                 onMouseLeave={() => setShowBannerList(false)}
                                             >
-                                                <div className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius">
+                                                <div
+                                                    className="absolute z-50 max-h-60 w-full border shadow-cardShadow border-mutedText 
+                overflow-y-auto scrollbar-hide bg-pageBg p-5 rounded-primaryRadius"
+                                                >
                                                     <ul className="space-y-2">
-                                                        {bannerData.map((banner, index) => (
-                                                            <li
-                                                                key={banner.id}
-                                                                className="flex flex-col sm:flex-row sm:items-center sm:justify-between border border-mutedText p-2 bg-cardBg rounded-primaryRadius"
-                                                            >
-                                                                <img src={banner.Imgsrc} alt={`banner-${index}`} className="w-16 h-10 object-cover rounded" />
-                                                                <span className="truncate w-full sm:w-4/5">{banner.Imgsrc}</span>
-                                                                <button
-                                                                    onClick={() => handleDeleteBanner(banner.id)}
-                                                                    type="button"
-                                                                    className="mt-2 sm:mt-0 px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder cursor-pointer transition-transform hover:scale-105"
+                                                        {bannerData
+                                                            ?.filter(b => b.status === "ACTIVE")
+                                                            ?.map((banner) => (
+                                                                <li
+                                                                    key={banner.id}
+                                                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between border border-mutedText p-2 bg-cardBg rounded-primaryRadius"
                                                                 >
-                                                                    Delete
-                                                                </button>
-                                                            </li>
-                                                        ))}
+                                                                    <ImageLoader
+                                                                        src={banner.image}
+                                                                        alt="banner"
+                                                                        className="w-16 h-10 object-cover rounded"
+                                                                    />
+
+                                                                    <button
+                                                                        onClick={() => handleDeleteBanner(banner.id)}
+                                                                        type="button"
+                                                                        className="px-3 py-1 bg-primaryBtn text-buttonText rounded-primaryRadius border border-buttonBorder hover:scale-105 mt-2 sm:mt-0"
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </li>
+                                                            ))}
                                                     </ul>
                                                 </div>
                                             </div>

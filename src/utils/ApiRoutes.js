@@ -4,9 +4,6 @@ export const accessToken = localStorage.getItem("accessToken") || " ";
 // profile data
 export const localProfile = JSON.parse(localStorage.getItem("userInfo") || "{}");
 
-// login status
-export const loginStatus = !!localStorage.getItem("accessToken");
-
 // admin status
 export const isAdmin = localStorage.getItem("isAdmin") || " ";
 export const adminStatus = isAdmin;
@@ -20,6 +17,16 @@ export const updateStatus = localProfile?.is_updated;
 
 // Base URL for the API
 export const BASE_URL = "http://13.238.142.220";
+
+export const getAuthData = () => {
+    // login status
+    const loginStatus = !!localStorage.getItem("accessToken");
+
+    return {
+        loginStatus,
+
+    };
+};
 
 
 const ApiRoutes = {
@@ -39,7 +46,7 @@ const ApiRoutes = {
         authenticate: true
     },
     UPDATE_PRODUCT: {
-        path: (id) => `/api/v1/products/update/${id}/`,  // put api 
+        path: (id) => `/api/v1/products/update/${id}/`,
         authenticate: true
     },
 
@@ -53,7 +60,7 @@ const ApiRoutes = {
         authenticate: true
     },
     REMOVE_FROM_CART: {
-        path:`/api/v1/cart/remove/`,
+        path: `/api/v1/cart/remove/`,
         authenticate: true
     },
 
@@ -75,6 +82,34 @@ const ApiRoutes = {
 
     // contact
     CONTACT: { path: 'api/v1/contact/' },
+
+    // CATEGORY ROUTES
+    GET_USER_CATEGORY: {
+        path: '/api/v1/products/category/',
+        authenticate: true
+    },
+    ADD_TO_CATEGORY: {
+        path: '/api/v1/products/category/create/',
+        authenticate: true
+    },
+    REMOVE_FROM_CATEGORY: {
+        path: (id) => `/api/v1/products/category/delete/${id}/`,
+        authenticate: true
+    },
+
+    // BANNER ROUTES
+    GET_USER_BANNER: {
+        path: '/api/v1/banner/',
+        authenticate: true
+    },
+    ADD_TO_BANNER: {
+        path: '/api/v1/banner/create/',
+        authenticate: true
+    },
+    REMOVE_FROM_BANNER: {
+        path: (id) => `/api/v1/banner/delete/${id}/`,
+        authenticate: true
+    },
 
 }
 

@@ -1,8 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axiosInstance from "../utils/AxiosInstance";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import ApiRoutes from "../utils/ApiRoutes";
+import axiosInstance from "../utils/AxiosInstance";
 
 const useAuth = () => {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     // ✅ Signup
     const signUpMutation = useMutation({
@@ -40,7 +44,7 @@ const useAuth = () => {
             const response = await axiosInstance.get(ApiRoutes.CURRENT_USER.path, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            localStorage.setItem("userInfo", JSON.stringify(response.data.data.user_profile)); 
+            localStorage.setItem("userInfo", JSON.stringify(response.data.data.user_profile));
             localStorage.setItem("isAdmin", response.data.data.is_admin);
             localStorage.setItem("email", response.data.data.email);
             localStorage.setItem("id", response.data.data.id);
@@ -85,18 +89,35 @@ const useAuth = () => {
     const logoutMutation = useMutation({
         mutationKey: ["logoutUser"],
         mutationFn: async () => {
-            const token = localStorage.getItem("accessToken");
+            const refreshToken = localStorage.getItem("refreshToken");
+
             const response = await axiosInstance.post(
                 ApiRoutes.LOGOUT.path,
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
+                { refresh: refreshToken },
+                { headers: { Authorization: `Bearer ${refreshToken}` } }
             );
+
             return response.data;
         },
         onSuccess: () => {
             console.log("✅ Logged Out");
+
+            // ❗ Remove cookies
+            document.cookie.split(";").forEach((cookie) => {
+                document.cookie =
+                    cookie
+                        .replace(/^ +/, "")
+                        .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
+            });
+
+            // ❗ Clear local storage
             localStorage.clear();
-            window.location.reload();
+            
+            // 🔥 Clear React Query cache (important!)
+            queryClient.removeQueries(['cart']);
+            queryClient.clear();
+
+            navigate("/");
         },
         onError: (err) => console.error("❌ Logout Error:", err),
     });
@@ -114,9 +135,20 @@ const useAuth = () => {
             return response.data;
         },
         onSuccess: () => {
-            console.log("✅ Logged out from all devices");
+            console.log("✅ Logged Out");
+
+            // ❗ Remove cookies
+            document.cookie.split(";").forEach((cookie) => {
+                document.cookie =
+                    cookie
+                        .replace(/^ +/, "")
+                        .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
+            });
+
+            // ❗ Clear local storage
             localStorage.clear();
-            window.location.reload();
+
+            navigate("/");
         },
         onError: (err) => console.error("❌ Logout All Error:", err),
     });
