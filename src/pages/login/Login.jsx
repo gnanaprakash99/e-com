@@ -6,7 +6,9 @@ const Login = ({ isOpen, onClose }) => {
   // modes: login | signup | reset
 
   const [signUpData, setSignUpData] = useState({
-    name: "",
+    first_name: "",
+    last_name: "",
+    country_code: "+91",
     contact_number: "",
     email: "",
     password: "",
@@ -115,7 +117,7 @@ const Login = ({ isOpen, onClose }) => {
               type="submit"
               className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
             >
-              {loginMutation.isPending ? 'Logging In' : 'Login'}
+              {loginMutation.isPending ? 'Logging...' : 'Login'}
             </button>
 
             <button
@@ -133,21 +135,48 @@ const Login = ({ isOpen, onClose }) => {
           <form className="space-y-4" onSubmit={handleSignupSubmit}>
             <input
               type="text"
-              placeholder="Full Name"
-              value={signUpData.name}
-              onChange={(e) => setSignUpData({ ...signUpData, name: e.target.value })}
+              placeholder="First Name"
+              value={signUpData.first_name}
+              onChange={(e) => setSignUpData({ ...signUpData, first_name: e.target.value })}
               className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+              required
             />
 
             <input
-              type="number"
-              placeholder="Mobile Number"
-              value={signUpData.contact_number}
-              onChange={(e) =>
-                setSignUpData({ ...signUpData, contact_number: e.target.value })
-              }
+              type="text"
+              placeholder="Last Name"
+              value={signUpData.last_name}
+              onChange={(e) => setSignUpData({ ...signUpData, last_name: e.target.value })}
               className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+              required
             />
+
+            <div className="flex items-center">
+              <select
+                value={signUpData.country_code || "+91"}
+                onChange={(e) => setSignUpData({ ...signUpData, country_code: e.target.value })}
+                className="px-3 py-2 border border-mutedText bg-inputBg outline-none mr-2 rounded-md"
+              >
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+61">🇦🇺 +61</option>
+              </select>
+
+              <input
+                type="number"
+                placeholder="Mobile Number"
+                value={signUpData.contact_number}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d{0,10}$/.test(value)) {
+                    setSignUpData({ ...signUpData, contact_number: value });
+                  }
+                }}
+                className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+                required
+              />
+            </div>
 
             <input
               type="email"
@@ -155,6 +184,7 @@ const Login = ({ isOpen, onClose }) => {
               value={signUpData.email}
               onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
               className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+              required
             />
 
             <input
@@ -163,23 +193,23 @@ const Login = ({ isOpen, onClose }) => {
               value={signUpData.password}
               onChange={(e) => setSignUpData({ ...signUpData, password: e.target.value })}
               className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+              required
             />
 
             <input
               type="password"
               placeholder="Confirm Password"
               value={signUpData.confirmPassword}
-              onChange={(e) =>
-                setSignUpData({ ...signUpData, confirmPassword: e.target.value })
-              }
+              onChange={(e) => setSignUpData({ ...signUpData, confirmPassword: e.target.value })}
               className="w-full px-4 py-2 border border-mutedText bg-inputBg rounded-primaryRadius"
+              required
             />
 
             <button
               type="submit"
               className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
             >
-              {signUpMutation.isPending ? 'Signing Up' : 'Sign Up'}
+              {signUpMutation.isPending ? 'Signing...' : 'Sign Up'}
             </button>
           </form>
         )}

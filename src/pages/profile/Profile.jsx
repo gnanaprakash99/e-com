@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { FaUserCircle } from "react-icons/fa";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { addCategory, removeCategory } from '../../store/slice/ProductCategorySlice';
 import { addBanner, removeBanner } from '../../store/slice/BannerCarouselSlice';
 import { getPermissions } from '../../utils/UserPermission';
@@ -202,7 +203,7 @@ const Profile = () => {
                 ) : (
                     <>
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold">Edit Profile</h2>
+                            <h2 className="flex text-2xl font-bold"><IoMdArrowRoundBack className='mt-1 cursor-pointer' onClick={() => setIsEditing(false)} /> Edit Profile</h2>
                             <button onClick={handleUpdate}
                                 className="px-6 py-2 rounded-primaryRadius font-semibold bg-primaryBtn text-buttonText border border-buttonBorder hover:scale-105 transition"
                             >
@@ -344,7 +345,7 @@ const Profile = () => {
                                                                 >
                                                                     <div className="flex items-center gap-3">
                                                                         <ImageLoader
-                                                                            src={cat.image }
+                                                                            src={cat.image}
                                                                             alt={cat.category_name}
                                                                             className="w-12 h-12 object-cover rounded"
                                                                         />
