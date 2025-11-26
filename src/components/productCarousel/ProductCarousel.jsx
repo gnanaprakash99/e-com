@@ -57,7 +57,10 @@ const ProductCarousel = ({ selectedProducts }) => {
                 {item.discount}% OFF
               </div>
             )}
-            <ProductImageRotator images={item.image} name={item.name} />
+            <ProductImageRotator
+              images={item.image?.map(img => img.image_url)}
+              name={item.name}
+            />
           </div>
 
           {/* Content */}

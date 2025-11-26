@@ -102,7 +102,9 @@ const ProductCarouselView = () => {
 
     if (!product) return <div>No product data found</div>;
 
-    const images = Array.isArray(product.image) ? product.image : [product.image];
+    const images = Array.isArray(product.image)
+        ? product.image.map(img => img.image_url)
+        : [product.image?.image_url || product.image];
 
     const handlePrev = () =>
         setCurrentIndex(prev => (prev === 0 ? images.length - 1 : prev - 1));

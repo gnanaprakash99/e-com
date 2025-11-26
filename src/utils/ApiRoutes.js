@@ -5,7 +5,7 @@ export const accessToken = localStorage.getItem("accessToken") || " ";
 export const localProfile = JSON.parse(localStorage.getItem("userInfo") || "{}");
 
 // admin status
-export const isAdmin = localStorage.getItem("isAdmin") || " ";
+export const isAdmin = localStorage.getItem("isAdmin") || false;
 export const adminStatus = isAdmin;
 
 // admin status

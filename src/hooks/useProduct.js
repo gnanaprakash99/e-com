@@ -53,21 +53,28 @@ const useProduct = () => {
             const data = response.data;
             return data.data;
         },
-        retry:false
+        retry: false
     });
 
     // create
     const createdProductMutation = useMutation({
         mutationKey: ['createProduct'],
         mutationFn: async (productData) => {
-            const response = await axiosInstance.post(ApiRoutes.CREATE_PRODUCT.path, productData, {
-                headers: { Authorization: `${accessToken}` },
-            });
+            const response = await axiosInstance.post(
+                ApiRoutes.CREATE_PRODUCT.path,
+                productData,
+                {
+                    headers: {
+                        Authorization: `${accessToken}`,
+                        'Content-Type': 'multipart/form-data', // ⚡ important
+                    },
+                }
+            );
             return response.data;
         },
         onSuccess: (data) => {
             console.log('Product created successfully:', data);
-            ProductQuery.refetch(); // Refetch products after successful creation
+            ProductQuery.refetch();
         },
         onError: (error) => {
             console.error('Error creating product:', error);
@@ -77,12 +84,21 @@ const useProduct = () => {
     const updateProductMutation = useMutation({
         mutationKey: ['updateProduct'],
         mutationFn: async ({ id, updatedData }) => {
-            const response = await axiosInstance.put(ApiRoutes.UPDATE_PRODUCT.path(id), updatedData);
+            const response = await axiosInstance.put(
+                ApiRoutes.UPDATE_PRODUCT.path(id),
+                updatedData,
+                {
+                    headers: {
+                        Authorization: `${accessToken}`,
+                        'Content-Type': 'multipart/form-data', // ⚡ important
+                    },
+                }
+            );
             return response.data;
         },
         onSuccess: (data) => {
             console.log('Product updated successfully:', data);
-            ProductQuery.refetch(); // Refetch products after successful update
+            ProductQuery.refetch();
         },
         onError: (error) => {
             console.error('Error updating product:', error);

@@ -4,7 +4,7 @@ import BannerCarousel from '../../components/bannerCarousel/BannerCarousel'
 import HomeIntro from './HomeIntro'
 // import TopSelling from './TopSelling'
 import HomePageProducts from './HomePageProducts'
-import RandomProducts from './RandomProducts'
+import OurProducts from './OurProducts'
 
 const Home = () => {
   return (
@@ -12,7 +12,7 @@ const Home = () => {
       <BannerCarousel />
       <CategoryBar />
       <HomeIntro />
-      <RandomProducts />
+      <OurProducts />
       {/* <TopSelling /> */}
       <HomePageProducts />
     </>

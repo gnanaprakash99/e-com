@@ -12,27 +12,30 @@ const useShipping = () => {
             });
             return res.data;
         },
+        onSuccess: async () => {
+            await refetchAddressQuery();
+        }
     });
 
     // Get addresses
-    const addressQuery = useQuery({
+    const { data: addressQuery, refetch: refetchAddressQuery, isLoading } = useQuery({
         queryKey: ["addressQuery"],
         queryFn: async () => {
             const token = localStorage.getItem("accessToken");
             const res = await axiosInstance.get(ApiRoutes.GET_ADDRESS.path, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            return res.data; // Assuming API returns an array
+            return res.data; 
         },
     });
 
     // Return useful parts
     return {
         createAddressMutation,
-        addressQuery,
-        addressData: addressQuery.data ?? [], // ✅ Correctly returns the array
-        isLoading: addressQuery.isLoading,
-        refetchAddress: addressQuery.refetch,
+        addressQuery,                        
+        addressData: addressQuery ?? [],      
+        isLoading,
+        refetchAddress: refetchAddressQuery,
     };
 };
 

@@ -8,13 +8,9 @@ const useCategory = () => {
     const { data: categoryQuery, refetch: categoryQueryRefetch } = useQuery({
         queryKey: ['category'],
         queryFn: async () => {
-            const token = localStorage.getItem("accessToken");
-            if (!token) return [];
-
             const response = await axiosInstance.get(ApiRoutes.GET_USER_CATEGORY.path);
             return response.data;
         },
-        enabled: !!localStorage.getItem("accessToken"),
     });
 
     const addTocategoryMutation = useMutation({

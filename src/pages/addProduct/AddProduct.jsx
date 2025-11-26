@@ -16,16 +16,16 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
 
     useEffect(() => {
         if (editData) {
-            setProductName(editData.name);
-            setProductCategory(editData.category); // ID
-            setProductPrice(editData.price);
-            setProductStock(editData.stock);
-            setProductDescription(editData.description);
+            setProductName(editData.name || '');
+            setProductCategory(editData.category || '');
+            setProductPrice(editData.price || '');
+            setProductStock(editData.stock || '');
+            setProductDescription(editData.description || '');
 
             if (editData.image && editData.image.length > 0) {
                 const previews = editData.image.map(img => ({
                     file: null,
-                    preview: img,
+                    preview: img, // URL from backend
                     existing: true
                 }));
                 setSelectedFiles(previews);
@@ -54,52 +54,45 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
     };
 
     const handleFileRemove = (index) => {
-        URL.revokeObjectURL(selectedFiles[index].preview);
+        if (!selectedFiles[index].existing) {
+            URL.revokeObjectURL(selectedFiles[index].preview);
+        }
         const updated = [...selectedFiles];
         updated.splice(index, 1);
         setSelectedFiles(updated);
     };
 
     const handleClearAll = () => {
-        selectedFiles.forEach(f => f.preview && URL.revokeObjectURL(f.preview));
+        selectedFiles.forEach(f => !f.existing && f.preview && URL.revokeObjectURL(f.preview));
         setSelectedFiles([]);
         fileInputRef.current.value = '';
-    };
-
-    // Convert file to base64
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Convert all selected files to base64
-        const imagesArray = await Promise.all(
-            selectedFiles.map(f => f.existing ? f.preview : fileToBase64(f.file))
-        );
+        const formData = new FormData();
+        formData.append('name', productName);
+        formData.append('category', productCategory);
+        formData.append('price', productPrice);
+        formData.append('stock', productStock);
+        formData.append('description', productDescription);
 
-        const payload = {
-            name: productName,
-            category: productCategory,
-            price: productPrice,
-            stock: productStock,
-            description: productDescription,
-            image: imagesArray, // ✅ array of strings
-        };
+        // Append new files
+        selectedFiles.forEach(f => {
+            if (!f.existing) {
+                formData.append('image', f.file); // key must match backend
+            }
+        });
 
         try {
             if (editData) {
-                await updateProductMutation.mutateAsync({ id: editData.id, updatedData: payload });
+                await updateProductMutation.mutateAsync({ id: editData.id, updatedData: formData });
             } else {
-                await createdProductMutation.mutateAsync(payload);
+                await createdProductMutation.mutateAsync(formData);
             }
 
+            // Clear all
             setProductName('');
             setProductCategory('');
             setProductPrice('');
@@ -184,8 +177,11 @@ const AddProduct = ({ isOpen, onClose, editData }) => {
                         {selectedFiles.map((f, i) => (
                             <div key={i} className="relative">
                                 <img src={f.preview} className="w-16 h-16 object-cover rounded border" />
-                                <button type="button" onClick={() => handleFileRemove(i)}
-                                    className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                                <button
+                                    type="button"
+                                    onClick={() => handleFileRemove(i)}
+                                    className="absolute top-0 right-0 bg-black text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                                >
                                     ×
                                 </button>
                             </div>

@@ -6,12 +6,9 @@ const useBanner = () => {
     const { data: bannerQuery, refetch: bannerQueryRefetch } = useQuery({
         queryKey: ['banner'],
         queryFn: async () => {
-            const token = localStorage.getItem("accessToken");
-            if (!token) return [];
             const response = await axiosInstance.get(ApiRoutes.GET_USER_BANNER.path);
             return response.data;
         },
-        enabled: !!localStorage.getItem("accessToken"),
     });
 
     const addTobannerMutation = useMutation({
