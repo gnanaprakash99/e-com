@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useCart from '../../hooks/useCart';
+import { FaSpinner } from "react-icons/fa";
 import { updateStatus } from '../../utils/ApiRoutes';
 import toast from 'react-hot-toast';
 
@@ -11,13 +12,9 @@ const Carts = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleCheckout = () => {
-    if (updateStatus == true) {
-      onClose();
-      navigate('/checkout');
-    } else {
-      toast.error("Please update profile and try again")
-    }
-  }
+    onClose();
+    navigate('/checkout');
+  };
 
   const handleRemove = (id, quantity) => {
     const cartData = {
@@ -95,7 +92,7 @@ const Carts = ({ isOpen, onClose }) => {
                   onClick={() => handleRemove(item.product.id, item.quantity)}
                   className="text-secondaryLite hover:underline text-sm"
                 >
-                  Remove
+                  {removeFromCartMutation.isPending ? <FaSpinner className="animate-spin" /> : 'Remove'}
                 </button>
               </div>
             ))}

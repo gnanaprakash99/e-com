@@ -5,9 +5,14 @@ import { useNavigate } from "react-router-dom";
 import SummaryPageNumber from "./SummaryPageNumber";
 import useShipping from "../../hooks/useShipping";
 import { id } from "../../utils/ApiRoutes";
+import { useSelector, useDispatch } from "react-redux";
+import { setDirectBuyItem } from "../../store/slice/DirectBuySlice";
+import { setCartBuy } from "../../store/slice/CartBuySlice";
+
 
 const SummaryAddress = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // 🟢 API Hooks
     const { addressData, createAddressMutation } = useShipping();
@@ -93,29 +98,29 @@ const SummaryAddress = () => {
         });
     };
 
-    const handlePaymentProcess = () => {
-        if (!selectedAddress) return alert("Please select a delivery address first.");
+    const directBuyItem = useSelector((state) => state.DirectBuy.item);
 
-        // 🟢 Check which mode we're in (direct buy or cart checkout)
-        const directBuyItem = JSON.parse(localStorage.getItem("directBuyItem"));
-        const isDirectBuy = !!directBuyItem; // true if directBuyItem exists
+    const handlePaymentProcess = () => {
+        if (!selectedAddress)
+            return alert("Please select a delivery address first.");
+
+        const isDirectBuy = !!directBuyItem;
 
         if (isDirectBuy) {
-            // ✅ Direct Buy flow
-            const updatedItem = {
-                ...directBuyItem,
-                addressId: selectedAddress.id,
-            };
-            localStorage.setItem("directBuyItem", JSON.stringify(updatedItem));
+            // DIRECT BUY FLOW — save addressId inside directBuy slice
+            dispatch(
+                setDirectBuyItem({
+                    ...directBuyItem,
+                    addressId: selectedAddress.id,
+                })
+            );
         } else {
-            // 🛒 Cart Checkout flow
-            const updatedCart = {
-                addressId: selectedAddress.id,
-            };
-            localStorage.setItem("cartBuy", JSON.stringify(updatedCart));
+            // CART FLOW — save selected address in cartBuy slice
+            dispatch(setCartBuy({
+                    addressId: selectedAddress.id,
+                }));
         }
 
-        // 🟢 Navigate to payment page
         navigate("/payment");
     };
 

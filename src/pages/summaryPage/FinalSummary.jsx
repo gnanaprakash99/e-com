@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react";
+import { useSelector } from "react-redux";
 import useCart from "../../hooks/useCart";
 import { FaTruck, FaMapMarkerAlt } from "react-icons/fa";
 import SummaryPageNumber from "./SummaryPageNumber";
@@ -34,8 +35,8 @@ const FinalSummary = () => {
     const isSmUp = useMediaQuery("(min-width: 640px)");
 
     // 🟢 Get localStorage data
-    const directBuy = JSON.parse(localStorage.getItem("directBuyItem")) || null;
-    const cartBuy = JSON.parse(localStorage.getItem("cartBuy")) || null;
+    const directBuy = useSelector((state) => state.DirectBuy.item) || null;
+    const cartBuy = useSelector((state) => state.CartBuy.item) || null;
 
     // 🟢 Determine flow type and address ID
     const isDirectBuy = !!directBuy;
@@ -103,8 +104,8 @@ const FinalSummary = () => {
         // 🟢 Trigger order creation
         createOrdersMutation.mutate(orderData, {
             onSuccess: (res) => {
-                localStorage.removeItem("directBuyItem");
-                localStorage.removeItem("cartBuy");
+                dispatch(clearDirectBuyItem());
+                dispatch(clearCartBuy());
                 navigate("/orderSuccess");
             },
             onError: (err) => {
@@ -156,7 +157,7 @@ const FinalSummary = () => {
                                         </button>
                                     </div>
                                     <div className="flex justify-between px-4 py-2 border-t text-sm text-gray-500">
-                                        <span>Sold by: {item.seller || "TANTANATAN TEXTILES"}</span>
+                                        <span>Sold by: {item?.seller || "TANTANATAN TEXTILES"}</span>
                                         <span>Free Delivery</span>
                                     </div>
                                 </div>

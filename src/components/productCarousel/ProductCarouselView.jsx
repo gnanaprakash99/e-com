@@ -7,9 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import Carts from "../../pages/cards/Carts";
 import { getAuthData } from "../../utils/ApiRoutes";
 import LoginRequest from "../LoginRequest";
+import { useDispatch } from "react-redux";
+import { setDirectBuyItem } from "../../store/slice/DirectBuySlice";
+
 
 const ProductCarouselView = () => {
     const location = useLocation();
+    const dispatch = useDispatch();
     const product = location.state?.product;
     const { cartItems, addToCartMutation } = useCart();
     const navigate = useNavigate();
@@ -138,8 +142,10 @@ const ProductCarouselView = () => {
                 quantity: 1,
             };
 
-            // Save to localStorage temporarily for checkout
-            localStorage.setItem("directBuyItem", JSON.stringify(directBuyItem));
+            // Save in Redux instead of localStorage
+            dispatch(setDirectBuyItem({
+                product: directBuyItem,
+            }));
 
             navigate("/checkout");
         } else {
@@ -161,7 +167,7 @@ const ProductCarouselView = () => {
     };
 
     // Check if product is already in cart
-    const isInCart = cartItems.some(item => item.id === product.id);
+    const isInCart = cartItems.some(item => item.product.id === product.id);
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen p-4 sm:p-6 lg:p-8 gap-6">
@@ -245,9 +251,10 @@ const ProductCarouselView = () => {
                     ) : (
                         <button
                             onClick={handleAddToCart}
+
                             className="bg-primaryBtn text-buttonText h-10 sm:h-primaryHeight px-4 sm:w-primaryWidth rounded-primaryRadius text-sm sm:text-lg font-medium border border-buttonBorder hover:scale-105 transition-transform"
                         >
-                            Add to Cart
+                            {addToCartMutation.isPending ? 'adding...' : 'Add to Cart'}
                         </button>
                     )}
                     <button

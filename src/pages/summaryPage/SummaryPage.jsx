@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SummaryPageNumber from "./SummaryPageNumber";
 import SummaryAddress from "./SummaryAddress";
 import useCart from "../../hooks/useCart";
 import { Link } from "react-router-dom";
 import ProductSummaryPage from "./ProductSummaryPage";
+import { useSelector } from "react-redux";
 
 const useMediaQuery = (query) => {
   const [matches, setMatches] = React.useState(false);
@@ -20,13 +21,12 @@ const useMediaQuery = (query) => {
 };
 
 const SummaryPage = () => {
+
   const { cartItems } = useCart();
-  const [directBuyItem, setDirectBuyItem] = useState(null);
+  const directBuyItem = useSelector((state) => state.DirectBuy.item);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const savedItem = localStorage.getItem("directBuyItem");
-    if (savedItem) setDirectBuyItem(JSON.parse(savedItem));
   }, []);
 
   const isSmUp = useMediaQuery("(max-width: 640px)");
@@ -52,22 +52,21 @@ const SummaryPage = () => {
   const ShowCheckout = () => {
     if (!isSmUp) {
       return (
-        <div>
+        <>
           <SummaryPageNumber currentStep="Address" />
           <SummaryAddress />
-        </div>
+        </>
       );
     } else {
       return (
-        <div>
+        <>
           <SummaryPageNumber currentStep="Product" />
           <ProductSummaryPage />
-        </div>
+        </>
       );
     }
   };
 
-  // 🟢 If direct buy item exists → treat it as the only item
   const hasDirectBuy = !!directBuyItem;
   const hasCartItems = cartItems.length > 0;
 
