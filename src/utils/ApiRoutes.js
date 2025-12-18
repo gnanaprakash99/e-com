@@ -9,14 +9,14 @@ export const isAdmin = localStorage.getItem("isAdmin") || false;
 export const adminStatus = isAdmin;
 
 // admin status
-export const isId = localStorage.getItem("id") || " ";
+export const isId = localProfile?.id || " ";
 export const id = isId;
 
 // profile update status
 export const updateStatus = localProfile?.is_updated;
 
 // Base URL for the API
-export const BASE_URL = "https://api.hridyatarangini.com/";
+export const BASE_URL = "http://13.238.142.220";
 
 export const getAuthData = () => {
     // login status
@@ -39,6 +39,10 @@ const ApiRoutes = {
     LOGOUT: { path: '/api/v1/auth/logout/', authenticate: true },
     LOGOUT_ALL: { path: '/api/v1/auth/logout_all/', authenticate: true },
 
+    // Razorpay
+    RAZORPAY_CREATE_ORDER: { path: '/api/v1/payment/create/' },
+    RAZORPAY_VERIFY_PAYMENT: { path: '/api/v1/payment/verify/' },
+
     // PRODUCT ROUTES
     GET_ALL_PRODUCTS: { path: '/api/v1/products/' },
     CREATE_PRODUCT: {
@@ -52,9 +56,13 @@ const ApiRoutes = {
 
     // CART ROUTES
     GET_USER_CART: {
-        path: '/api/v1/cart/',
+        path: `/api/v1/cart/`,
         authenticate: true
     },
+    // GET_USER_CART: {
+    //     path: `/api/v1/cart/`,
+    //     authenticate: true
+    // },
     ADD_TO_CART: {
         path: '/api/v1/cart/add/',
         authenticate: true

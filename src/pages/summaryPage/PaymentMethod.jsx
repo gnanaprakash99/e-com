@@ -93,7 +93,7 @@ const PaymentMethodSection = () => {
                     <h2 className="text-xl font-semibold mb-4">Select Payment Method</h2>
 
                     {/* Scan & Pay */}
-                    <div
+                    {/* <div
                         onClick={() => {
                             setSelectedMethod("Scan & Pay");
                             toggleSection("scanAndPay");
@@ -125,10 +125,21 @@ const PaymentMethodSection = () => {
                                 </motion.div>
                             )}
                         </AnimatePresence>
+                    </div> */}
+
+                    {/* Online Payment */}
+                    <div
+                        onClick={() => setSelectedMethod("Online Payment")}
+                        className={`bg-cardBg rounded-secondaryRadius border px-5 py-4 cursor-pointer mb-4 transition ${selectedMethod === "Cash on Delivery"
+                            ? "border-2 bg-gradient-to-t from-secondaryBtn to-primaryBtn bg-opacity-20"
+                            : "border-buttonBorder"
+                            }`}
+                    >
+                        <span className="font-bold">Online Payment (Razorpay)</span>
                     </div>
 
                     {/* Cash on Delivery */}
-                    <div
+                    {/* <div
                         onClick={() => setSelectedMethod("Cash on Delivery")}
                         className={`bg-cardBg rounded-secondaryRadius border px-5 py-4 cursor-pointer mb-4 transition ${selectedMethod === "Cash on Delivery"
                             ? "border-2 bg-gradient-to-t from-secondaryBtn to-primaryBtn bg-opacity-20"
@@ -136,7 +147,7 @@ const PaymentMethodSection = () => {
                             }`}
                     >
                         <span className="font-bold">Cash on Delivery</span>
-                    </div>
+                    </div> */}
 
                     {/* Continue Button */}
                     <div className="flex justify-end">
@@ -157,7 +168,7 @@ const PaymentMethodSection = () => {
         </div>
     );
 
-    return cartItems.length === 0 ? <EmptyCart /> : <ShowCheckout />;
+    return  <ShowCheckout />;
 };
 
 export default PaymentMethodSection;

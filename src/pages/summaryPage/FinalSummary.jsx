@@ -6,6 +6,8 @@ import SummaryPageNumber from "./SummaryPageNumber";
 import { useNavigate } from "react-router-dom";
 import useShipping from "../../hooks/useShipping";
 import useOrders from "../../hooks/useOrders";
+import { startRazorpayPayment } from "../../services/PaymentService";
+import useRazorpay from "../../hooks/useRazorpay";
 
 const useMediaQuery = (query) => {
     const [matches, setMatches] = React.useState(false);
@@ -29,7 +31,12 @@ const FinalSummary = () => {
     const { addressData } = useShipping();
 
     // api calls
-    const { createOrdersMutation } = useOrders();
+    const { createOrdersMutation, ordersQuery } = useOrders();
+    const {
+        createRazorpayOrderMutation,
+        verifyRazorpayPaymentMutation,
+    } = useRazorpay();
+
 
     // 🟢 Detect screen
     const isSmUp = useMediaQuery("(min-width: 640px)");
@@ -70,7 +77,7 @@ const FinalSummary = () => {
     const handleAddressEdit = () => navigate("/address");
     const handlePaymentEdit = () => navigate("/payment");
 
-    const handleSubmit = () => {
+    const handlePlaceOrder = async () => {
         if (!selectedAddress) {
             alert("Please select a delivery address.");
             return;
@@ -81,37 +88,53 @@ const FinalSummary = () => {
             return;
         }
 
-        // 🟢 Prepare order payload
-        const orderData = {
-            address_id: selectedAddress.id,
-            payment_method: paymentMode,
-            order_items: isDirectBuy
-                ? [
-                    {
-                        product_id: directBuy?.product?.id,
-                        quantity: directBuy?.quantity || 1,
-                        price: directBuy?.product?.price,
-                    },
-                ]
-                : cartItems.map((item) => ({
-                    product_id: item.product.id,
-                    quantity: item.quantity,
-                    price: item.product.price,
-                })),
-            total_price: subtotal,
-        };
+        try {
+            // 1️⃣ Create order first
+            const orderPayload = {
+                shipping_address: selectedAddress.id,
+                product_id: isDirectBuy
+                    // ? [directBuy.product.id]
+                    ? directBuy.product.id
+                    // : cartItems.map(item => item.product.id),
+                    : cartItems[0]?.product?.id,
+            };
 
-        // 🟢 Trigger order creation
-        createOrdersMutation.mutate(orderData, {
-            onSuccess: (res) => {
-                dispatch(clearDirectBuyItem());
-                dispatch(clearCartBuy());
+            const orderRes = await createOrdersMutation.mutateAsync(orderPayload);
+
+            // 🟢 Get orderId (prefer response, fallback to ordersQuery)
+
+            const orderId = orderRes?.order_id;
+
+            if (!orderId) {
+                throw new Error("Order ID not found");
+            }
+
+            // 2️⃣ COD → done
+            if (paymentMode === "Cash on Delivery") {
                 navigate("/orderSuccess");
-            },
-            onError: (err) => {
-                console.error("❌ Order Failed:", err);
-            },
-        });
+                return;
+            }
+
+            // 3️⃣ Online payment
+            startRazorpayPayment({
+                orderId,
+                amount: subtotal,
+                address: selectedAddress,
+
+                createPayment: createRazorpayOrderMutation.mutateAsync,
+                verifyPayment: verifyRazorpayPaymentMutation.mutateAsync,
+
+                onSuccess: () => {
+                    navigate("/orderSuccess");
+                },
+                onFailure: () => {
+                    console.log("Payment failed");
+                },
+            });
+        } catch (err) {
+            console.error(err);
+            alert("Failed to place order");
+        }
     };
 
     return (
@@ -228,7 +251,7 @@ const FinalSummary = () => {
                         <span>₹{subtotal}</span>
                     </div>
                     <button
-                        onClick={handleSubmit}
+                        onClick={handlePlaceOrder}
                         className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 transform duration-300 ease-in-out"
                     >
                         Place Order

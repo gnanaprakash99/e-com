@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 const Carts = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const { cartItems, removeFromCartMutation } = useCart();
+  console.log('1111', cartItems);
 
   if (!isOpen) return null;
 
