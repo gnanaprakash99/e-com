@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/AxiosInstance";
 import ApiRoutes from "../utils/ApiRoutes";
 
-const useOrders = () => {
+const useOrders = ({ fetchOrders } = {}) => {
     const localProfile = JSON.parse(localStorage.getItem("userInfo"));
     const userId = localProfile?.id || "";
 
@@ -37,7 +37,7 @@ const useOrders = () => {
 
             return res.data;
         },
-        enabled: !!token && !!userId,
+        enabled: fetchOrders &&  !!token && !!userId,
     });
 
     // ✅ Always return array

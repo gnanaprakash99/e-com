@@ -35,6 +35,7 @@ const ApiRoutes = {
     LOGIN: { path: '/api/v1/auth/token/' },
     CURRENT_USER: { path: '/api/v1/user/' },
     RESET_PASSWORD: { path: '/api/v1/auth/password-reset/' },
+    CONFIRM_RESET_PASSWORD: { path: '/api/v1/auth/password-reset/confirm/' },
     REFRESH_TOKEN: { path: '/api/v1/auth/token/refresh/', authenticate: true },
     LOGOUT: { path: '/api/v1/auth/logout/', authenticate: true },
     LOGOUT_ALL: { path: '/api/v1/auth/logout_all/', authenticate: true },

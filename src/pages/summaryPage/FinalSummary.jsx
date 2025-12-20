@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import useCart from "../../hooks/useCart";
 import { FaTruck, FaMapMarkerAlt } from "react-icons/fa";
@@ -30,8 +30,10 @@ const FinalSummary = () => {
     const navigate = useNavigate();
     const { addressData } = useShipping();
 
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
     // api calls
-    const { createOrdersMutation, ordersQuery } = useOrders();
+    const { createOrdersMutation, ordersQuery } = useOrders({ fetchOrders: false });
     const {
         createRazorpayOrderMutation,
         verifyRazorpayPaymentMutation,
@@ -56,7 +58,15 @@ const FinalSummary = () => {
     }, [addressData, addressId]);
 
     // 🟢 Determine items to display
-    const finalItems = isDirectBuy ? [directBuy?.product] : cartItems;
+    const finalItems = useMemo(() => {
+        if (isDirectBuy && directBuy?.product) {
+            return [{
+                product: directBuy.product,
+                quantity: directBuy.quantity || 1,
+            }];
+        }
+        return cartItems || [];
+    }, [isDirectBuy, directBuy, cartItems]);
 
     // 🟢 Determine payment mode
     const paymentMode = isDirectBuy
@@ -89,33 +99,27 @@ const FinalSummary = () => {
         }
 
         try {
-            // 1️⃣ Create order first
+            setIsPlacingOrder(true); // 🔥 START LOADING
+
             const orderPayload = {
                 shipping_address: selectedAddress.id,
                 product_id: isDirectBuy
-                    // ? [directBuy.product.id]
                     ? directBuy.product.id
-                    // : cartItems.map(item => item.product.id),
                     : cartItems[0]?.product?.id,
             };
 
             const orderRes = await createOrdersMutation.mutateAsync(orderPayload);
 
-            // 🟢 Get orderId (prefer response, fallback to ordersQuery)
+            const orderId = orderRes?.id;
+            if (!orderId) throw new Error("Order ID not found");
 
-            const orderId = orderRes?.order_id;
-
-            if (!orderId) {
-                throw new Error("Order ID not found");
-            }
-
-            // 2️⃣ COD → done
+            // COD FLOW
             if (paymentMode === "Cash on Delivery") {
-                navigate("/orderSuccess");
+                navigate("/orders");
                 return;
             }
 
-            // 3️⃣ Online payment
+            // ONLINE PAYMENT
             startRazorpayPayment({
                 orderId,
                 amount: subtotal,
@@ -125,15 +129,17 @@ const FinalSummary = () => {
                 verifyPayment: verifyRazorpayPaymentMutation.mutateAsync,
 
                 onSuccess: () => {
-                    navigate("/orderSuccess");
+                    navigate("/orders");
                 },
                 onFailure: () => {
-                    console.log("Payment failed");
+                    alert("Payment failed");
+                    setIsPlacingOrder(false); // ❌ stop loading
                 },
             });
         } catch (err) {
             console.error(err);
             alert("Failed to place order");
+            setIsPlacingOrder(false); // ❌ stop loading
         }
     };
 
@@ -252,9 +258,12 @@ const FinalSummary = () => {
                     </div>
                     <button
                         onClick={handlePlaceOrder}
-                        className="mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius cursor-pointer transition-transform hover:scale-105 focus:outline-none disabled:opacity-50 transform duration-300 ease-in-out"
+                        disabled={isPlacingOrder}
+                        className={`mx-auto block bg-primaryBtn border-[1px] border-buttonBorder text-buttonText font-semibold py-2 px-6 rounded-primaryRadius transition-transform transform duration-300 ease-in-out
+        ${isPlacingOrder ? "opacity-60 cursor-not-allowed" : "hover:scale-105"}
+    `}
                     >
-                        Place Order
+                        {isPlacingOrder ? "Placing Order..." : "Place Order"}
                     </button>
                 </div>
             </div>

@@ -1,58 +1,56 @@
 export const startRazorpayPayment = async ({
-    createPayment,
-    verifyPayment,
-    orderId,
-    amount,
-    address,
+    orderId,          // DB order ID (number)
+    amount,           // amount in rupees (string or number)
+    createPayment,    // mutation: create razorpay order
+    verifyPayment,    // mutation: verify payment
     onSuccess,
     onFailure,
 }) => {
     try {
         // 1️⃣ Create Razorpay Order (Backend)
-        const paymentOrder = await createPayment({
+        const response = await createPayment({
             order: orderId,
-            amount, // rupees
+            amount: amount,
         });
 
-        // 2️⃣ Open Razorpay
+        const { razorpay_order, key_id } = response;
+
+        if (!razorpay_order || !key_id) {
+            throw new Error("Invalid Razorpay response");
+        }
+
+        // 2️⃣ Razorpay Checkout
         const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY,
-            amount: paymentOrder.amount * 100, // paise
-            currency: "INR",
-            name: "Your Store Name",
-            description: "Order Payment",
-            order_id: paymentOrder.razorpay_order_id,
+            key: key_id,
+            amount: razorpay_order.amount,
+            currency: razorpay_order.currency,
+            name: "Your Company",
+            order_id: razorpay_order.id,
 
-            prefill: {
-                name: address?.full_name,
-                contact: address?.phone,
-            },
-
-            theme: {
-                color: "#3399cc",
-            },
-
-            handler: async function (response) {
+            handler: async function (res) {
                 try {
-                    // 3️⃣ Verify payment
+                    // 3️⃣ Verify Payment
                     await verifyPayment({
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_order_id: response.razorpay_order_id,
-                        razorpay_signature: response.razorpay_signature,
+                        razorpay_payment_id: res.razorpay_payment_id,
+                        razorpay_order_id: res.razorpay_order_id,
+                        razorpay_signature: res.razorpay_signature,
                     });
 
-                    onSuccess?.();
+                    onSuccess && onSuccess();
                 } catch (err) {
-                    alert("Payment verification failed");
-                    onFailure?.();
+                    console.error("Verification failed", err);
+                    onFailure && onFailure();
                 }
             },
+
+            theme: { color: "#3399cc" },
         };
 
         const rzp = new window.Razorpay(options);
         rzp.open();
-    } catch (err) {
-        alert("Failed to create payment");
-        onFailure?.();
+
+    } catch (error) {
+        console.error("Razorpay init failed:", error);
+        onFailure && onFailure();
     }
 };

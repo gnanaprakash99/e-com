@@ -130,7 +130,7 @@ const PaymentMethodSection = () => {
                     {/* Online Payment */}
                     <div
                         onClick={() => setSelectedMethod("Online Payment")}
-                        className={`bg-cardBg rounded-secondaryRadius border px-5 py-4 cursor-pointer mb-4 transition ${selectedMethod === "Cash on Delivery"
+               className={`bg-cardBg rounded-secondaryRadius border px-5 py-4 cursor-pointer mb-4 transition ${selectedMethod === "Online Payment"
                             ? "border-2 bg-gradient-to-t from-secondaryBtn to-primaryBtn bg-opacity-20"
                             : "border-buttonBorder"
                             }`}
@@ -168,7 +168,7 @@ const PaymentMethodSection = () => {
         </div>
     );
 
-    return  <ShowCheckout />;
+    return <ShowCheckout />;
 };
 
 export default PaymentMethodSection;
