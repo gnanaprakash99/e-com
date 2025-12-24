@@ -14,63 +14,63 @@ const Orders = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {orderedData.map((order) => {
-            const firstItem = order.items?.[0];
+          {orderedData
+            .slice()        // create a copy
+            .reverse()      // reverse order
+            .map((order) => {
+              const firstItem = order.items?.[0];
 
-            return (
-              <div
-                key={order.id}
-                className="bg-cardBg rounded-primaryRadius shadow p-4 flex flex-col sm:flex-row items-center justify-between gap-4"
-              >
-                {/* LEFT */}
-                <div className="flex items-center gap-4">
-                  <img
-                    src={firstItem?.product?.image}
-                    alt={firstItem?.product?.name}
-                    className="w-24 h-24 object-cover rounded"
-                  />
+              return (
+                <div
+                  key={order.id}
+                  className="bg-cardBg rounded-primaryRadius shadow p-4 flex flex-col sm:flex-row items-center justify-between gap-4"
+                >
+                  {/* LEFT */}
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={firstItem?.product?.image}
+                      alt={firstItem?.product?.name}
+                      className="w-24 h-24 object-cover rounded"
+                    />
 
-                  <div>
-                    <h3 className="text-lg font-medium">
-                      {firstItem?.product?.name}
-                    </h3>
+                    <div>
+                      <h3 className="text-lg font-medium">
+                        {firstItem?.product?.name}
+                      </h3>
 
-                    <p className="text-sm text-mutedText">
-                      Quantity: {firstItem?.quantity}
-                    </p>
+                      <p className="text-sm text-mutedText">
+                        Quantity: {firstItem?.quantity}
+                      </p>
 
-                    <p className="text-sm text-mutedText">
-                      Ordered on:{" "}
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </p>
+                      <p className="text-sm text-mutedText">
+                        Ordered on:{" "}
+                        {new Date(order.created_at).toLocaleDateString()}
+                      </p>
 
-                    <p className="text-xs text-mutedText">
-                      Order ID: {order.order_id}
-                    </p>
+                      <p className="text-xs text-mutedText">
+                        Order ID: {order.order_id}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* RIGHT */}
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">₹{order.total_price}</p>
+
+                    <span
+                      className={`text-sm font-medium px-2 py-1 rounded-primaryRadius ${order.status === "confirmed"
+                          ? "text-success bg-green-100"
+                          : order.status === "processing"
+                            ? "text-Warning bg-yellow-100"
+                            : "text-Error bg-red-100"
+                        }`}
+                    >
+                      {order.status}
+                    </span>
                   </div>
                 </div>
-
-                {/* RIGHT */}
-                <div className="text-right">
-                  <p className="text-lg font-semibold">
-                    ₹{order.total_price}
-                  </p>
-
-                  <span
-                    className={`text-sm font-medium px-2 py-1 rounded-primaryRadius ${
-                      order.status === "confirmed"
-                        ? "text-success bg-green-100"
-                        : order.status === "processing"
-                        ? "text-Warning bg-yellow-100"
-                        : "text-Error bg-red-100"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       )}
     </div>
