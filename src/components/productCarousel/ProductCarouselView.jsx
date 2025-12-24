@@ -9,7 +9,7 @@ import { getAuthData } from "../../utils/ApiRoutes";
 import LoginRequest from "../LoginRequest";
 import { useDispatch } from "react-redux";
 import { setDirectBuyItem } from "../../store/slice/DirectBuySlice";
-
+import ImagePreviewModal from "./ImagePreviewModal";
 
 const ProductCarouselView = () => {
     const location = useLocation();
@@ -22,6 +22,7 @@ const ProductCarouselView = () => {
     const [quantity, setQuantity] = useState(1);
     const [checkDeliveryDate, setCheckDeliveryDate] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [showImageModal, setShowImageModal] = useState(false);
 
     // login status
     const [showLoginRequest, setShowLoginRequest] = useState(false);
@@ -175,16 +176,13 @@ const ProductCarouselView = () => {
             <div className="w-full md:w-1/2 flex justify-center items-start relative overflow-hidden">
                 <AnimatePresence mode="wait">
                     <motion.img
-                        key={currentIndex} // ensures animation triggers on change
+                        key={currentIndex}
                         src={images[currentIndex]}
                         alt={`Product Image ${currentIndex + 1}`}
-                        className="w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
-                 rounded-primaryRadius bg-productCardBg 
-                 p-4 sm:p-6 md:p-10 sm:m-20 lg:m-0 shadow"
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -50 }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        onClick={() => setShowImageModal(true)}
+                        className="cursor-pointer w-full max-w-sm sm:max-w-md md:max-w-lg object-cover 
+             rounded-primaryRadius bg-productCardBg 
+             p-4 sm:p-6 md:p-10 shadow"
                     />
                 </AnimatePresence>
 
@@ -434,6 +432,14 @@ const ProductCarouselView = () => {
             {showLoginRequest && (
                 <LoginRequest label={label} onclose={() => setShowLoginRequest(false)} />
             )}
+
+            <ImagePreviewModal
+                isOpen={showImageModal}
+                images={images}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                onClose={() => setShowImageModal(false)}
+            />
         </div>
     );
 };
