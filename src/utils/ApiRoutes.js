@@ -16,7 +16,8 @@ export const id = isId;
 export const updateStatus = localProfile?.is_updated;
 
 // Base URL for the API
-export const BASE_URL = "http://13.238.142.220";
+export const BASE_URL = "https://api.hridyatarangini.com/";
+// export const BASE_URL = "http://13.238.142.220";
 
 export const getAuthData = () => {
     // login status
