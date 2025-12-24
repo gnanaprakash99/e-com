@@ -9,6 +9,7 @@ import ProductSummaryPage from '../pages/summaryPage/ProductSummaryPage'
 import Carts from '../pages/cards/Carts'
 import BrandedLoader from '../components/loader/BrandedLoader'
 import React, { Suspense, lazy } from "react";
+import ResetPassword from '../pages/resetPassword/ResetPassword'
 
 // Lazy loaded pages
 const Home = lazy(() => import("../pages/home/Home"));
@@ -104,6 +105,10 @@ const AppRoutes = [
       {
         path: "finalSummaryPage",
         element: <FinalSummary />
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
       },
     ]
   },

@@ -58,7 +58,7 @@ const Orders = () => {
                     <p className="text-lg font-semibold">₹{order.total_price}</p>
 
                     <span
-                      className={`text-sm font-medium px-2 py-1 rounded-primaryRadius ${order.status === "confirmed"
+                      className={`text-sm font-medium px-2 py-1 rounded-primaryRadius ${order.status === ("CONFIRMED" || "confirmed")
                           ? "text-success bg-green-100"
                           : order.status === "processing"
                             ? "text-Warning bg-yellow-100"

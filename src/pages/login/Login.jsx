@@ -33,11 +33,17 @@ const Login = ({ isOpen, onClose }) => {
   // ✅ Login Submit
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (!loginData.email || !loginData.password) return alert("Enter email & password");
 
-    await loginMutation.mutateAsync(loginData);
-    setLoginData({ email: "", password: "" });
-    onClose();
+    if (!loginData.email || !loginData.password)
+      return alert("Enter email & password");
+
+    try {
+      await loginMutation.mutateAsync(loginData);
+      setLoginData({ email: "", password: "" });
+      onClose(); // ✅ close only on success
+    } catch (err) {
+      // ❌ do nothing (error already handled)
+    }
   };
 
   // ✅ Signup Submit
@@ -115,9 +121,14 @@ const Login = ({ isOpen, onClose }) => {
 
             <button
               type="submit"
-              className="mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition"
+              disabled={loginMutation.isPending}
+              className={`mx-auto block bg-primaryBtn text-buttonText border border-buttonBorder py-2 px-6 rounded-primaryRadius font-semibold cursor-pointer hover:scale-105 transition
+    ${loginMutation.isPending
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primaryBtn hover:scale-105"}
+  `}
             >
-              {loginMutation.isPending ? 'Logging...' : 'Login'}
+              {loginMutation.isPending ? "Logging in..." : "Login"}
             </button>
 
             <button

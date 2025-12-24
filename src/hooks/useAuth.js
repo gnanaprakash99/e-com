@@ -28,10 +28,13 @@ const useAuth = () => {
             const response = await axiosInstance.post(ApiRoutes.LOGIN.path, loginData);
             return response.data;
         },
-        onSuccess: async (data) => {
-            await userProfileRefetch();
+        onSuccess: (data) => {
+            // ✅ Store tokens immediately
             localStorage.setItem("refreshToken", data?.refresh);
             localStorage.setItem("accessToken", data?.access);
+
+            // ✅ Fire profile fetch WITHOUT await
+            userProfileRefetch();
         },
         onError: (err) => console.error("❌ Login Error:", err),
     });
@@ -67,6 +70,24 @@ const useAuth = () => {
         },
         onError: (error) => {
             console.error("Reset password error:", error);
+        },
+    });
+
+    // ✅ Confirm Reset Password
+    const confirmResetPasswordMutation = useMutation({
+        mutationKey: ['confirmResetPassword'],
+        mutationFn: async (data) => {
+            const response = await axiosInstance.post(
+                ApiRoutes.CONFIRM_RESET_PASSWORD.path,
+                data
+            );
+            return response.data;
+        },
+        onSuccess: () => {
+            console.log("✅ Password reset successful");
+        },
+        onError: (error) => {
+            console.error("❌ Confirm reset error:", error);
         },
     });
 
@@ -112,7 +133,7 @@ const useAuth = () => {
 
             // ❗ Clear local storage
             localStorage.clear();
-            
+
             // 🔥 Clear React Query cache (important!)
             queryClient.removeQueries(['cart']);
             queryClient.clear();
@@ -160,6 +181,7 @@ const useAuth = () => {
         profileQuery,
         profileData: profileQuery ?? [],
         resetPasswordMutation,
+        confirmResetPasswordMutation,
         refreshTokenMutation,
         logoutMutation,
         logoutAllMutation,
