@@ -10,9 +10,9 @@ const Footer = () => {
                             <span className="self-center text-2xl font-semibold whitespace-nowrap">HridyaTarangini</span>
                         </a>
                     </div>
-                    <div className="grid grid-cols-2 gap-6 sm:gap-6 sm:grid-cols-3">
+                    <div className="grid grid-cols-2 gap-6 sm:gap-6 sm:grid-cols-2">
                         {/* Resources */}
-                        <div>
+                        {/* <div>
                             <h2 className="mb-6 text-sm font-semibold uppercase">Resources</h2>
                             <ul className="font-medium">
                                 <li className="mb-4">
@@ -22,11 +22,11 @@ const Footer = () => {
                                     <a href="" className="hover:underline">Pottery</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
 
                         {/* Why Choose Us */}
                         <div>
-                            <h2 className="mb-6 text-sm font-semibold uppercase">Why Choose Us</h2>
+                            <h2 className="mb-6 text-sm font-semibold uppercase">Follow Us</h2>
                             <ul className="font-medium">
                                 <li className="mb-4">High quality hand-crafted products</li>
                                 <li className="mb-4">Unique and authentic designs</li>
